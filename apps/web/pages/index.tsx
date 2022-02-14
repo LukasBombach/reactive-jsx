@@ -1,10 +1,11 @@
-import { Button } from "ui";
+import { Playground } from "components/Playground";
 
-export default function Web() {
+export default function Home() {
+  const code = "console.log('hello coasasdasddasde');";
+
   return (
-    <div>
-      <h1>Web</h1>
-      <Button />
-    </div>
+    <main className="h-screen">
+      <Playground code={code} />
+    </main>
   );
 }
