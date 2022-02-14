@@ -19,12 +19,20 @@ export const Preview: VFC<PreviewProps> = ({ code, ...props }) => {
   useEffect(() => {
     if (!head || !body) return;
 
+    const safeCode = `
+      try {
+        ${code};
+      } catch(error) {
+        document.body.innerHTML = \`<pre>\${error.message}</pre>\`;
+      }
+    `;
+
     if (!script) {
-      const newScript = createScript(code);
+      const newScript = createScript(safeCode);
       head.append(newScript);
       setScript(newScript);
-    } else if (script.textContent !== code) {
-      const newScript = createScript(code);
+    } else if (script.textContent !== safeCode) {
+      const newScript = createScript(safeCode);
       script.parentNode.removeChild(script);
       body.replaceChildren();
       head.append(newScript);
