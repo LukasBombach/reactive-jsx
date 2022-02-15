@@ -7,22 +7,28 @@ import type { VFC } from "react";
 
 const Playground: VFC<{ initialSource?: string }> = ({ initialSource = "" }) => {
   const [source, setSource] = useState(initialSource);
-  const [result, setResult] = useState<string>("");
+  const [result, setResult] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   // todo race conditions
   useEffect(() => {
     bundle(source)
       .then(newResult => {
-        // console.log(newResult);
+        setError(null);
         setResult(newResult);
       })
-      .catch(error => console.error(error.message));
+      .catch(error => setError(error.message));
   }, [source]);
 
   return (
-    <div className="grid grid-cols-2 h-full">
+    <div className="grid grid-cols-2 h-full relative">
       <Editor defaultLanguage="typescript" defaultValue={source} onChange={v => setSource(v)} />
       <Preview className="w-full" code={result} />
+      {error && (
+        <p className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-purple-500 shadow-lg rounded-lg p-4 text-white dark:bg-sky-500">
+          {error}
+        </p>
+      )}
     </div>
   );
 };
