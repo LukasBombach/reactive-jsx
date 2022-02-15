@@ -19,7 +19,9 @@ export const Preview: VFC<PreviewProps> = ({ code, ...props }) => {
   useEffect(() => {
     if (!head || !body) return;
 
-    const safeCode = `
+    body.innerHTML = `<pre>${code}</pre>`;
+
+    /* const safeCode = `
       try {
         ${code};
       } catch(error) {
@@ -37,7 +39,7 @@ export const Preview: VFC<PreviewProps> = ({ code, ...props }) => {
       body.replaceChildren();
       head.append(newScript);
       setScript(newScript);
-    }
+    } */
   }, [head, body, script, code]);
 
   return <iframe {...props} ref={setIframe} />;

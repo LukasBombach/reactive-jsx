@@ -2,29 +2,29 @@ import { rollup } from "rollup";
 
 import type { Plugin } from "rollup";
 
-const replPlugin: Plugin = {
+const replPlugin: (source: string) => Plugin = source => ({
   name: "reactive-jsx-repl",
-  async resolveId(source) {
-    if (source === "virtual-module") {
-      return source;
+  async resolveId(id) {
+    if (id === "virtual-module") {
+      return id;
     }
     return null;
   },
   async load(id) {
     if (id === "virtual-module") {
-      return 'export default "This is virtual!"';
+      return source;
     }
     return null;
   },
-};
+});
 
-export async function bundle() {
+export async function bundle(source: string) {
   const file = "bundle.js";
   const format = "es";
 
   const bundle = await rollup({
     input: "virtual-module",
-    plugins: [replPlugin],
+    plugins: [replPlugin(source)],
     output: [{ file, format }],
   });
 
