@@ -17,7 +17,10 @@ const Playground: VFC<{ initialSource?: string }> = ({ initialSource = "" }) => 
         setError(null);
         setResult(newResult);
       })
-      .catch(error => setError(error.message));
+      .catch(error => {
+        setError(error.message);
+        setResult("");
+      });
   }, [source]);
 
   return (

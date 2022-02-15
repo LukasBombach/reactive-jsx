@@ -1,4 +1,4 @@
-import { transform as transformBabel } from "@babel/standalone";
+import { transform } from "@babel/standalone";
 import template from "@babel/template";
 import { isIdentifier, isAssignmentExpression, cloneDeepWithoutLoc } from "@babel/types";
 
@@ -83,6 +83,6 @@ const options = {
   ast: true,
 };
 
-export function transform(code: string): BabelFileResult | null {
-  return transformBabel(code, options);
+export function transpile(code: string): string | null {
+  return transform(code, options).code || null;
 }

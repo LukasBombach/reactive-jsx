@@ -1,4 +1,5 @@
 import { rollup } from "rollup";
+import { transpile } from "transpiler";
 
 import type { Plugin } from "rollup";
 
@@ -12,7 +13,7 @@ const replPlugin: (source: string) => Plugin = source => ({
   },
   async load(id) {
     if (id === "virtual-module") {
-      return source;
+      return transpile(source) || "";
     }
     return null;
   },
@@ -24,6 +25,7 @@ export async function bundle(source: string) {
 
   const bundle = await rollup({
     input: "virtual-module",
+    treeshake: false,
     plugins: [replPlugin(source)],
     output: [{ file, format }],
   });
