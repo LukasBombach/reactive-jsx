@@ -1,27 +1,32 @@
-import { useState, useEffect } from "react";
+import { useState /* useEffect */ } from "react";
+import { createPortal } from "react-dom";
 
 import type { VFC } from "react";
 
 type PreviewProps = Omit<JSX.IntrinsicElements["iframe"], "children"> & { code: string };
 
-const createScript = (code: string) => {
-  const script = document.createElement("script");
-  script.textContent = code;
-  return script;
-};
+// const createScript = (code: string) => {
+//   const script = document.createElement("script");
+//   script.textContent = code;
+//   return script;
+// };
 
 export const Preview: VFC<PreviewProps> = ({ code, ...props }) => {
-  const [script, setScript] = useState<HTMLScriptElement | null>(null);
-  const [iframe, setIframe] = useState<HTMLIFrameElement | null>(null);
-  const head = iframe?.contentWindow.document.head;
-  const body = iframe?.contentWindow.document.body;
+  // const [script, setScript] = useState<HTMLScriptElement | null>(null);
+  // const [iframe, setIframe] = useState<HTMLIFrameElement | null>(null);
 
-  useEffect(() => {
-    if (!head || !body) return;
+  // console.log("render", { iframe, code });
 
-    body.innerHTML = `<pre>${code}</pre>`;
+  // const body = iframe?.contentWindow?.document?.body;
 
-    /* const safeCode = `
+  // useEffect(() => {
+  // if (!body) return;
+
+  // console.log("useEffect", { iframe, code });
+
+  // body.innerHTML = `<pre>${code}</pre>`;
+
+  /* const safeCode = `
       try {
         ${code};
       } catch(error) {
@@ -40,7 +45,31 @@ export const Preview: VFC<PreviewProps> = ({ code, ...props }) => {
       head.append(newScript);
       setScript(newScript);
     } */
-  }, [head, body, script, code]);
+  // }, [iframe, code]);
 
-  return <iframe {...props} ref={setIframe} />;
+  return (
+    <Iframe>
+      <pre>${code}</pre>
+    </Iframe>
+  );
+
+  /* return (
+    <iframe {...props} ref={setIframe}>
+      {body && createPortal(() => <pre>${code}</pre>, body)}
+    </iframe>
+  ); */
+
+  // return <iframe {...props} ref={setIframe} />;
+};
+
+const Iframe = ({ children, ...props }) => {
+  const [ref, setRef] = useState(null);
+
+  const body = ref?.contentWindow.document.body;
+
+  return (
+    <iframe {...props} ref={setRef}>
+      {body && createPortal(children, body)}
+    </iframe>
+  );
 };
