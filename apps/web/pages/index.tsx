@@ -2,9 +2,10 @@ import dynamic from "next/dynamic";
 
 const Playground = dynamic(() => import("components/Playground"), { ssr: false });
 
-export default function Home() {
-  const initialSource = "console.log('hello world');";
+const initialSource = `const text = "abc";
+const el = <div data-text={text} />;`;
 
+export default function Home() {
   return (
     <main className="h-screen">
       <Playground initialSource={initialSource} />
