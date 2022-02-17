@@ -5,17 +5,20 @@ import type { Plugin } from "rollup";
 
 const replPlugin: (source: string) => Plugin = source => ({
   name: "reactive-jsx-repl",
-  async resolveId(id) {
+  resolveId(id) {
     if (id === "virtual-module") {
       return id;
     }
     return null;
   },
-  async load(id) {
+  load(id) {
     if (id === "virtual-module") {
-      return transpile(source) || "";
+      return source;
     }
     return null;
+  },
+  transform(source) {
+    return transpile(source) || "";
   },
 });
 
