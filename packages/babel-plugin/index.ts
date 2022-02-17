@@ -14,7 +14,7 @@ function assertStatement(value: Statement | Statement[]): asserts value is State
 }
 
 const signal = template`
-  const [GETTER, SETTER] = signal(VALUE);
+  const [GETTER, SETTER] = ReactiveJsx.signal(VALUE);
 `;
 
 const setter = template`
@@ -22,7 +22,7 @@ const setter = template`
 `;
 
 const libImport = template.ast(`
-  import { signal, effect, element, text } from "./lib";
+  import ReactiveJsx from "@reactive-jsx/runtime";
 `);
 
 export const getProp = (): PluginObj => ({

@@ -1,10 +1,27 @@
-import { transform } from "@babel/standalone";
+import { transform, availablePresets } from "@babel/standalone";
 import { insertImports, getProp } from "babel-plugin";
 
 const options = {
-  presets: ["env", "react"],
+  presets: [
+    [
+      availablePresets.env,
+      {
+        modules: false,
+        targets: {
+          firefox: "97",
+        },
+      },
+    ],
+    [
+      availablePresets.react,
+      {
+        pragma: "ReactiveJsx.el",
+        pragmaFrag: "ReactiveJsx.frag",
+        useBuiltIns: true,
+      },
+    ],
+  ],
   plugins: [insertImports, getProp],
-  ast: true,
 };
 
 export function transpile(code: string): string | null {
