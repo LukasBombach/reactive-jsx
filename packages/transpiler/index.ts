@@ -1,5 +1,5 @@
 import { transform, availablePresets } from "@babel/standalone";
-import { insertImports, getProp } from "babel-plugin";
+import { insertImports, reactiveProps, reactiveChildren } from "babel-plugin";
 
 const options = {
   presets: [
@@ -21,7 +21,7 @@ const options = {
       },
     ],
   ],
-  plugins: [insertImports, getProp],
+  plugins: [insertImports, reactiveProps, reactiveChildren],
 };
 
 export function transpile(code: string): string | null {
