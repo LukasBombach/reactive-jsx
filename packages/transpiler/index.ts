@@ -4,6 +4,8 @@ import { insertImports, reactiveProps, reactiveChildren } from "@reactive-jsx/ba
 interface Options {
   // todo this should be done automatically by detecting jsx in the plugin
   injectRuntime: boolean;
+  env?: object;
+  react?: object;
 }
 
 export function transpile(code: string, options: Options): string | null {
@@ -17,23 +19,8 @@ export function transpile(code: string, options: Options): string | null {
   return (
     transform(code, {
       presets: [
-        [
-          availablePresets.env,
-          {
-            modules: false,
-            targets: {
-              firefox: "97",
-            },
-          },
-        ],
-        [
-          availablePresets.react,
-          {
-            pragma: "ReactiveJsx.element",
-            pragmaFrag: "ReactiveJsx.fragment",
-            useBuiltIns: true,
-          },
-        ],
+        [availablePresets.env, options.env],
+        [availablePresets.react, options.react],
       ],
       plugins,
     }).code || null
