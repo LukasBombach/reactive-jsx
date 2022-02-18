@@ -3,7 +3,7 @@ import { runtime } from "./runtime_proto";
 
 import type { Plugin } from "rollup";
 
-export const pluginShowCode: (source: string) => Plugin = source => ({
+/* export const pluginShowCode: (source: string) => Plugin = source => ({
   name: "reactive-jsx-repl",
   resolveId(id) {
     if (id === "playground") {
@@ -36,7 +36,7 @@ export const pluginShowCode: (source: string) => Plugin = source => ({
 
     return transpile(source, { injectRuntime: true, env, react }) || "";
   },
-});
+}); */
 
 export const pluginBundle: (source: string) => Plugin = source => ({
   name: "reactive-jsx-repl",
@@ -45,6 +45,8 @@ export const pluginBundle: (source: string) => Plugin = source => ({
       return id;
     }
     if (id === "@reactive-jsx/runtime") {
+      console.log("resolve @reactive-jsx/runtime");
+
       return id;
     }
     return null;
@@ -54,6 +56,7 @@ export const pluginBundle: (source: string) => Plugin = source => ({
       return source;
     }
     if (id === "@reactive-jsx/runtime") {
+      console.log(id, runtime);
       return runtime;
     }
     return null;
@@ -62,7 +65,9 @@ export const pluginBundle: (source: string) => Plugin = source => ({
     const injectRuntime = id !== "@reactive-jsx/runtime";
 
     const env = {
-      targets: { chrome: "58" },
+      targets: {
+        firefox: "97",
+      },
     };
 
     const react = {

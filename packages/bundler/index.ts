@@ -1,23 +1,25 @@
 import { rollup } from "rollup";
 
-import { pluginShowCode, pluginBundle } from "./plugin";
+import { /* pluginShowCode, */ pluginBundle } from "./plugin";
 
 export async function bundle(source: string) {
   const file = "bundle.js";
 
   const bundle = await rollup({
     input: "playground",
-    treeshake: true,
+    treeshake: false,
     plugins: [pluginBundle(source)],
     output: [{ file, format: "es" }],
   });
 
-  const { output } = await bundle.generate({ file, format: "iife" });
+  const { output } = await bundle.generate({ file, format: "es" });
+  console.log(output);
+
   const [{ code }] = output;
   return code;
 }
 
-export async function showCode(source: string) {
+/* export async function showCode(source: string) {
   const file = "bundle.js";
   const format = "es";
 
@@ -32,3 +34,4 @@ export async function showCode(source: string) {
   const [{ code }] = output;
   return code;
 }
+ */
