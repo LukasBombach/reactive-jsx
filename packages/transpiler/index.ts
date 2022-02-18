@@ -1,5 +1,5 @@
 import { transform, availablePresets } from "@babel/standalone";
-import { insertImports, reactiveProps, reactiveChildren } from "babel-plugin";
+import { insertImports, reactiveProps, reactiveChildren } from "@reactive-jsx/babel-plugin";
 
 const options = {
   presets: [

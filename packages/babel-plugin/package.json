@@ -1,13 +1,13 @@
 {
-  "name": "babel-plugin",
+  "name": "@reactive-jsx/babel-plugin",
   "version": "0.0.0",
   "main": "./index.tsx",
   "types": "./index.tsx",
   "license": "MIT",
   "devDependencies": {
-    "config": "*",
-    "tsconfig": "*",
-    "typescript": "^4.5.3"
+    "@reactive-jsx/config": "*",
+    "@reactive-jsx/tsconfig": "*",
+    "typescript": "4.5.3"
   },
   "dependencies": {
     "@babel/core": "7.17.2",

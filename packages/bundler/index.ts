@@ -1,5 +1,5 @@
 import { rollup } from "rollup";
-import { transpile } from "transpiler";
+import { transpile } from "@reactive-jsx/transpiler";
 
 import type { Plugin } from "rollup";
 

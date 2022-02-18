@@ -1,12 +1,12 @@
 {
-  "name": "bundler",
+  "name": "@reactive-jsx/bundler",
   "version": "0.0.0",
   "main": "./index.tsx",
   "types": "./index.tsx",
   "license": "MIT",
   "devDependencies": {
-    "config": "*",
-    "tsconfig": "*",
+    "@reactive-jsx/config": "*",
+    "@reactive-jsx/tsconfig": "*",
     "typescript": "4.5.3"
   },
   "dependencies": {
