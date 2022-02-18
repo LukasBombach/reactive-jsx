@@ -1,0 +1,8 @@
+{
+  "extends": "@reactive-jsx/tsconfig/react-library.json",
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"]
+  },
+  "include": ["modules.d.ts", "."],
+  "exclude": ["dist", "build", "node_modules"]
+}

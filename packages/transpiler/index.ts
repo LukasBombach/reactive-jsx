@@ -15,8 +15,8 @@ const options = {
     [
       availablePresets.react,
       {
-        pragma: "ReactiveJsx.el",
-        pragmaFrag: "ReactiveJsx.frag",
+        pragma: "ReactiveJsx.element",
+        pragmaFrag: "ReactiveJsx.fragment",
         useBuiltIns: true,
       },
     ],

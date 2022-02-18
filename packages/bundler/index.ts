@@ -1,19 +1,23 @@
 import { rollup } from "rollup";
 import { transpile } from "@reactive-jsx/transpiler";
+import { runtime } from "./runtime_proto";
 
 import type { Plugin } from "rollup";
 
 const replPlugin: (source: string) => Plugin = source => ({
   name: "reactive-jsx-repl",
   resolveId(id) {
-    if (id === "virtual-module") {
+    if (["@reactive-jsx/runtime", "playground"].includes(id)) {
       return id;
     }
     return null;
   },
   load(id) {
-    if (id === "virtual-module") {
+    if (id === "playground") {
       return source;
+    }
+    if (id === "@reactive-jsx/runtime") {
+      return runtime;
     }
     return null;
   },
@@ -27,7 +31,7 @@ export async function bundle(source: string) {
   const format = "es";
 
   const bundle = await rollup({
-    input: "virtual-module",
+    input: "playground",
     treeshake: false,
     plugins: [replPlugin(source)],
     output: [{ file, format }],
