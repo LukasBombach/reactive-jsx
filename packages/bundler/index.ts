@@ -7,7 +7,10 @@ import type { Plugin } from "rollup";
 const replPlugin: (source: string) => Plugin = source => ({
   name: "reactive-jsx-repl",
   resolveId(id) {
-    if (["@reactive-jsx/runtime", "playground"].includes(id)) {
+    if (id === "playground") {
+      return id;
+    }
+    if (id === "@reactive-jsx/runtime") {
       return id;
     }
     return null;
@@ -21,8 +24,10 @@ const replPlugin: (source: string) => Plugin = source => ({
     }
     return null;
   },
-  transform(source) {
-    return transpile(source) || "";
+  transform(source, id) {
+    const injectRuntime = id !== "@reactive-jsx/runtime";
+
+    return transpile(source, { injectRuntime }) || "";
   },
 });
 

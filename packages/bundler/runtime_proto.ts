@@ -9,7 +9,7 @@ function cleanup(running) {
     }
     running.dependencies.clear();
 }
-export function signal(value) {
+function signal(value) {
     const subscriptions = new Set();
     const read = () => {
         const running = context[context.length - 1];
@@ -25,7 +25,7 @@ export function signal(value) {
     };
     return [read, write];
 }
-export function effect(fn) {
+function effect(fn) {
     const execute = () => {
         cleanup(running);
         context.push(running);
@@ -42,7 +42,7 @@ export function effect(fn) {
     };
     execute();
 }
-export function element(tag, props = {}, children = () => []) {
+function element(tag, props = {}, children = () => []) {
     const element = document.createElement(tag);
     Object.keys(props).forEach(name => {
         if (/^on/.test(name)) {
@@ -55,7 +55,7 @@ export function element(tag, props = {}, children = () => []) {
     effect(() => element.replaceChildren(...children()));
     return element;
 }
-export function text(value) {
+function text(value) {
     const text = document.createTextNode(value());
     effect(() => (text.nodeValue = value()));
     return text;
