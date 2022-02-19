@@ -42,9 +42,9 @@ function effect(fn) {
     };
     execute();
 }
-function element(tag, props = {}, children = () => []) {
+function element(tag, props, ...children) {
     const element = document.createElement(tag);
-    Object.keys(props).forEach(name => {
+    Object.keys(props || {}).forEach(name => {
         if (/^on/.test(name)) {
             element.addEventListener(name.substring(2).toLowerCase(), props[name]);
         }
@@ -52,7 +52,17 @@ function element(tag, props = {}, children = () => []) {
             effect(() => element.setAttribute(name, props[name]()));
         }
     });
-    effect(() => element.replaceChildren(...children()));
+
+    // dirty
+     children = children.map(child => {
+        if (typeof child !== "function") {
+            return child;
+        } else {
+            return child();
+        }
+    }); 
+
+    effect(() => element.replaceChildren(...children));
     return element;
 }
 function text(value) {
