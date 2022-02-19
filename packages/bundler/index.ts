@@ -13,7 +13,6 @@ export async function bundle(source: string) {
   });
 
   const { output } = await bundle.generate({ file, format: "es" });
-  console.log(output);
 
   const [{ code }] = output;
   return code;

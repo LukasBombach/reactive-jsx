@@ -45,8 +45,6 @@ export const pluginBundle: (source: string) => Plugin = source => ({
       return id;
     }
     if (id === "@reactive-jsx/runtime") {
-      console.log("resolve @reactive-jsx/runtime");
-
       return id;
     }
     return null;
@@ -56,7 +54,6 @@ export const pluginBundle: (source: string) => Plugin = source => ({
       return source;
     }
     if (id === "@reactive-jsx/runtime") {
-      console.log(id, runtime);
       return runtime;
     }
     return null;
@@ -65,6 +62,7 @@ export const pluginBundle: (source: string) => Plugin = source => ({
     const injectRuntime = id !== "@reactive-jsx/runtime";
 
     const env = {
+      modules: false,
       targets: {
         firefox: "97",
       },
@@ -75,6 +73,8 @@ export const pluginBundle: (source: string) => Plugin = source => ({
       pragmaFrag: "ReactiveJsx.fragment",
     };
 
-    return transpile(source, { injectRuntime, env, react }) || "";
+    const code = transpile(source, { injectRuntime, env, react }) || "";
+
+    return code;
   },
 });
