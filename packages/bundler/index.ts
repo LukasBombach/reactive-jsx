@@ -4,15 +4,16 @@ import { /* pluginShowCode, */ pluginBundle } from "./plugin";
 
 export async function bundle(source: string) {
   const file = "bundle.js";
+  const format = "iife";
 
   const bundle = await rollup({
     input: "playground",
     treeshake: false,
     plugins: [pluginBundle(source)],
-    output: [{ file, format: "es" }],
+    output: [{ file, format }],
   });
 
-  const { output } = await bundle.generate({ file, format: "es" });
+  const { output } = await bundle.generate({ file, format });
 
   const [{ code }] = output;
   return code;
