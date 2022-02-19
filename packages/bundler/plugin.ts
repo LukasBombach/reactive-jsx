@@ -3,41 +3,6 @@ import { runtime } from "./runtime_proto";
 
 import type { Plugin } from "rollup";
 
-/* export const pluginShowCode: (source: string) => Plugin = source => ({
-  name: "reactive-jsx-repl",
-  resolveId(id) {
-    if (id === "playground") {
-      return id;
-    }
-    if (id === "@reactive-jsx/runtime") {
-      return { id, external: true };
-    }
-    return null;
-  },
-  load(id) {
-    if (id === "playground") {
-      return source;
-    }
-    return null;
-  },
-  transform(source) {
-    const env = {
-      modules: false,
-      targets: {
-        firefox: "97",
-      },
-    };
-
-    const react = {
-      pragma: "ReactiveJsx.element",
-      pragmaFrag: "ReactiveJsx.fragment",
-      useBuiltIns: true,
-    };
-
-    return transpile(source, { injectRuntime: true, env, react }) || "";
-  },
-}); */
-
 export const pluginBundle: (source: string) => Plugin = source => ({
   name: "reactive-jsx-repl",
   resolveId(id) {
@@ -78,3 +43,38 @@ export const pluginBundle: (source: string) => Plugin = source => ({
     return code;
   },
 });
+
+/* export const pluginShowCode: (source: string) => Plugin = source => ({
+  name: "reactive-jsx-repl",
+  resolveId(id) {
+    if (id === "playground") {
+      return id;
+    }
+    if (id === "@reactive-jsx/runtime") {
+      return { id, external: true };
+    }
+    return null;
+  },
+  load(id) {
+    if (id === "playground") {
+      return source;
+    }
+    return null;
+  },
+  transform(source) {
+    const env = {
+      modules: false,
+      targets: {
+        firefox: "97",
+      },
+    };
+
+    const react = {
+      pragma: "ReactiveJsx.element",
+      pragmaFrag: "ReactiveJsx.fragment",
+      useBuiltIns: true,
+    };
+
+    return transpile(source, { injectRuntime: true, env, react }) || "";
+  },
+}); */
