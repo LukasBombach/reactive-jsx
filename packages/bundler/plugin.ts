@@ -1,9 +1,8 @@
 import { transpile } from "@reactive-jsx/transpiler";
-import { runtime } from "./runtime_proto";
 
 import type { Plugin } from "rollup";
 
-export const pluginBundle: (source: string) => Plugin = source => ({
+export const pluginBundle = (source: string, runtime: string): Plugin => ({
   name: "reactive-jsx-repl",
   resolveId(id) {
     if (id === "playground") {

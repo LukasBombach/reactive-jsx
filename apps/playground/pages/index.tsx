@@ -1,15 +1,44 @@
+import { resolve } from "path";
+import { promises as fs } from "fs";
 import dynamic from "next/dynamic";
+
+import type { NextPage, InferGetServerSidePropsType } from "next";
+
+type SsrProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const Playground = dynamic(() => import("components/Playground"), { ssr: false });
 
-const initialSource = `const child = "test";
-const el = <h1>Dies ist ein {child}</h1>;
+export const getServerSideProps = async (): Promise<{ props: { runtime: string } }> => {
+  const runtimePath = resolve(process.cwd(), "../../packages/runtime/dist/index.modern.js");
+  const runtime = await fs.readFile(runtimePath, "utf-8");
+
+  return {
+    props: {
+      runtime,
+    },
+  };
+};
+
+const initialSource = `let count = 0;
+
+function handleClick() {
+  count += 1;
+}
+
+const el = (
+  <button onClick={handleClick}>
+	  Clicked {count} times
+  </button>
+);
+
 document.body.append(el);`;
 
-export default function Home() {
+const Home: NextPage<SsrProps> = ({ runtime }) => {
   return (
     <main className="h-screen">
-      <Playground initialSource={initialSource} />
+      <Playground initialSource={initialSource} runtime={runtime} />
     </main>
   );
-}
+};
+
+export default Home;

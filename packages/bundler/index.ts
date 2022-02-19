@@ -2,14 +2,14 @@ import { rollup } from "rollup";
 
 import { /* pluginShowCode, */ pluginBundle } from "./plugin";
 
-export async function bundle(source: string) {
+export async function bundle(source: string, runtime: string) {
   const file = "bundle.js";
   const format = "iife";
 
   const bundle = await rollup({
     input: "playground",
     treeshake: false,
-    plugins: [pluginBundle(source)],
+    plugins: [pluginBundle(source, runtime)],
     output: [{ file, format }],
   });
 
