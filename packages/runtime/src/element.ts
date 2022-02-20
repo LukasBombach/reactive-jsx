@@ -1,4 +1,4 @@
-import { effect } from "./reactive";
+import { reaction } from "./reactive";
 
 import type { Tag, Element } from "./types";
 import type { Read } from "./reactive";
@@ -14,7 +14,7 @@ export function element<T extends Tag>(tag: T, props: Props | null = null, ...ch
       if (/^on/.test(name)) {
         element.addEventListener(name.substring(2).toLowerCase(), props[name]);
       } else {
-        effect(() => element.setAttribute(name, props[name]()));
+        reaction(() => element.setAttribute(name, props[name]()));
       }
     });
   }
@@ -23,11 +23,11 @@ export function element<T extends Tag>(tag: T, props: Props | null = null, ...ch
     .map(child => {
       if (typeof child === "function") {
         const text = document.createTextNode(child());
-        effect(() => (text.nodeValue = child()));
+        reaction(() => (text.nodeValue = child()));
         return text;
       } else {
         const text = document.createTextNode(child);
-        effect(() => (text.nodeValue = child));
+        reaction(() => (text.nodeValue = child));
         return text;
       }
     })

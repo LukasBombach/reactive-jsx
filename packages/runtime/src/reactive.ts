@@ -20,7 +20,7 @@ function cleanup(running: Running) {
   running.dependencies.clear();
 }
 
-export function signal<T>(value: T): [read: Read<T>, write: Write<T>] {
+export function value<T>(value: T): [read: Read<T>, write: Write<T>] {
   const subscriptions = new Set<Running>();
 
   const read = () => {
@@ -39,8 +39,7 @@ export function signal<T>(value: T): [read: Read<T>, write: Write<T>] {
   return [read, write];
 }
 
-// todo effects don't return, that's computeds
-export function effect<T>(fn: () => T) {
+export function reaction<T>(fn: () => T) {
   const execute = () => {
     cleanup(running);
     context.push(running);

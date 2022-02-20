@@ -20,8 +20,8 @@ function assertStatement(value: Statement | Statement[]): asserts value is State
   if (Array.isArray(value)) throw new TypeError(`${value} should not be an array`);
 }
 
-const signal = template`
-  const [GETTER, SETTER] = ReactiveJsx.signal(VALUE);
+const value = template`
+  const [GETTER, SETTER] = ReactiveJsx.value(VALUE);
 `;
 
 const setter = template`
@@ -32,9 +32,8 @@ const getter = template`
   GETTER()
 `;
 
-// todo effects don't return, that's computeds
-const effect = template`
-ReactiveJsx.effect(() => { return EXPRESSION })
+const reaction = template`
+ReactiveJsx.reaction(() => { return EXPRESSION })
 `;
 
 const libImport = template.ast(`
@@ -68,7 +67,7 @@ export const reactiveChildren = (): PluginObj => ({
             if (isConditionalExpression(expressionPath.node)) {
               const EXPRESSION = expressionPath.node;
 
-              const ast = effect({
+              const ast = reaction({
                 EXPRESSION,
               });
               assertStatement(ast);
@@ -95,7 +94,7 @@ const reactiveIdentifier = (path: NodePath<Node> | NodePath<Node>[]) => {
     const SETTER = `set${name[0].toUpperCase()}${name.substring(1)}`;
     const VALUE = cloneDeepWithoutLoc(valuePath.node);
 
-    const ast = signal({
+    const ast = value({
       GETTER,
       SETTER,
       VALUE,
