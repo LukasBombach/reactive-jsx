@@ -27,6 +27,10 @@ const setter = template`
   SETTER(VALUE)
 `;
 
+const getter = template`
+  GETTER()
+`;
+
 const libImport = template.ast(`
   import ReactiveJsx from "@reactive-jsx/runtime";
 `);
@@ -83,9 +87,24 @@ const reactiveIdentifier = (path: NodePath<Node> | NodePath<Node>[]) => {
 
     binding.path.parentPath?.replaceWith(ast);
 
+    binding.referencePaths
+      .filter(r => r !== path)
+      .forEach(r => {
+        if (isIdentifier(r.node)) {
+          const GETTER = r.node.name;
+
+          const ast = getter({
+            GETTER,
+          });
+          assertStatement(ast);
+          r.replaceWith(ast);
+        }
+      });
+
     binding.constantViolations.forEach(v => {
       if (isAssignmentExpression(v.node)) {
         const VALUE = cloneDeepWithoutLoc(v.node.right);
+
         const ast = setter({
           SETTER,
           VALUE,
