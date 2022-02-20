@@ -70,6 +70,7 @@ export const reactiveChildren = (): PluginObj => ({
               const ast = reaction({
                 EXPRESSION,
               });
+
               assertStatement(ast);
               expressionPath.replaceWith(ast);
             } else if (isIdentifier(expressionPath.node)) {
