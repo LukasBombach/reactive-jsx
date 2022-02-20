@@ -1,6 +1,7 @@
 import template from "@babel/template";
 import {
   isIdentifier,
+  isConditionalExpression,
   isAssignmentExpression,
   isJSXExpressionContainer,
   isJSXIdentifier,
@@ -31,6 +32,11 @@ const getter = template`
   GETTER()
 `;
 
+// todo effects don't return, that's computeds
+const effect = template`
+ReactiveJsx.effect(() => { return EXPRESSION })
+`;
+
 const libImport = template.ast(`
   import ReactiveJsx from "@reactive-jsx/runtime";
 `);
@@ -57,7 +63,19 @@ export const reactiveChildren = (): PluginObj => ({
       exit(path) {
         path.get("children").forEach(child => {
           if (isJSXExpressionContainer(child)) {
-            reactiveIdentifier(child.get("expression"));
+            const expressionPath = child.get("expression");
+            assertNodePath(expressionPath);
+            if (isConditionalExpression(expressionPath.node)) {
+              const EXPRESSION = expressionPath.node;
+
+              const ast = effect({
+                EXPRESSION,
+              });
+              assertStatement(ast);
+              expressionPath.replaceWith(ast);
+            } else if (isIdentifier(expressionPath.node)) {
+              reactiveIdentifier(expressionPath);
+            }
           }
         });
       },

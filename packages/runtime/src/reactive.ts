@@ -39,15 +39,18 @@ export function signal<T>(value: T): [read: Read<T>, write: Write<T>] {
   return [read, write];
 }
 
-export function effect(fn: () => void) {
+// todo effects don't return, that's computeds
+export function effect<T>(fn: () => T) {
   const execute = () => {
     cleanup(running);
     context.push(running);
+    let val: T;
     try {
-      fn();
+      val = fn();
     } finally {
       context.pop();
     }
+    return val;
   };
 
   const running: Running = {
@@ -55,5 +58,5 @@ export function effect(fn: () => void) {
     dependencies: new Set(),
   };
 
-  execute();
+  return execute();
 }

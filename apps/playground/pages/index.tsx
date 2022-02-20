@@ -19,7 +19,7 @@ export const getServerSideProps = async (): Promise<{ props: { runtime: string }
   };
 };
 
-const initialSource = `let count = 0;
+const initialSource = `let count = 1;
 
 function handleClick() {
   count = count + 1;
@@ -27,7 +27,7 @@ function handleClick() {
 
 const el = (
   <button onClick={handleClick}>
-	  Clicked {count} times
+  Clicked {count} {count === 1 ? 'time' : 'times'}
   </button>
 );
 
