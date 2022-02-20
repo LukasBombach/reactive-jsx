@@ -19,8 +19,6 @@ export function element<T extends Tag>(tag: T, props: Props | null = null, ...ch
     });
   }
 
-  console.log("children", children);
-
   children
     .map(child => {
       if (typeof child === "function") {

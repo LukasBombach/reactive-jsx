@@ -1,5 +1,11 @@
 import template from "@babel/template";
-import { isIdentifier, isAssignmentExpression, isJSXExpressionContainer, cloneDeepWithoutLoc } from "@babel/types";
+import {
+  isIdentifier,
+  isAssignmentExpression,
+  isJSXExpressionContainer,
+  isJSXIdentifier,
+  cloneDeepWithoutLoc,
+} from "@babel/types";
 
 import type { NodePath, Node } from "@babel/core";
 import type { PluginObj } from "@babel/core";
@@ -25,11 +31,41 @@ const libImport = template.ast(`
   import ReactiveJsx from "@reactive-jsx/runtime";
 `);
 
-const reactiveIdentifier = (nodePath: NodePath<Node> | NodePath<Node>[]) => {
-  assertNodePath(nodePath);
-  if (isIdentifier(nodePath.node)) {
-    const { name } = nodePath.node;
-    const binding = nodePath.scope.bindings[name];
+export const reactiveProps = (): PluginObj => ({
+  visitor: {
+    JSXAttribute: {
+      exit(path) {
+        const namePath = path.get("name");
+        if (isJSXIdentifier(namePath.node)) {
+          const { name } = namePath.node;
+          if (!/^on/.test(name)) {
+            reactiveIdentifier(path.get("value.expression"));
+          }
+        }
+      },
+    },
+  },
+});
+
+export const reactiveChildren = (): PluginObj => ({
+  visitor: {
+    JSXElement: {
+      exit(path) {
+        path.get("children").forEach(child => {
+          if (isJSXExpressionContainer(child)) {
+            reactiveIdentifier(child.get("expression"));
+          }
+        });
+      },
+    },
+  },
+});
+
+const reactiveIdentifier = (path: NodePath<Node> | NodePath<Node>[]) => {
+  assertNodePath(path);
+  if (isIdentifier(path.node)) {
+    const { name } = path.node;
+    const binding = path.scope.bindings[name];
     const valuePath = binding.path.get("init");
     assertNodePath(valuePath);
 
@@ -60,30 +96,6 @@ const reactiveIdentifier = (nodePath: NodePath<Node> | NodePath<Node>[]) => {
     });
   }
 };
-
-export const reactiveChildren = (): PluginObj => ({
-  visitor: {
-    JSXElement: {
-      exit(path) {
-        path.get("children").forEach(child => {
-          if (isJSXExpressionContainer(child)) {
-            reactiveIdentifier(child.get("expression"));
-          }
-        });
-      },
-    },
-  },
-});
-
-export const reactiveProps = (): PluginObj => ({
-  visitor: {
-    JSXAttribute: {
-      exit(path) {
-        reactiveIdentifier(path.get("value.expression"));
-      },
-    },
-  },
-});
 
 export const insertImports = (): PluginObj => ({
   visitor: {

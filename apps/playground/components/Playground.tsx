@@ -19,6 +19,7 @@ const Playground: VFC<{ runtime: string; initialSource: string }> = ({ runtime, 
         setResult(newResult);
       })
       .catch(error => {
+        console.error(error);
         setError(error.message);
         setResult("");
       });
@@ -32,9 +33,17 @@ const Playground: VFC<{ runtime: string; initialSource: string }> = ({ runtime, 
         extensions={[javascript({ jsx: true })]}
         onChange={value => setSource(value)}
         height="100%"
+        className="h-full overflow-y-auto"
       />
-      <CodeMirror value={result} theme="dark" extensions={[javascript()]} editable={false} height="100%" />
-      <CodePreview code={result} className="h-full w-full" />
+      <CodeMirror
+        value={result}
+        theme="dark"
+        extensions={[javascript()]}
+        editable={false}
+        height="100%"
+        className="h-full overflow-y-auto"
+      />
+      <CodePreview code={result} className="h-full w-full overflow-y-auto bg-[#282c34]" />
       {error && (
         <p className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-purple-500 shadow-lg rounded-lg p-4 text-white dark:bg-sky-500">
           {error}

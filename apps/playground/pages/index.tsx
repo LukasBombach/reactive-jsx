@@ -22,7 +22,7 @@ export const getServerSideProps = async (): Promise<{ props: { runtime: string }
 const initialSource = `let count = 0;
 
 function handleClick() {
-  count += 1;
+  count = count + 1;
 }
 
 const el = (
