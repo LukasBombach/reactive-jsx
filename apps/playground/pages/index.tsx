@@ -27,7 +27,7 @@ function handleClick() {
 
 const el = (
   <button onClick={handleClick}>
-  Clicked {count} {count === 1 ? 'time' : 'times'}
+    Clicked {count} {count === 1 ? 'time' : 'times'}
   </button>
 );
 
