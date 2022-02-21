@@ -33,7 +33,11 @@ const getter = template`
 `;
 
 const reaction = template`
-ReactiveJsx.reaction(() => { return EXPRESSION })
+  ReactiveJsx.reaction(() => EXPRESSION)
+`;
+
+const fn = template`
+  () => EXPRESSION
 `;
 
 const libImport = template.ast(`
@@ -67,7 +71,7 @@ export const reactiveChildren = (): PluginObj => ({
             if (isConditionalExpression(expressionPath.node)) {
               const EXPRESSION = expressionPath.node;
 
-              const ast = reaction({
+              const ast = fn({
                 EXPRESSION,
               });
 

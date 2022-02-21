@@ -27,7 +27,7 @@ export function element<T extends Tag>(tag: T, props: Props | null = null, ...ch
         return text;
       } else {
         const text = document.createTextNode(child);
-        reaction(() => (text.nodeValue = child));
+        text.nodeValue = child;
         return text;
       }
     })

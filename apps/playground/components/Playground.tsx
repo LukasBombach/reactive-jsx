@@ -26,14 +26,14 @@ const Playground: VFC<{ runtime: string; initialSource: string }> = ({ runtime, 
   }, [source, runtime]);
 
   return (
-    <div className="grid grid-cols-3 h-full relative">
+    <div className="flex h-full relative">
       <CodeMirror
         value={source}
         theme="dark"
         extensions={[javascript({ jsx: true })]}
         onChange={value => setSource(value)}
         height="100%"
-        className="h-full overflow-y-auto"
+        className="h-full overflow-y-auto w-2/5"
       />
       <CodeMirror
         value={result}
@@ -41,9 +41,9 @@ const Playground: VFC<{ runtime: string; initialSource: string }> = ({ runtime, 
         extensions={[javascript()]}
         editable={false}
         height="100%"
-        className="h-full overflow-y-auto"
+        className="h-full overflow-y-auto w-2/5"
       />
-      <CodePreview code={result} className="h-full w-full overflow-y-auto bg-[#282c34]" />
+      <CodePreview code={result} className="h-full overflow-y-auto bg-[#282c34] w-1/5" />
       {error && (
         <p className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-purple-500 shadow-lg rounded-lg p-4 text-white dark:bg-sky-500">
           {error}
