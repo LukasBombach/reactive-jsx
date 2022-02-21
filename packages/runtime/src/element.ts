@@ -54,12 +54,15 @@ function child(child: unknown) {
   }
 
   if (isFunction(child)) {
+    return reconcile(child);
   }
 
   if (isBoolean(child) || isUndefined(child) || isNull(child) || isSymbol(child)) {
     return null;
   }
 }
+
+function reconcile(child: Function) {}
 
 const isNumber = (value: unknown): value is number => typeof value === "number";
 const isBigInt = (value: unknown): value is BigInt => typeof value === "bigint";
