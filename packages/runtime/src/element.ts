@@ -10,13 +10,7 @@ export function element<T extends Tag>(tag: T, props: Props | null = null, ...ch
   const element = document.createElement(tag);
 
   if (props) {
-    Object.keys(props).forEach(name => {
-      if (/^on/.test(name)) {
-        element.addEventListener(name.substring(2).toLowerCase(), props[name]);
-      } else {
-        reaction(() => element.setAttribute(name, props[name]()));
-      }
-    });
+    Object.keys(props).map(name => prop(element, name, props[name]));
   }
 
   children
@@ -34,4 +28,19 @@ export function element<T extends Tag>(tag: T, props: Props | null = null, ...ch
     .forEach(child => element.append(child));
 
   return element;
+}
+
+function prop(element: HTMLElement, name: string, value: unknown) {
+  if (/^on/.test(name)) {
+    assertFunction(name, value);
+    element.addEventListener(name.substring(2).toLowerCase(), value);
+  } else if (typeof value === "function") {
+    reaction(() => element.setAttribute(name, value()));
+  } else {
+    element.setAttribute(name, String(value));
+  }
+}
+
+function assertFunction(name: string, value: unknown): asserts value is EventListener {
+  if (typeof value !== "function") throw new Error(`${name} must be a function, got ${typeof value}`);
 }
