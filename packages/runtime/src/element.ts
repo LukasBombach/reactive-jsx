@@ -43,7 +43,7 @@ function prop(element: HTMLElement, name: string, value: unknown) {
 }
 
 function child(child: unknown) {
-  if (isNumber(child)) {
+  if (isNumber(child) || isBigInt(child)) {
     child = child.toString();
   }
 
@@ -62,6 +62,7 @@ function child(child: unknown) {
 }
 
 const isNumber = (value: unknown): value is number => typeof value === "number";
+const isBigInt = (value: unknown): value is BigInt => typeof value === "bigint";
 const isString = (value: unknown): value is string => typeof value === "string";
 const isBoolean = (value: unknown): value is boolean => typeof value === "boolean";
 const isUndefined = (value: unknown): value is undefined => typeof value === "undefined";
