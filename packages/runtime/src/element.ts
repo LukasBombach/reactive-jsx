@@ -6,6 +6,8 @@ import type { Read } from "./reactive";
 type Props = Record<string, Read<any>>;
 type Child = Read<string> | string;
 
+type EventHandler = `on${string}`;
+
 export function element<T extends Tag>(tag: T, props: Props | null = null, ...children: Child[]): Element<T> {
   const element = document.createElement(tag);
 
@@ -31,8 +33,8 @@ export function element<T extends Tag>(tag: T, props: Props | null = null, ...ch
 }
 
 function prop(element: HTMLElement, name: string, value: unknown) {
-  if (/^on/.test(name)) {
-    element.addEventListener(name.substring(2).toLowerCase(), value as EventListener);
+  if (isEventHandler(name) && isEventListener(value)) {
+    element.addEventListener(getEventName(name), value);
   } else if (isFunction(value)) {
     reaction(() => element.setAttribute(name, value()));
   } else {
@@ -66,3 +68,7 @@ const isUndefined = (value: unknown): value is undefined => typeof value === "un
 const isNull = (value: unknown): value is null => typeof value === "object" && value === null;
 const isSymbol = (value: unknown): value is symbol => typeof value === "symbol";
 const isFunction = (value: unknown): value is Function => typeof value === "function";
+const isEventListener = (value: unknown): value is EventListener => typeof value === "function";
+
+const isEventHandler = (name: string): name is EventHandler => /^on/.test(name);
+const getEventName = (name: EventHandler): string => name.substring(2).toLowerCase();
