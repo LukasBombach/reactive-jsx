@@ -21,13 +21,13 @@ const getEventName = (name: EventHandler): string => name.substring(2).toLowerCa
 
 const isTextNode = (node: Node): node is Text => node.nodeType === 3;
 
-export function element<T extends Tag | HTMLElement>(
+export function element<T extends Tag | (() => HTMLElement)>(
   tag: T,
   props: Props | null = null,
   ...children: Child[]
 ): T extends Tag ? Element<T> : HTMLElement {
-  if (isElement(tag)) {
-    return tag as any;
+  if (isFunction(tag)) {
+    return tag() as any;
   } else {
     const element = document.createElement(tag);
 
