@@ -13,6 +13,7 @@ const isBigInt = (value: unknown): value is BigInt => typeof value === "bigint";
 const isString = (value: unknown): value is string => typeof value === "string";
 const isFunction = (value: unknown): value is Function => typeof value === "function";
 const isUndefined = (value: unknown): value is undefined => typeof value === "undefined";
+const isElement = (value: unknown): value is HTMLElement => value instanceof HTMLElement;
 
 const isEventListener = (value: unknown): value is EventListener => typeof value === "function";
 const isEventHandler = (name: string): name is EventHandler => /^on/.test(name);
@@ -20,16 +21,24 @@ const getEventName = (name: EventHandler): string => name.substring(2).toLowerCa
 
 const isTextNode = (node: Node): node is Text => node.nodeType === 3;
 
-export function element<T extends Tag>(tag: T, props: Props | null = null, ...children: Child[]): Element<T> {
-  const element = document.createElement(tag);
+export function element<T extends Tag | HTMLElement>(
+  tag: T,
+  props: Props | null = null,
+  ...children: Child[]
+): T extends Tag ? Element<T> : HTMLElement {
+  if (isElement(tag)) {
+    return tag as any;
+  } else {
+    const element = document.createElement(tag);
 
-  if (props) {
-    Object.keys(props).map(name => setAttribute(element, name, props[name]));
+    if (props) {
+      Object.keys(props).map(name => setAttribute(element, name, props[name]));
+    }
+
+    children.forEach(child => append(element, child));
+
+    return element as any;
   }
-
-  children.forEach(child => append(element, child));
-
-  return element;
 }
 
 function setAttribute(element: HTMLElement, name: string, value: unknown) {
@@ -43,16 +52,12 @@ function setAttribute(element: HTMLElement, name: string, value: unknown) {
 }
 
 function append(element: HTMLElement, child: unknown) {
-  if (isNumber(child) || isBigInt(child)) {
-    child = child.toString();
-  }
-
-  if (isString(child)) {
-    const text = document.createTextNode(child);
+  if (isString(child) || isNumber(child) || isBigInt(child)) {
+    const text = document.createTextNode(child.toString());
     element.append(text);
-  }
-
-  if (isFunction(child)) {
+  } else if (isElement(child)) {
+    element.append(child);
+  } else if (isFunction(child)) {
     reaction<Node | undefined>(current => {
       if (!isFunction(child)) {
         throw new Error(`expected "${child}" to be a function, but it is typeof ${typeof child}`);
@@ -79,9 +84,18 @@ function reconcile(element: HTMLElement, current: Node | undefined, next: unknow
       return current;
     } else {
       const text = document.createTextNode(next);
-      element.replaceChild(current, text);
+      element.replaceChild(text, current);
       return text;
     }
+  } else if (isElement(next)) {
+    if (next !== current) {
+      if (isUndefined(current)) {
+        element.append(next);
+      } else {
+        element.replaceChild(next, current);
+      }
+    }
+    return next;
   } else {
     throw new Error(`cannot handle type "${typeof next}": ${JSON.stringify(next)}`);
   }
