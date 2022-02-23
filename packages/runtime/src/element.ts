@@ -12,9 +12,13 @@ const isNumber = (value: unknown): value is number => typeof value === "number";
 const isBigInt = (value: unknown): value is BigInt => typeof value === "bigint";
 const isString = (value: unknown): value is string => typeof value === "string";
 const isFunction = (value: unknown): value is Function => typeof value === "function";
+const isUndefined = (value: unknown): value is undefined => typeof value === "undefined";
+
 const isEventListener = (value: unknown): value is EventListener => typeof value === "function";
 const isEventHandler = (name: string): name is EventHandler => /^on/.test(name);
 const getEventName = (name: EventHandler): string => name.substring(2).toLowerCase();
+
+const isTextNode = (node: Node): node is Text => node.nodeType === 3;
 
 export function element<T extends Tag>(tag: T, props: Props | null = null, ...children: Child[]): Element<T> {
   const element = document.createElement(tag);
@@ -45,17 +49,40 @@ function append(element: HTMLElement, child: unknown) {
 
   if (isString(child)) {
     const text = document.createTextNode(child);
-    text.nodeValue = child;
     element.append(text);
   }
 
   if (isFunction(child)) {
-    return reconcile(element, child);
+    reaction<Node | undefined>(current => {
+      if (!isFunction(child)) {
+        throw new Error(`expected "${child}" to be a function, but it is typeof ${typeof child}`);
+      }
+      return reconcile(element, current, child());
+    });
   }
 }
 
-function reconcile(element: HTMLElement, child: Function) {
-  const text = document.createTextNode(child());
-  reaction(() => (text.nodeValue = child()));
-  element.append(text);
+function reconcile(element: HTMLElement, current: Node | undefined, next: unknown): Node {
+  if (isNumber(next) || isBigInt(next)) {
+    next = next.toString();
+  }
+
+  if (isString(next)) {
+    if (isUndefined(current)) {
+      const text = document.createTextNode(next);
+      element.append(text);
+      return text;
+    } else if (isTextNode(current)) {
+      if (next !== current.nodeValue) {
+        current.nodeValue = next;
+      }
+      return current;
+    } else {
+      const text = document.createTextNode(next);
+      element.replaceChild(current, text);
+      return text;
+    }
+  } else {
+    throw new Error(`cannot handle type "${typeof next}": ${JSON.stringify(next)}`);
+  }
 }
