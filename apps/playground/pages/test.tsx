@@ -1,19 +1,12 @@
 import type { NextPage } from "next";
 
-// todo maybe allow T to be Read<T> and return another Read<T>
 type Read<T> = () => T;
 type Write<T> = (value: T) => void;
-
-// type Value<T> = Read<T> & Write<T>;
-// type Reaction<T, R extends T | void> = (fn: (value: T) => R) => Read<R>;
-// const currentReaction = new Set<Value<unknown>>();
-// type Subscribers = { subscribers: Set<unknown> };
 
 type Reaction<T> = (value: T) => T;
 
 let currentReacton: Reaction<any> | null = null;
 
-// todo cleanup
 function value<T>(initial: T): Read<T> & Write<T> {
   let current = initial;
   const subscribers = new Set<Reaction<any>>();
@@ -56,25 +49,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-/* type Value<T> = {
-  (): T;
-  (next: T): void;
-};
-
-function value<T>(initial: T): Value<T> {
-  let current = initial;
-  return (next?: T) => {
-    if (next) {
-      current = next;
-    } else {
-      return current;
-    }
-  };
-}
-
-function reaction<T, R extends T | void>(fn: (current: T) => R): R {
-  return fn();
-}
-
-const state = new Set(); */
