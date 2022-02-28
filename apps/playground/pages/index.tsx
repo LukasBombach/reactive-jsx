@@ -25,8 +25,8 @@ function handleClick() {
   count = count + 1;
 }
 
-const Even = <button>even</button>;
-const Uneven = <em>uneven</em>;
+const Even = () => <button>even</button>;
+const Uneven = () => <em>uneven</em>;
 
 const el = (
   <main>
