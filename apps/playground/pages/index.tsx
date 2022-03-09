@@ -25,17 +25,14 @@ function handleClick() {
   count = count + 1;
 }
 
-const Even = () => <button>even</button>;
-const Uneven = () => <em>uneven</em>;
-
 const el = (
   <main>
-    <h1>Count is {count} ({count % 2 === 0 ? <Even /> : <Uneven />})</h1>
+    <h1>Count is {count} ({count % 2 === 0 ? "even" : "uneven"})</h1>
     <button onClick={handleClick}>inc count</button>
   </main>
 );
 
-document.body.append(el);`;
+document.getElementById("app").append(el);`;
 
 const Home: NextPage<SsrProps> = ({ runtime }) => {
   return (
