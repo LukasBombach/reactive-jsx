@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { bundle } from "@reactive-jsx/bundler";
-import { CodePreview } from "components/Preview";
+import { CodePreview } from "components/Preview2";
 
 import type { VFC } from "react";
 
