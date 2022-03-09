@@ -8,31 +8,40 @@ type Child = Read<string> | string;
 
 type EventHandler = `on${string}`;
 
-export function element<T extends Tag>(tag: T, props: Props | null = null, ...children: Child[]): Element<T> {
-  const element = document.createElement(tag);
+const isNumber = (value: unknown): value is number => typeof value === "number";
+const isBigInt = (value: unknown): value is BigInt => typeof value === "bigint";
+const isString = (value: unknown): value is string => typeof value === "string";
+const isFunction = (value: unknown): value is Function => typeof value === "function";
+const isUndefined = (value: unknown): value is undefined => typeof value === "undefined";
+const isElement = (value: unknown): value is HTMLElement => value instanceof HTMLElement;
 
-  if (props) {
-    Object.keys(props).map(name => prop(element, name, props[name]));
+const isEventListener = (value: unknown): value is EventListener => typeof value === "function";
+const isEventHandler = (name: string): name is EventHandler => /^on/.test(name);
+const getEventName = (name: EventHandler): string => name.substring(2).toLowerCase();
+
+const isTextNode = (node: Node): node is Text => node.nodeType === 3;
+
+export function element<T extends Tag | (() => HTMLElement)>(
+  tag: T,
+  props: Props | null = null,
+  ...children: Child[]
+): T extends Tag ? Element<T> : HTMLElement {
+  if (isFunction(tag)) {
+    return tag() as any;
+  } else {
+    const element = document.createElement(tag);
+
+    if (props) {
+      Object.keys(props).map(name => setAttribute(element, name, props[name]));
+    }
+
+    children.forEach(child => append(element, child));
+
+    return element as any;
   }
-
-  children
-    .map(child => {
-      if (typeof child === "function") {
-        const text = document.createTextNode(child());
-        reaction(() => (text.nodeValue = child()));
-        return text;
-      } else {
-        const text = document.createTextNode(child);
-        text.nodeValue = child;
-        return text;
-      }
-    })
-    .forEach(child => element.append(child));
-
-  return element;
 }
 
-function prop(element: HTMLElement, name: string, value: unknown) {
+function setAttribute(element: HTMLElement, name: string, value: unknown) {
   if (isEventHandler(name) && isEventListener(value)) {
     element.addEventListener(getEventName(name), value);
   } else if (isFunction(value)) {
@@ -42,37 +51,52 @@ function prop(element: HTMLElement, name: string, value: unknown) {
   }
 }
 
-function child(child: unknown) {
-  if (isNumber(child) || isBigInt(child)) {
-    child = child.toString();
-  }
-
-  if (isString(child)) {
-    const text = document.createTextNode(child);
-    text.nodeValue = child;
-    return text;
-  }
-
-  if (isFunction(child)) {
-    return reconcile(child);
-  }
-
-  if (isBoolean(child) || isUndefined(child) || isNull(child) || isSymbol(child)) {
-    return null;
+function append(element: HTMLElement, child: unknown) {
+  if (isString(child) || isNumber(child) || isBigInt(child)) {
+    const text = document.createTextNode(child.toString());
+    element.append(text);
+  } else if (isElement(child)) {
+    element.append(child);
+  } else if (isFunction(child)) {
+    reaction<Node | undefined>(current => {
+      if (!isFunction(child)) {
+        throw new Error(`expected "${child}" to be a function, but it is typeof ${typeof child}`);
+      }
+      return reconcile(element, current, child());
+    });
   }
 }
 
-function reconcile(child: Function) {}
+function reconcile(element: HTMLElement, current: Node | undefined, next: unknown): Node {
+  if (isNumber(next) || isBigInt(next)) {
+    next = next.toString();
+  }
 
-const isNumber = (value: unknown): value is number => typeof value === "number";
-const isBigInt = (value: unknown): value is BigInt => typeof value === "bigint";
-const isString = (value: unknown): value is string => typeof value === "string";
-const isBoolean = (value: unknown): value is boolean => typeof value === "boolean";
-const isUndefined = (value: unknown): value is undefined => typeof value === "undefined";
-const isNull = (value: unknown): value is null => typeof value === "object" && value === null;
-const isSymbol = (value: unknown): value is symbol => typeof value === "symbol";
-const isFunction = (value: unknown): value is Function => typeof value === "function";
-const isEventListener = (value: unknown): value is EventListener => typeof value === "function";
-
-const isEventHandler = (name: string): name is EventHandler => /^on/.test(name);
-const getEventName = (name: EventHandler): string => name.substring(2).toLowerCase();
+  if (isString(next)) {
+    if (isUndefined(current)) {
+      const text = document.createTextNode(next);
+      element.append(text);
+      return text;
+    } else if (isTextNode(current)) {
+      if (next !== current.nodeValue) {
+        current.nodeValue = next;
+      }
+      return current;
+    } else {
+      const text = document.createTextNode(next);
+      element.replaceChild(text, current);
+      return text;
+    }
+  } else if (isElement(next)) {
+    if (next !== current) {
+      if (isUndefined(current)) {
+        element.append(next);
+      } else {
+        element.replaceChild(next, current);
+      }
+    }
+    return next;
+  } else {
+    throw new Error(`cannot handle type "${typeof next}": ${JSON.stringify(next)}`);
+  }
+}

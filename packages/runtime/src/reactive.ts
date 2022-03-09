@@ -39,13 +39,13 @@ export function value<T>(value: T): [read: Read<T>, write: Write<T>] {
   return [read, write];
 }
 
-export function reaction<T>(fn: () => T) {
+export function reaction<T>(fn: (current: T) => T) {
+  let val: T;
   const execute = () => {
     cleanup(running);
     context.push(running);
-    let val: T;
     try {
-      val = fn();
+      val = fn(val);
     } finally {
       context.pop();
     }

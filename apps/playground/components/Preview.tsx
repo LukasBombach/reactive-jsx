@@ -1,29 +1,57 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 import type { VFC } from "react";
 
 type PreviewProps = Omit<JSX.IntrinsicElements["iframe"], "children"> & { code: string };
 
 export const CodePreview: VFC<PreviewProps> = ({ code, ...props }) => {
-  const iframe = useRef<HTMLIFrameElement | null>(null);
-  const script = useRef<HTMLScriptElement | null>(null);
+  const ref = useRef<HTMLIFrameElement | null>(null);
+  const [script, setScript] = useState<HTMLScriptElement | null>(null);
 
-  useEffect(() => {
-    const head = iframe.current?.contentWindow.document.head;
-    const body = iframe.current?.contentWindow.document.body;
+  const setRef = useCallback(
+    (node: HTMLIFrameElement | undefined) => {
+      if (ref.current && script) {
+        script.parentNode.removeChild(script);
+      }
 
-    if (!head || !body) return;
+      if (node) {
+        const head = node.contentWindow.document.head;
+        const body = node.contentWindow.document.body;
 
-    script.current?.parentNode.removeChild(script.current);
+        const newScript = document.createElement("script");
+        newScript.textContent = code;
+        setScript(newScript);
 
-    const newScript = document.createElement("script");
-    newScript.textContent = code;
+        // body.replaceChildren();
+        head.appendChild(newScript);
+      }
 
-    body.replaceChildren();
-    head.append(newScript);
+      ref.current = node;
+    },
+    [code]
+  );
 
-    script.current = newScript;
-  }, [iframe.current, code]);
+  // const ref = useCallback(
+  //   node => {
+  //     if (ref.current) {
+  //       // Make sure to cleanup any events/references added to the last instance
+  //     }
+  //
+  //
+  //     /* if (!iframe) return;
+  //     if (code === script?.textContent) return;
+  //
+  //     const newScript = document.createElement("script");
+  //     newScript.textContent = code;
+  //     setScript(newScript);
+  //
+  //     const body = iframe.contentWindow.document.body;
+  //     body.replaceChildren(newScript); */
+  //   },
+  //   [code]
+  // );
 
-  return <iframe {...props} ref={iframe} />;
+  console.log("rerender", ref.current?.contentWindow.document.head.children);
+
+  return <iframe {...props} ref={setRef} />;
 };
