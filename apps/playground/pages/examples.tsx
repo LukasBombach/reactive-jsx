@@ -7,12 +7,16 @@ import type { NextPage, InferGetServerSidePropsType } from "next";
 const Example = dynamic(() => import("components/Example"), { ssr: false });
 
 const helloWorld = `
-const name = 'world';
+const el = <h1>Hello world</h1>;
+
+document.body.append(el);`;
+
+const variables = `
+const name = 'Rick Astley';
 
 const el = <h1>Hello {name}</h1>;
 
-const root = document.getElementById("app");
-root.append(el);`;
+document.body.append(el);`;
 
 const dynamicAttributes = `
 const src = '/tutorial/image.gif';
@@ -20,8 +24,7 @@ const name = 'Rick Astley';
 
 const el = <img src={src} alt={\`$\{name} dancing\`} />;
 
-const root = document.getElementById("app");
-root.append(el);`;
+document.body.append(el);`;
 
 const components = `
 const Component = () => {
@@ -30,8 +33,7 @@ const Component = () => {
   return <h1>Hello {name}</h1>;
 };
 
-const root = document.getElementById("app");
-root.append(<Component />);`;
+document.body.append(<Component />);`;
 
 const nestedComponents = `
 const Nested = () => {
@@ -42,8 +44,7 @@ const Component = () => {
   return <h1>This component <Nested /></h1>;
 };
 
-const root = document.getElementById("app");
-root.append(<Component />);`;
+document.body.append(<Component />);`;
 
 const reactiveAssignments = `
 let count = 0;
@@ -58,14 +59,15 @@ const el = (
   </button>
 )
 
-const root = document.getElementById("app");
-root.append(el);`;
+document.body.append(el);`;
 
 const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ runtime }) => {
   return (
     <main className="container mx-auto">
       Hello World
       <Example source={helloWorld} runtime={runtime} />
+      Variables
+      <Example source={variables} runtime={runtime} />
       Dynamic Attributes
       <Example source={dynamicAttributes} runtime={runtime} className="h-[280px]" />
       Components
