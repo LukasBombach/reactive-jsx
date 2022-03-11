@@ -9,9 +9,10 @@ export const Preview: VFC<PreviewProps> = ({ code, ...props }) => {
   const [documentReady, setDocumentReady] = useState(false);
 
   useEffect(() => {
+    if (!ref) return;
     const listener = () => setDocumentReady(true);
-    ref?.contentWindow.addEventListener("DOMContentLoaded", listener);
-    return () => ref?.contentWindow.removeEventListener("DOMContentLoaded", listener);
+    ref.contentWindow.addEventListener("DOMContentLoaded", listener);
+    return () => ref.contentWindow?.removeEventListener("DOMContentLoaded", listener);
   });
 
   useEffect(() => {

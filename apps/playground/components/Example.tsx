@@ -13,7 +13,7 @@ interface ExampleProps {
 }
 
 function useCompiler(initialSource: string, runtime: string) {
-  const [source, setSource] = useState(initialSource.trim());
+  const [source, setSource] = useState(initialSource);
   const [result, setResult] = useState("");
   const [error, setError] = useState<string>();
 
@@ -40,7 +40,7 @@ const Example: VFC<ExampleProps> = ({ runtime, source, className }) => {
   return (
     <div className={`flex h-full relative bg-[#282c34] ${className}`}>
       <CodeMirror
-        value={source}
+        value={source.trim()}
         theme="dark"
         extensions={[javascript({ jsx: true })]}
         onChange={value => setSource(value)}

@@ -28,7 +28,7 @@ document.body.append(el);`;
 
 const components = `
 const Component = () => {
-  const name = 'world';
+  const name = 'Rick Astley';
 
   return <h1>Hello {name}</h1>;
 };
@@ -36,12 +36,12 @@ const Component = () => {
 document.body.append(<Component />);`;
 
 const nestedComponents = `
-const Nested = () => {
-  return <em>nests this component</em>;
+const Component = () => {
+  return <h1>This component <br /> <Nested /></h1>;
 };
 
-const Component = () => {
-  return <h1>This component <Nested /></h1>;
+const Nested = () => {
+  return <em>nests this component</em>;
 };
 
 document.body.append(<Component />);`;
@@ -50,7 +50,7 @@ const reactiveAssignments = `
 let count = 0;
 
 function handleClick() {
-  count += 1;
+  count = count + 1;
 }
 
 const el = (
