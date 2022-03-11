@@ -1,33 +1,25 @@
-import { useEffect, useRef, useState, useCallback } from "react";
-import Frame from "react-frame-component";
+import { useEffect, useState } from "react";
 
 import type { VFC } from "react";
 
 type PreviewProps = Omit<JSX.IntrinsicElements["iframe"], "children"> & { code: string };
 
 export const Preview: VFC<PreviewProps> = ({ code, ...props }) => {
-  const [script, setScript] = useState<HTMLScriptElement | null>(null);
-  const [scriptsRef, setScriptsRef] = useState<HTMLDivElement | null>(null);
-  // const scriptsRef = useRef<HTMLDivElement | null>(null);
-  const appRef = useRef<HTMLDivElement | null>(null);
+  const [ref, setRef] = useState<HTMLIFrameElement | null>(null);
+  const [documentReady, setDocumentReady] = useState(false);
 
   useEffect(() => {
-    if (!scriptsRef) return;
+    const listener = () => setDocumentReady(true);
+    ref?.contentWindow.addEventListener("DOMContentLoaded", listener);
+    return () => ref?.contentWindow.removeEventListener("DOMContentLoaded", listener);
+  });
 
-    script?.parentNode.removeChild(script);
-    appRef.current?.replaceChildren();
+  useEffect(() => {
+    if (!ref || !documentReady) return;
+    const script = document.createElement("script");
+    script.textContent = code;
+    ref.contentWindow.document.body.replaceChildren(script);
+  });
 
-    const newScript = document.createElement("script");
-    newScript.textContent = code;
-
-    scriptsRef.append(newScript);
-    setScript(newScript);
-  }, [scriptsRef, code]);
-
-  return (
-    <Frame {...props}>
-      <div ref={setScriptsRef} />
-      <div ref={appRef} id="app" />
-    </Frame>
-  );
+  return <iframe {...props} ref={setRef}></iframe>;
 };
