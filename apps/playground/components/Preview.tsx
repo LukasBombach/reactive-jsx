@@ -5,7 +5,7 @@ import type { VFC } from "react";
 
 type PreviewProps = Omit<JSX.IntrinsicElements["iframe"], "children"> & { code: string };
 
-export const CodePreview: VFC<PreviewProps> = ({ code, ...props }) => {
+export const Preview: VFC<PreviewProps> = ({ code, ...props }) => {
   const [script, setScript] = useState<HTMLScriptElement | null>(null);
   const [scriptsRef, setScriptsRef] = useState<HTMLDivElement | null>(null);
   // const scriptsRef = useRef<HTMLDivElement | null>(null);
