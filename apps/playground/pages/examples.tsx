@@ -47,19 +47,21 @@ const Nested = () => {
 document.body.append(<Component />);`;
 
 const reactiveAssignments = `
-let count = 0;
+const Component = () => {
+  let count = 0;
 
-function handleClick() {
-  count = count + 1;
-}
+  function handleClick() {
+    count = count + 1;
+  }
 
-const el = (
-  <button onClick={handleClick}>
-    Clicked {count} {count === 1 ? 'time' : 'times'}
-  </button>
-)
+  return (
+    <button onClick={handleClick}>
+      Clicked {count} {count === 1 ? 'time' : 'times'}
+    </button>
+  )
+};
 
-document.body.append(el);`;
+document.body.append(<Component />);`;
 
 const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ runtime }) => {
   return (
