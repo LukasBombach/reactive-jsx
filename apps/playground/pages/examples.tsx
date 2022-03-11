@@ -63,6 +63,19 @@ const Component = () => {
 
 document.body.append(<Component />);`;
 
+const reactiveAssignmentsInline = `
+const Component = () => {
+  let count = 0;
+
+  return (
+    <button onClick={() => count = count + 1}>
+      Clicked {count} {count === 1 ? 'time' : 'times'}
+    </button>
+  )
+};
+
+document.body.append(<Component />);`;
+
 const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ runtime }) => {
   return (
     <main className="container mx-auto">
@@ -78,6 +91,8 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
       <Example source={nestedComponents} runtime={runtime} />
       Reactive Assignments
       <Example source={reactiveAssignments} runtime={runtime} />
+      Inline Reactive Assignments
+      <Example source={reactiveAssignmentsInline} runtime={runtime} />
     </main>
   );
 };
