@@ -20,17 +20,11 @@ export const getServerSideProps = async (): Promise<{ props: { runtime: string }
 };
 
 const initialSource = `
-const Component = () => {
-  let count = 0;
-
-  return (
-    <button onClick={() => count += 1}>
-      Clicked {count} {count === 1 ? 'time' : 'times'}
-    </button>
-  )
+const Component = (props) => {
+  return <h1>Hello {props.name}</h1>;
 };
 
-document.body.append(<Component />);`;
+document.body.append(<Component name="Rick Astley" />);`;
 
 const Home: NextPage<SsrProps> = ({ runtime }) => {
   return (

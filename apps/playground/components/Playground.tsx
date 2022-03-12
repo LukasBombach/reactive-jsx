@@ -13,16 +13,15 @@ const Playground: VFC<{ runtime: string; initialSource: string }> = ({ runtime, 
 
   // todo race conditions
   useEffect(() => {
-    bundle(source, runtime)
-      .then(newResult => {
-        setError(null);
-        setResult(newResult);
-      })
-      .catch(error => {
+    bundle(source, runtime).then(newResult => {
+      setError(null);
+      setResult(newResult);
+    });
+    /* .catch(error => {
         console.error(error);
         setError(error.message);
         setResult("");
-      });
+      }) */
   }, [source, runtime]);
 
   return (

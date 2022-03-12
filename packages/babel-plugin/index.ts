@@ -130,6 +130,7 @@ const reactiveIdentifier = (path: NodePath<Node> | NodePath<Node>[]) => {
     binding.constantViolations.forEach(v => {
       if (isAssignmentExpression(v.node)) {
         let ast;
+
         switch (v.node.operator) {
           case "+=":
             ast = assignInc({
