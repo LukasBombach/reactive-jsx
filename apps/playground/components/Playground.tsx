@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { bundle } from "@reactive-jsx/bundler";
-import { CodePreview } from "components/Preview";
+import { Preview } from "components/Preview";
 
 import type { VFC } from "react";
 
@@ -43,7 +43,7 @@ const Playground: VFC<{ runtime: string; initialSource: string }> = ({ runtime, 
         height="100%"
         className="h-full overflow-y-auto w-2/5"
       />
-      <CodePreview code={result} className="h-full overflow-y-auto bg-[#282c34] w-1/5" />
+      <Preview code={result} className="h-full overflow-y-auto bg-[#282c34] w-1/5" />
       {error && (
         <p className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-purple-500 shadow-lg rounded-lg p-4 text-white dark:bg-sky-500">
           {error}

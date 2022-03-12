@@ -19,20 +19,18 @@ export const getServerSideProps = async (): Promise<{ props: { runtime: string }
   };
 };
 
-const initialSource = `let count = 0;
+const initialSource = `
+const Component = () => {
+  let count = 0;
 
-function handleClick() {
-  count = count + 1;
-}
+  return (
+    <button onClick={() => count += 1}>
+      Clicked {count} {count === 1 ? 'time' : 'times'}
+    </button>
+  )
+};
 
-const el = (
-  <main>
-    <h1>Count is {count} ({count % 2 === 0 ? "even" : "uneven"})</h1>
-    <button onClick={handleClick}>inc count</button>
-  </main>
-);
-
-document.getElementById("app").append(el);`;
+document.body.append(<Component />);`;
 
 const Home: NextPage<SsrProps> = ({ runtime }) => {
   return (

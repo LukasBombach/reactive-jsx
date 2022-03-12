@@ -125,7 +125,9 @@ const reactiveIdentifier = (path: NodePath<Node> | NodePath<Node>[]) => {
 
     binding.constantViolations.forEach(v => {
       if (isAssignmentExpression(v.node)) {
-        const VALUE = cloneDeepWithoutLoc(v.node.right);
+        const VALUE = /\+=|-=/.test(v.node.operator) ? "" : cloneDeepWithoutLoc(v.node.right);
+
+        debugger;
 
         const ast = setter({
           SETTER,
