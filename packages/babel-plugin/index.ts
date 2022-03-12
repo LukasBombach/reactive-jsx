@@ -32,8 +32,12 @@ const getter = template`
   GETTER()
 `;
 
-const reaction = template`
-  ReactiveJsx.reaction(() => EXPRESSION)
+const assignInc = template`
+  SETTER(GETTER() + VALUE)
+`;
+
+const assignDec = template`
+  SETTER(GETTER() + VALUE)
 `;
 
 const fn = template`
@@ -125,14 +129,29 @@ const reactiveIdentifier = (path: NodePath<Node> | NodePath<Node>[]) => {
 
     binding.constantViolations.forEach(v => {
       if (isAssignmentExpression(v.node)) {
-        const VALUE = /\+=|-=/.test(v.node.operator) ? "" : cloneDeepWithoutLoc(v.node.right);
+        let ast;
+        switch (v.node.operator) {
+          case "+=":
+            ast = assignInc({
+              SETTER,
+              GETTER,
+              VALUE: cloneDeepWithoutLoc(v.node.right),
+            });
+            break;
+          case "-=":
+            ast = assignDec({
+              SETTER,
+              GETTER,
+              VALUE: cloneDeepWithoutLoc(v.node.right),
+            });
+            break;
+          default:
+            ast = setter({
+              SETTER,
+              VALUE: cloneDeepWithoutLoc(v.node.right),
+            });
+        }
 
-        debugger;
-
-        const ast = setter({
-          SETTER,
-          VALUE,
-        });
         assertStatement(ast);
         v.replaceWith(ast);
       }
