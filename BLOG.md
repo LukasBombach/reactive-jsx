@@ -8,6 +8,13 @@ Why can't we just write React components like this?
 
 In fact, we can. Try it out, right there. It totally works. It's not magic. It's not new. It's just a combination of design decisions. Let me explain.
 
+# How it works
+
+- explanation traversal upwards
+- interactive examples
+
+<!--
+
 #1 - A Compiler
 
 Code that you can read like a book, that describes what it does clearly and simply is good. Why? Because you can comprehend its logic and spot errors more easily. Robert C. Martin writes about this in length in his book "Clean Code" and I have never seen this so eloquently and skillfully delivered than in Rich Harris' Talk "The Return of 'Write Less, Do More' by Rich Harris" at the 2019 JScamp
@@ -27,3 +34,6 @@ https://www.youtube.com/watch?v=Dq5EAcup044
 and I completely fell this. To me—personally—Svelte is too high
 
 #2 Mental Model
+
+
+-->

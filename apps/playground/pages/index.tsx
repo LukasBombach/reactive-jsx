@@ -19,12 +19,34 @@ export const getServerSideProps = async (): Promise<{ props: { runtime: string }
   };
 };
 
-const initialSource = `
+/* const props = `
 const Component = (props) => {
   return <h1>Hello {props.name}</h1>;
 };
 
-document.body.append(<Component name="Rick Astley" />);`;
+document.body.append(<Component name="Rick Astley" />);`; */
+
+const initialSource = `
+const Component = () => {
+	let count = 0;
+
+	if (count >= 10) {
+		alert(\`count is dangerously high!\`);
+		count = 9;
+	}
+
+	function handleClick() {
+		count += 1;
+	}
+
+  return (
+    <button onClick={handleClick}>
+      Clicked {count} {count === 1 ? 'time' : 'times'}
+    </button>
+  )
+};
+
+document.body.append(<Component />);`;
 
 const Home: NextPage<SsrProps> = ({ runtime }) => {
   return (
