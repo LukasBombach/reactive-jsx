@@ -26,22 +26,21 @@ const Component = (props) => {
 
 document.body.append(<Component name="Rick Astley" />);`; */
 
-const initialSource = `
+const initialSource = `// Reactive blocks
+
 const Component = () => {
-	let count = 0;
+  let count = 0;
+  let text = "";
 
-	if (count >= 10) {
-		alert(\`count is dangerously high!\`);
-		count = 9;
-	}
-
-	function handleClick() {
-		count += 1;
-	}
+  if (count % 2 === 0) {
+    text = "Count is even";
+  } else {
+    text = "Count is odd";
+  }
 
   return (
-    <button onClick={handleClick}>
-      Clicked {count} {count === 1 ? 'time' : 'times'}
+    <button onClick={() => count += 1}>
+      {text} ({count})
     </button>
   )
 };
