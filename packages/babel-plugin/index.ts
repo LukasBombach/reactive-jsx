@@ -32,6 +32,12 @@ const getter = template`
   GETTER()
 `;
 
+const reaction = template`
+  ReactiveJsx.reaction(() => {
+    EXPRESSION
+  });
+`;
+
 const assignInc = template`
   SETTER(GETTER() + VALUE)
 `;
@@ -129,6 +135,7 @@ const reactiveIdentifier = (path: NodePath<Node> | NodePath<Node>[]) => {
 
     binding.constantViolations.forEach(v => {
       if (isAssignmentExpression(v.node)) {
+        // Replace the assignment with a setter method
         let ast;
 
         switch (v.node.operator) {
@@ -155,6 +162,18 @@ const reactiveIdentifier = (path: NodePath<Node> | NodePath<Node>[]) => {
 
         assertStatement(ast);
         v.replaceWith(ast);
+
+        // traverse the ast up to enacpsulate blocks that might affect
+        // the reactivity in an effect
+        const reactiveParent = findReactiveParent(v);
+
+        if (reactiveParent) {
+          const ast = reaction({
+            EXPRESSION: cloneDeepWithoutLoc(reactiveParent.node),
+          });
+          assertStatement(ast);
+          reactiveParent.replaceWith(ast);
+        }
       }
     });
   }
@@ -167,3 +186,12 @@ export const insertImports = (): PluginObj => ({
     },
   },
 });
+
+const findReactiveParent = (path: NodePath<Node>): NodePath<Node> | null => {
+  const parent = path.findParent(parent => parent.isIfStatement());
+  if (!parent) {
+    return null;
+  }
+  const parentOfParent = findReactiveParent(parent);
+  return parentOfParent || parent;
+};

@@ -30,6 +30,24 @@ const initialSource = `// Reactive blocks
 
 const Component = () => {
   let count = 0;
+
+  if (count >= 10) {
+		alert("count is dangerously high!");
+		count = 9;
+	}
+
+  return (
+    <button onClick={() => count += 1}>
+      {text} ({count})
+    </button>
+  )
+};
+
+document.body.append(<Component />);`;
+/* const initialSource = `// Reactive blocks
+
+const Component = () => {
+  let count = 0;
   let text = "";
 
   if (count % 2 === 0) {
@@ -45,7 +63,7 @@ const Component = () => {
   )
 };
 
-document.body.append(<Component />);`;
+document.body.append(<Component />);`; */
 
 const Home: NextPage<SsrProps> = ({ runtime }) => {
   return (
