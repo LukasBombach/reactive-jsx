@@ -165,7 +165,7 @@ const reactiveIdentifier = (path: NodePath<Node> | NodePath<Node>[]) => {
 
         // traverse the ast up to enacpsulate blocks that might affect
         // the reactivity in an effect
-        const reactiveParent = findReactiveParent(v);
+        /* const reactiveParent = findReactiveParent(v);
 
         if (reactiveParent) {
           const ast = reaction({
@@ -173,11 +173,34 @@ const reactiveIdentifier = (path: NodePath<Node> | NodePath<Node>[]) => {
           });
           assertStatement(ast);
           reactiveParent.replaceWith(ast);
-        }
+        } */
       }
     });
   }
 };
+
+const reactiveStatement = (path: NodePath<Node> | NodePath<Node>[]) => (): PluginObj => ({
+  visitor: {
+    JSXElement: {
+      exit(path) {
+        path.get("children").forEach(child => {
+          if (isJSXExpressionContainer(child)) {
+            const path = child.get("expression");
+            assertNodePath(path);
+            if (isIdentifier(path.node)) {
+              const { name } = path.node;
+              const binding = path.scope.bindings[name];
+              binding.constantViolations.forEach(path => {
+                const parent = findReactiveParent(path);
+                log parent
+              });
+            }
+          }
+        });
+      },
+    },
+  },
+});
 
 export const insertImports = (): PluginObj => ({
   visitor: {

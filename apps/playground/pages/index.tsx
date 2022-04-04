@@ -26,25 +26,21 @@ const Component = (props) => {
 
 document.body.append(<Component name="Rick Astley" />);`; */
 
-const initialSource = `// Reactive blocks
+const source1 = `// Reactive blocks
 
 const Component = () => {
   let count = 0;
 
-  if (count >= 10) {
-		alert("count is dangerously high!");
-		count = 9;
-	}
-
   return (
     <button onClick={() => count += 1}>
-      {text} ({count})
+      ({count})
     </button>
   )
 };
 
 document.body.append(<Component />);`;
-/* const initialSource = `// Reactive blocks
+
+const source2 = `// Reactive blocks
 
 const Component = () => {
   let count = 0;
@@ -63,12 +59,12 @@ const Component = () => {
   )
 };
 
-document.body.append(<Component />);`; */
+document.body.append(<Component />);`;
 
 const Home: NextPage<SsrProps> = ({ runtime }) => {
   return (
     <main className="h-screen">
-      <Playground initialSource={initialSource} runtime={runtime} />
+      <Playground initialSource={source2} runtime={runtime} />
     </main>
   );
 };
