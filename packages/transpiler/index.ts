@@ -9,7 +9,7 @@ interface Options {
 }
 
 export function transpile(code: string, options: Options): string | null {
-  const plugins = [reactiveStatement, reactiveProps, reactiveChildren];
+  const plugins = [reactiveProps, reactiveChildren, reactiveStatement];
 
   // quick and dirty
   if (options.injectRuntime) {
