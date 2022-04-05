@@ -76,6 +76,24 @@ const Component = () => {
 
 document.body.append(<Component />);`;
 
+const reactiveStatements = `
+const Component = () => {
+  let count = 0;
+
+  if (count >= 10) {
+    alert("count is dangerously high!");
+    count = 9;
+  }
+
+  return (
+    <button onClick={() => count += 1}>
+    Clicked {count} {count === 1 ? 'time' : 'times'}
+    </button>
+  )
+};
+
+document.body.append(<Component />);`;
+
 const sharedContext = `
 let count = 0;
 
@@ -112,6 +130,8 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
       <Example source={reactiveAssignments} runtime={runtime} />
       Inline Reactive Assignments
       <Example source={reactiveAssignmentsInline} runtime={runtime} />
+      Reactive Statements
+      <Example source={reactiveStatements} runtime={runtime} />
       Shared Values (React Context)
       <Example source={sharedContext} runtime={runtime} />
     </main>
