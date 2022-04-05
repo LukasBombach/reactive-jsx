@@ -57,7 +57,7 @@ const libImport = template.ast(`
 export const reactiveProps = (): PluginObj => ({
   visitor: {
     JSXAttribute: {
-      exit(path) {
+      enter(path) {
         const namePath = path.get("name");
         if (isJSXIdentifier(namePath.node)) {
           const { name } = namePath.node;
@@ -73,7 +73,7 @@ export const reactiveProps = (): PluginObj => ({
 export const reactiveChildren = (): PluginObj => ({
   visitor: {
     JSXElement: {
-      exit(path) {
+      enter(path) {
         path.get("children").forEach(child => {
           if (isJSXExpressionContainer(child)) {
             const expressionPath = child.get("expression");
@@ -162,27 +162,15 @@ const reactiveIdentifier = (path: NodePath<Node> | NodePath<Node>[]) => {
 
         assertStatement(ast);
         v.replaceWith(ast);
-
-        // traverse the ast up to enacpsulate blocks that might affect
-        // the reactivity in an effect
-        /* const reactiveParent = findReactiveParent(v);
-
-        if (reactiveParent) {
-          const ast = reaction({
-            EXPRESSION: cloneDeepWithoutLoc(reactiveParent.node),
-          });
-          assertStatement(ast);
-          reactiveParent.replaceWith(ast);
-        } */
       }
     });
   }
 };
 
-const reactiveStatement = (path: NodePath<Node> | NodePath<Node>[]) => (): PluginObj => ({
+export const reactiveStatement = (): PluginObj => ({
   visitor: {
     JSXElement: {
-      exit(path) {
+      enter(path) {
         path.get("children").forEach(child => {
           if (isJSXExpressionContainer(child)) {
             const path = child.get("expression");
@@ -192,7 +180,13 @@ const reactiveStatement = (path: NodePath<Node> | NodePath<Node>[]) => (): Plugi
               const binding = path.scope.bindings[name];
               binding.constantViolations.forEach(path => {
                 const parent = findReactiveParent(path);
-                log parent
+                if (parent) {
+                  const ast = reaction({
+                    EXPRESSION: cloneDeepWithoutLoc(parent.node),
+                  });
+                  assertStatement(ast);
+                  parent.replaceWith(ast);
+                }
               });
             }
           }

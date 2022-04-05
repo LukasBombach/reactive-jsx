@@ -1,5 +1,5 @@
 import { transform, availablePresets } from "@babel/standalone";
-import { insertImports, reactiveProps, reactiveChildren } from "@reactive-jsx/babel-plugin";
+import { insertImports, reactiveProps, reactiveStatement, reactiveChildren } from "@reactive-jsx/babel-plugin";
 
 interface Options {
   // todo this should be done automatically by detecting jsx in the plugin
@@ -9,7 +9,7 @@ interface Options {
 }
 
 export function transpile(code: string, options: Options): string | null {
-  const plugins = [reactiveProps, reactiveChildren];
+  const plugins = [reactiveStatement, reactiveProps, reactiveChildren];
 
   // quick and dirty
   if (options.injectRuntime) {
