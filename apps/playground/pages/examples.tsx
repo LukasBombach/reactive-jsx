@@ -99,19 +99,19 @@ let count = 0;
 
 const Display = () => <h1>Count is {count}</h1>;
 
-const Increase = () => (
-  <button onClick={() => count = count + 1}>
-    Increase
-  </button>
-);
-
 const Decrease = () => (
   <button onClick={() => count = count - 1}>
     Decrease
   </button>
 );
 
-document.body.append(<Display />, <Increase />, <Decrease />);`;
+const Increase = () => (
+  <button onClick={() => count = count + 1}>
+    Increase
+  </button>
+);
+
+document.body.append(<Display />, <Decrease />, <Increase />);`;
 
 const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ runtime }) => {
   return (

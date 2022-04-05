@@ -43,7 +43,7 @@ const assignInc = template`
 `;
 
 const assignDec = template`
-  SETTER(GETTER() + VALUE)
+  SETTER(GETTER() - VALUE)
 `;
 
 const fn = template`
@@ -101,7 +101,13 @@ const reactiveIdentifier = (path: NodePath<Node> | NodePath<Node>[]) => {
   assertNodePath(path);
   if (isIdentifier(path.node)) {
     const { name } = path.node;
-    const binding = path.scope.bindings[name];
+    const binding = path.scope.getBinding(path.node.name);
+
+    if (!binding) {
+      console.warn("did not find binding");
+      return;
+    }
+
     const valuePath = binding.path.get("init");
     assertNodePath(valuePath);
 
@@ -177,7 +183,12 @@ export const reactiveStatement = (): PluginObj => ({
             assertNodePath(path);
             if (isIdentifier(path.node)) {
               const { name } = path.node;
-              const binding = path.scope.bindings[name];
+              // const binding = path.scope.bindings[name];
+              const binding = path.scope.getBinding(path.node.name);
+              if (!binding) {
+                console.warn("did not find binding");
+                return;
+              }
               binding.constantViolations.forEach(path => {
                 const parent = findReactiveParent(path);
                 if (parent) {

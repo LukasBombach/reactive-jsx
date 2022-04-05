@@ -19,42 +19,32 @@ export const getServerSideProps = async (): Promise<{ props: { runtime: string }
   };
 };
 
-/* const props = `
-const Component = (props) => {
-  return <h1>Hello {props.name}</h1>;
-};
+const source1 = `
+let count = 0;
 
-document.body.append(<Component name="Rick Astley" />);`; */
+const Display = () => <h1>Count is {count}</h1>;
 
-const source1 = `// Reactive blocks
+const Increase = () => (
+  <button onClick={() => count += 1}>
+    Increase
+  </button>
+);
+
+const Decrease = () => (
+  <button onClick={() => count -= 1}>
+    Decrease
+  </button>
+);
+
+document.body.append(<Display />, <Increase />, <Decrease />);`;
+
+const source2 = `
+let count = 0;
 
 const Component = () => {
-  let count = 0;
-
   return (
-    <button onClick={() => count += 1}>
-      ({count})
-    </button>
-  )
-};
-
-document.body.append(<Component />);`;
-
-const source2 = `// Reactive blocks
-
-const Component = () => {
-  let count = 0;
-  let text = "";
-
-  if (count % 2 === 0) {
-    text = "Count is even";
-  } else {
-    text = "Count is odd";
-  }
-
-  return (
-    <button onClick={() => count += 1}>
-      {text} ({count})
+    <button onClick={() => count = count + 1}>
+      Clicked {count} {count === 1 ? 'time' : 'times'}
     </button>
   )
 };
@@ -64,7 +54,7 @@ document.body.append(<Component />);`;
 const Home: NextPage<SsrProps> = ({ runtime }) => {
   return (
     <main className="h-screen">
-      <Playground initialSource={source2} runtime={runtime} />
+      <Playground initialSource={source1} runtime={runtime} />
     </main>
   );
 };
