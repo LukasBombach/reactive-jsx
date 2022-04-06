@@ -12,6 +12,8 @@ import type { NodePath, Node } from "@babel/core";
 import type { PluginObj } from "@babel/core";
 import type { Statement } from "@babel/types";
 
+export * from "./children";
+
 function assertNodePath(value: NodePath | NodePath[]): asserts value is NodePath {
   if (Array.isArray(value)) throw new TypeError(`${value} should not be an array`);
 }

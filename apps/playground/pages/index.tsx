@@ -42,9 +42,19 @@ const source2 = `
 let count = 0;
 
 const Component = () => {
+
+  if (count >= 10) {
+    alert("count is dangerously high!");
+    count = 9;
+  }
+
+  function handleClick() {
+    count = count + 1;
+  }
+
   return (
-    <button onClick={() => count = count + 1}>
-      Clicked {count} {count === 1 ? 'time' : 'times'}
+    <button onClick={handleClick}>
+    Clicked {count}
     </button>
   )
 };
@@ -54,7 +64,7 @@ document.body.append(<Component />);`;
 const Home: NextPage<SsrProps> = ({ runtime }) => {
   return (
     <main className="h-screen">
-      <Playground initialSource={source1} runtime={runtime} />
+      <Playground initialSource={source2} runtime={runtime} />
     </main>
   );
 };
