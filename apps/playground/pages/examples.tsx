@@ -116,24 +116,50 @@ document.body.append(<Display />, <Decrease />, <Increase />);`;
 const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ runtime }) => {
   return (
     <main className="container mx-auto">
-      Hello World
-      <Example source={helloWorld} runtime={runtime} />
-      Variables
-      <Example source={variables} runtime={runtime} />
-      Dynamic Attributes
-      <Example source={dynamicAttributes} runtime={runtime} className="h-[280px]" />
-      Components
-      <Example source={components} runtime={runtime} />
-      Nested Components
-      <Example source={nestedComponents} runtime={runtime} />
-      Reactive Assignments
-      <Example source={reactiveAssignments} runtime={runtime} />
-      Inline Reactive Assignments
-      <Example source={reactiveAssignmentsInline} runtime={runtime} />
-      Reactive Statements
-      <Example source={reactiveStatements} runtime={runtime} />
-      Shared Values (React Context)
-      <Example source={sharedContext} runtime={runtime} />
+      <section>
+        <p>Hello World</p>
+        <Example source={helloWorld} runtime={runtime} />
+      </section>
+
+      <section>
+        <p>Variables</p>
+        <Example source={variables} runtime={runtime} />
+      </section>
+
+      <section>
+        <p>Dynamic Attributes</p>
+        <Example source={dynamicAttributes} runtime={runtime} className="h-[280px]" />
+      </section>
+
+      <section>
+        <p>Components</p>
+        <Example source={components} runtime={runtime} />
+      </section>
+
+      <section>
+        <p>Nested Components</p>
+        <Example source={nestedComponents} runtime={runtime} />
+      </section>
+
+      <section>
+        <p>Reactive Assignments</p>
+        <Example source={reactiveAssignments} runtime={runtime} />
+      </section>
+
+      <section>
+        <p>Inline Reactive Assignments</p>
+        <Example source={reactiveAssignmentsInline} runtime={runtime} />
+      </section>
+
+      <section>
+        <p>Reactive Statements</p>
+        <Example source={reactiveStatements} runtime={runtime} />
+      </section>
+
+      <section>
+        <p>Shared Values (React Context)</p>
+        <Example source={sharedContext} runtime={runtime} />
+      </section>
     </main>
   );
 };
