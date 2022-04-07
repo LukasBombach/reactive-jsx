@@ -21,7 +21,7 @@ export const children = (): PluginObj => ({
             if (path.isIdentifier()) {
               identifier(path);
             } else {
-              console.warn("cannot handle child", path);
+              console.warn("Cannot handle JSX Child yet:", path);
             }
           });
       },
