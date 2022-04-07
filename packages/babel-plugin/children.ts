@@ -1,19 +1,8 @@
 import template from "@babel/template";
-import {
-  isIdentifier,
-  isConditionalExpression,
-  isAssignmentExpression,
-  isJSXExpressionContainer,
-  isJSXIdentifier,
-  cloneDeepWithoutLoc,
-} from "@babel/types";
+import { cloneDeepWithoutLoc, assertVariableDeclarator } from "@babel/types";
 
 import type { NodePath, Node, PluginObj } from "@babel/core";
-import type { Statement, Identifier } from "@babel/types";
-
-const value = template`
-  const [GETTER, SETTER] = ReactiveJsx.value(VALUE);
-`;
+import type { Identifier } from "@babel/types";
 
 export const children = (): PluginObj => ({
   visitor: {
@@ -37,21 +26,19 @@ export const children = (): PluginObj => ({
 
 const identifier = (path: NodePath<Identifier>): void => {
   const name = path.node.name;
-  const binding = path.scope.getBinding(name);
+  const binding = path.scope.getBinding(name)!;
 
-  if (!binding) {
-    return;
-  }
+  assertVariableDeclarator(binding.path.node);
 
-  if (binding.kind === "const") {
-    return;
-  }
+  const value = binding.path.node.init!;
+  const parent = binding.path.parentPath!;
+
   if (binding.constantViolations.length === 0) {
     return;
   }
 
   // value
-  convertReactiveValue(binding.path);
+  convertReactiveValue(name, value, parent);
 
   // setters
 
@@ -62,4 +49,14 @@ const identifier = (path: NodePath<Identifier>): void => {
   console.log(binding);
 };
 
-const convertReactiveValue = (path: NodePath<Node>) => {};
+const convertReactiveValue = (name: string, value: Node, parent: NodePath<Node> | null) => {
+  const GETTER = name;
+  const SETTER = `set${name[0].toUpperCase()}${name.substring(1)}`;
+  const VALUE = cloneDeepWithoutLoc(value);
+  const ast = reactiveValue({ GETTER, SETTER, VALUE });
+  parent?.replaceWith(ast);
+};
+
+const reactiveValue = template.statement`
+  const [GETTER, SETTER] = ReactiveJsx.value(VALUE);
+`;
