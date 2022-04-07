@@ -1,5 +1,10 @@
 import template from "@babel/template";
-import { cloneDeepWithoutLoc, assertVariableDeclarator } from "@babel/types";
+import {
+  cloneDeepWithoutLoc,
+  assertVariableDeclarator,
+  assertAssignmentExpression,
+  assertIdentifier,
+} from "@babel/types";
 
 import type { NodePath, Node, PluginObj } from "@babel/core";
 import type { Identifier } from "@babel/types";
@@ -40,9 +45,19 @@ const identifier = (path: NodePath<Identifier>): void => {
   // value
   convertReactiveValue(name, value, parent);
 
-  // setters
-
   // getters
+  binding.referencePaths
+    .filter(ref => ref !== path)
+    .forEach(path => {
+      assertIdentifier(path.node);
+      convertReactiveGetter(name, path);
+    });
+
+  // setters
+  binding.constantViolations.forEach(path => {
+    assertAssignmentExpression(path.node);
+    convertReactiveSetter(name, path.node.right, path);
+  });
 
   // blocks
 
@@ -57,6 +72,27 @@ const convertReactiveValue = (name: string, value: Node, parent: NodePath<Node> 
   parent?.replaceWith(ast);
 };
 
+const convertReactiveSetter = (name: string, value: Node, parent: NodePath<Node> | null) => {
+  const SETTER = `set${name[0].toUpperCase()}${name.substring(1)}`;
+  const VALUE = cloneDeepWithoutLoc(value);
+  const ast = reactiveSetter({ SETTER, VALUE });
+  parent?.replaceWith(ast);
+};
+
+const convertReactiveGetter = (name: string, parent: NodePath<Node> | null) => {
+  const GETTER = name;
+  const ast = reactiveGetter({ GETTER });
+  parent?.replaceWith(ast);
+};
+
 const reactiveValue = template.statement`
   const [GETTER, SETTER] = ReactiveJsx.value(VALUE);
+`;
+
+const reactiveSetter = template.statement`
+  SETTER(VALUE)
+`;
+
+const reactiveGetter = template.statement`
+  GETTER()
 `;
