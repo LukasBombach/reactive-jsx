@@ -1,10 +1,5 @@
 import template from "@babel/template";
-import {
-  cloneDeepWithoutLoc,
-  assertVariableDeclarator,
-  assertAssignmentExpression,
-  assertIdentifier,
-} from "@babel/types";
+import { cloneDeepWithoutLoc, assertVariableDeclarator, assertAssignmentExpression } from "@babel/types";
 
 import type { NodePath, Node, PluginObj } from "@babel/core";
 import type { Identifier } from "@babel/types";
@@ -37,26 +32,29 @@ const identifier = (path: NodePath<Identifier>): void => {
 
   const value = binding.path.node.init!;
   const parent = binding.path.parentPath!;
+  const getter = name;
+  const setter = `set${name[0].toUpperCase()}${name.substring(1)}`;
 
+  // No need to make values reactive that never get updated
   if (binding.constantViolations.length === 0) {
     return;
   }
 
   // value
-  convertReactiveValue(name, value, parent);
+  parent.replaceWith(convertReactiveValue(getter, setter, value));
 
   // getters
   binding.referencePaths
     .filter(ref => ref !== path)
+    .filter(path => path.isIdentifier())
     .forEach(path => {
-      assertIdentifier(path.node);
-      convertReactiveGetter(name, path);
+      path.replaceWith(convertReactiveGetter(getter));
     });
 
   // setters
   binding.constantViolations.forEach(path => {
     assertAssignmentExpression(path.node);
-    convertReactiveSetter(name, path.node.right, path);
+    path.replaceWith(convertReactiveSetter(setter, path.node.right));
   });
 
   // blocks
@@ -64,25 +62,18 @@ const identifier = (path: NodePath<Identifier>): void => {
   console.log(binding);
 };
 
-const convertReactiveValue = (name: string, value: Node, parent: NodePath<Node> | null) => {
-  const GETTER = name;
-  const SETTER = `set${name[0].toUpperCase()}${name.substring(1)}`;
+const convertReactiveValue = (GETTER: string, SETTER: string, value: Node) => {
   const VALUE = cloneDeepWithoutLoc(value);
-  const ast = reactiveValue({ GETTER, SETTER, VALUE });
-  parent?.replaceWith(ast);
+  return reactiveValue({ GETTER, SETTER, VALUE });
 };
 
-const convertReactiveSetter = (name: string, value: Node, parent: NodePath<Node> | null) => {
-  const SETTER = `set${name[0].toUpperCase()}${name.substring(1)}`;
+const convertReactiveSetter = (SETTER: string, value: Node) => {
   const VALUE = cloneDeepWithoutLoc(value);
-  const ast = reactiveSetter({ SETTER, VALUE });
-  parent?.replaceWith(ast);
+  return reactiveSetter({ SETTER, VALUE });
 };
 
-const convertReactiveGetter = (name: string, parent: NodePath<Node> | null) => {
-  const GETTER = name;
-  const ast = reactiveGetter({ GETTER });
-  parent?.replaceWith(ast);
+const convertReactiveGetter = (GETTER: string) => {
+  return reactiveGetter({ GETTER });
 };
 
 const reactiveValue = template.statement`
