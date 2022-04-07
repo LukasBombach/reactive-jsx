@@ -50,5 +50,16 @@ const identifier = (path: NodePath<Identifier>): void => {
     return;
   }
 
+  // value
+  convertReactiveValue(binding.path);
+
+  // setters
+
+  // getters
+
+  // blocks
+
   console.log(binding);
 };
+
+const convertReactiveValue = (path: NodePath<Node>) => {};
