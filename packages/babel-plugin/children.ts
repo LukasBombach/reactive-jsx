@@ -1,5 +1,10 @@
 import template from "@babel/template";
-import { cloneDeepWithoutLoc, assertVariableDeclarator, assertAssignmentExpression } from "@babel/types";
+import {
+  cloneDeepWithoutLoc,
+  assertVariableDeclarator,
+  assertAssignmentExpression,
+  assertIfStatement,
+} from "@babel/types";
 
 import type { NodePath, Node, PluginObj } from "@babel/core";
 import type { Identifier } from "@babel/types";
@@ -46,39 +51,50 @@ const identifier = (path: NodePath<Identifier>): void => {
   }
 
   // Creates a reative value `let name = xxx` becomes `const [name, setName] = value(xxx);`
-  parent.replaceWith(convertReactiveValue(getter, setter, value));
+  parent.replaceWith(convertToReactiveValue(getter, setter, value));
 
   // Replaces accesors of `name` with `name()`
   binding.referencePaths
-    .filter(ref => ref !== path)
+    .filter(refPath => refPath !== path)
     .filter(path => path.isIdentifier())
     .forEach(path => {
-      path.replaceWith(convertReactiveGetter(getter));
+      path.replaceWith(convertToReactiveGetter(getter));
     });
 
   // Replaces assignemtns `name = xxx` with `setName(xxx)`
   binding.constantViolations.forEach(path => {
     assertAssignmentExpression(path.node);
-    path.replaceWith(convertReactiveSetter(setter, path.node.right));
+    path.replaceWith(convertToReactiveSetter(setter, path.node.right));
   });
 
   // blocks
-
-  console.log(binding);
+  binding.referencePaths
+    .filter(refPath => refPath !== path)
+    .map(path => path.parentPath?.parentPath)
+    .filter(isDefined)
+    .filter(shouldBeReactiveBlock)
+    .forEach(path => {
+      path.replaceWith(convertToReaction(path.node));
+    });
 };
 
-const convertReactiveValue = (GETTER: string, SETTER: string, value: Node) => {
+const convertToReactiveValue = (GETTER: string, SETTER: string, value: Node) => {
   const VALUE = cloneDeepWithoutLoc(value);
   return reactiveValue({ GETTER, SETTER, VALUE });
 };
 
-const convertReactiveSetter = (SETTER: string, value: Node) => {
+const convertToReactiveSetter = (SETTER: string, value: Node) => {
   const VALUE = cloneDeepWithoutLoc(value);
   return reactiveSetter({ SETTER, VALUE });
 };
 
-const convertReactiveGetter = (GETTER: string) => {
+const convertToReactiveGetter = (GETTER: string) => {
   return reactiveGetter({ GETTER });
+};
+
+const convertToReaction = (expression: Node) => {
+  const EXPRESSION = cloneDeepWithoutLoc(expression);
+  return reaction({ EXPRESSION });
 };
 
 const reactiveValue = template.statement`
@@ -92,3 +108,17 @@ const reactiveSetter = template.statement`
 const reactiveGetter = template.statement`
   GETTER()
 `;
+
+const reaction = template.statement`
+  ReactiveJsx.reaction(() => {
+    EXPRESSION
+  });
+`;
+
+function shouldBeReactiveBlock({ type }: NodePath<Node>): boolean {
+  return ["IfStatement"].includes(type);
+}
+
+function isDefined<T>(val: T): val is NonNullable<T> {
+  return val !== undefined && val !== null;
+}
