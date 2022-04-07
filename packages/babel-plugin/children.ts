@@ -1,10 +1,5 @@
 import template from "@babel/template";
-import {
-  cloneDeepWithoutLoc,
-  assertVariableDeclarator,
-  assertAssignmentExpression,
-  assertIfStatement,
-} from "@babel/types";
+import { cloneDeepWithoutLoc, assertVariableDeclarator, assertAssignmentExpression } from "@babel/types";
 
 import type { NodePath, Node, PluginObj } from "@babel/core";
 import type { Identifier } from "@babel/types";
@@ -21,13 +16,19 @@ export const children = (): PluginObj => ({
             if (path.isIdentifier()) {
               identifier(path);
             } else {
-              console.warn("Cannot handle JSX Child yet:", path);
+              expression(path);
             }
           });
       },
     },
   },
 });
+
+const expression = (path: NodePath<Node>): void => {
+  const EXPRESSION = path.node;
+  const ast = fn({ EXPRESSION });
+  path.replaceWith(ast);
+};
 
 const identifier = (path: NodePath<Identifier>): void => {
   const name = path.node.name;
@@ -114,6 +115,10 @@ const reaction = template.statement`
   ReactiveJsx.reaction(() => {
     STATEMENT
   });
+`;
+
+const fn = template.statement`
+  () => EXPRESSION
 `;
 
 function shouldBeReactiveStatement({ type }: NodePath<Node>): boolean {

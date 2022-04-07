@@ -94,6 +94,26 @@ const Component = () => {
 
 document.body.append(<Component />);`;
 
+const reactiveStatements2 = `
+const Component = () => {
+  let count = 0;
+  let text = "";  
+  
+  if (count %2 === 0) {
+    text = "Count is even";
+  } else {
+    text = "Count is odd";
+  }
+
+  return (
+    <button onClick={() => count = count + 1}>
+    Clicked {count}
+    </button>
+  )
+};
+
+document.body.append(<Component />);`;
+
 const sharedContext = `
 let count = 0;
 
