@@ -67,12 +67,13 @@ const identifier = (path: NodePath<Identifier>): void => {
     path.replaceWith(convertToReactiveSetter(setter, path.node.right));
   });
 
-  // blocks
+  // Finds statements that should need to be re-evaluated reactively
+  // and wraps them in reaction(() => { statement })
   binding.referencePaths
     .filter(refPath => refPath !== path)
     .map(path => path.parentPath?.parentPath)
     .filter(isDefined)
-    .filter(shouldBeReactiveBlock)
+    .filter(shouldBeReactiveStatement)
     .forEach(path => {
       path.replaceWith(convertToReaction(path.node));
     });
@@ -92,9 +93,9 @@ const convertToReactiveGetter = (GETTER: string) => {
   return reactiveGetter({ GETTER });
 };
 
-const convertToReaction = (expression: Node) => {
-  const EXPRESSION = cloneDeepWithoutLoc(expression);
-  return reaction({ EXPRESSION });
+const convertToReaction = (statement: Node) => {
+  const STATEMENT = cloneDeepWithoutLoc(statement);
+  return reaction({ STATEMENT });
 };
 
 const reactiveValue = template.statement`
@@ -111,11 +112,11 @@ const reactiveGetter = template.statement`
 
 const reaction = template.statement`
   ReactiveJsx.reaction(() => {
-    EXPRESSION
+    STATEMENT
   });
 `;
 
-function shouldBeReactiveBlock({ type }: NodePath<Node>): boolean {
+function shouldBeReactiveStatement({ type }: NodePath<Node>): boolean {
   return ["IfStatement"].includes(type);
 }
 
