@@ -35,15 +35,20 @@ const identifier = (path: NodePath<Identifier>): void => {
   const getter = name;
   const setter = `set${name[0].toUpperCase()}${name.substring(1)}`;
 
+  // No need to make values reactive that can't get updated
+  if (binding.kind === "const") {
+    return;
+  }
+
   // No need to make values reactive that never get updated
   if (binding.constantViolations.length === 0) {
     return;
   }
 
-  // value
+  // Creates a reative value `let name = xxx` becomes `const [name, setName] = value(xxx);`
   parent.replaceWith(convertReactiveValue(getter, setter, value));
 
-  // getters
+  // Replaces accesors of `name` with `name()`
   binding.referencePaths
     .filter(ref => ref !== path)
     .filter(path => path.isIdentifier())
@@ -51,7 +56,7 @@ const identifier = (path: NodePath<Identifier>): void => {
       path.replaceWith(convertReactiveGetter(getter));
     });
 
-  // setters
+  // Replaces assignemtns `name = xxx` with `setName(xxx)`
   binding.constantViolations.forEach(path => {
     assertAssignmentExpression(path.node);
     path.replaceWith(convertReactiveSetter(setter, path.node.right));
