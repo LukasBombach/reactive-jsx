@@ -12,6 +12,7 @@ import type { NodePath, Node } from "@babel/core";
 import type { PluginObj } from "@babel/core";
 import type { Statement } from "@babel/types";
 
+export * from "./reactive";
 export * from "./children";
 
 function assertNodePath(value: NodePath | NodePath[]): asserts value is NodePath {

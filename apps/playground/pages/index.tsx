@@ -53,10 +53,28 @@ const Component = () => {
 
 document.body.append(<Component />);`;
 
+const source3 = `
+const Component = () => {
+  let count = 0;
+  
+  function handleMouseDown() {
+  	count--;
+  }
+
+  return (
+    <button onMouseDown={handleMouseDown} onMouseUp={() => count++} onHover={function () {}}>
+      {count}
+    </button>
+  )
+};
+
+document.body.append(<Component />);
+`;
+
 const Home: NextPage<SsrProps> = ({ runtime }) => {
   return (
     <main className="h-screen">
-      <Playground initialSource={source1} runtime={runtime} />
+      <Playground initialSource={source3} runtime={runtime} />
     </main>
   );
 };
