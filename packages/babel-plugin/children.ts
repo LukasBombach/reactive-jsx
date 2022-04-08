@@ -70,6 +70,11 @@ const identifier = (path: NodePath<Identifier>): void => {
 
   // Finds statements that should need to be re-evaluated reactively
   // and wraps them in reaction(() => { statement })
+
+  binding.referencePaths
+    .filter(refPath => refPath !== path)
+    .forEach(path => console.log(path.parentPath?.parentPath?.toString()));
+
   binding.referencePaths
     .filter(refPath => refPath !== path)
     .map(path => path.parentPath?.parentPath)
@@ -123,6 +128,10 @@ const fn = template.statement`
 
 function shouldBeReactiveStatement({ type }: NodePath<Node>): boolean {
   return ["IfStatement"].includes(type);
+}
+
+function findReactiveStatement(path: NodePath<Node>): NodePath<Node> | null {
+  return path.findParent(parent => parent.isIfStatement() && path.isDescendant(parent.node.test.path));
 }
 
 function isDefined<T>(val: T): val is NonNullable<T> {

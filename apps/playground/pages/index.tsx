@@ -56,7 +56,7 @@ document.body.append(<Component />);`;
 const Home: NextPage<SsrProps> = ({ runtime }) => {
   return (
     <main className="h-screen">
-      <Playground initialSource={source2} runtime={runtime} />
+      <Playground initialSource={source1} runtime={runtime} />
     </main>
   );
 };
