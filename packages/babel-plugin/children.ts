@@ -130,9 +130,9 @@ function shouldBeReactiveStatement({ type }: NodePath<Node>): boolean {
   return ["IfStatement"].includes(type);
 }
 
-function findReactiveStatement(path: NodePath<Node>): NodePath<Node> | null {
-  return path.findParent(parent => parent.isIfStatement() && path.isDescendant(parent.node.test.path));
-}
+// function findReactiveStatement(path: NodePath<Node>): NodePath<Node> | null {
+//   return path.findParent(parent => parent.isIfStatement() && path.isDescendant(parent.node.test.path));
+// }
 
 function isDefined<T>(val: T): val is NonNullable<T> {
   return val !== undefined && val !== null;
