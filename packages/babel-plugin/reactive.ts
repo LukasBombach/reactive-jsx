@@ -17,6 +17,9 @@ export const reactive = (): PluginObj => ({
             if (binding.path.isFunctionDeclaration()) {
               findReactiveIdentifiersInFunction(binding.path);
             }
+
+            // todo variable = function x () {}
+            // todo variable = () => {}
           }
 
           if (expression.isFunctionExpression() || expression.isArrowFunctionExpression()) {
