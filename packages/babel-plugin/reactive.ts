@@ -1,3 +1,5 @@
+import template from "@babel/template";
+import { cloneDeepWithoutLoc, Identifier } from "@babel/types";
 import { makeIdentifierReactive } from "./children";
 
 import type { NodePath, PluginObj } from "@babel/core";
@@ -30,6 +32,23 @@ export const reactive = (): PluginObj => ({
         }
       }
     },
+    JSXElement: {
+      enter(path) {
+        path
+          .get("children")
+          .filter(path => path.isJSXExpressionContainer())
+          .flatMap(path => path.get("expression"))
+          .forEach(path => {
+            if (path.isIdentifier()) {
+              // makeIdentifierReactive(path);
+              path.replaceWith(convertToChild(path.node));
+            } else {
+              console.warn("cannot handle child");
+              // expression(path);
+            }
+          });
+      },
+    },
   },
 });
 
@@ -48,3 +67,12 @@ function isEventHandler(path: NodePath<JSXAttribute>): boolean {
   const name = path.get("name").node.name;
   return typeof name === "string" ? nameIsEventHandler.test(name) : nameIsEventHandler.test(name.name);
 }
+
+const convertToChild = (identifier: Identifier) => {
+  const IDENTIFIER = cloneDeepWithoutLoc(identifier);
+  return child({ IDENTIFIER });
+};
+
+const child = template.statement`
+  ReactiveJsx.child(() => IDENTIFIER());
+`;

@@ -1,5 +1,5 @@
 import template from "@babel/template";
-import { cloneDeepWithoutLoc, assertVariableDeclarator, assertAssignmentExpression } from "@babel/types";
+import { cloneDeepWithoutLoc } from "@babel/types";
 
 import type { NodePath, Node, PluginObj } from "@babel/core";
 import type { Identifier } from "@babel/types";
@@ -62,7 +62,7 @@ export const makeIdentifierReactive = (path: NodePath<Identifier>): void => {
 
   // Replaces accesors of `name` with `name()`
   binding.referencePaths
-    .filter(path => !path.findParent(p => p.isJSXElement()))
+    // .filter(path => !path.findParent(p => p.isJSXElement()))
     .filter(path => path.isIdentifier())
     .forEach(path => {
       path.replaceWith(convertToReactiveGetter(getter));
@@ -78,12 +78,12 @@ export const makeIdentifierReactive = (path: NodePath<Identifier>): void => {
   // Finds statements that should need to be re-evaluated reactively
   // and wraps them in reaction(() => { statement })
 
-  console.log(binding.referencePaths);
+  // console.log(binding.referencePaths);
 
   // binding.referencePaths.forEach(path => console.log(!path.findParent(p => p.isJSXElement())));
 
   binding.referencePaths
-    .filter(path => !path.findParent(p => p.isJSXElement()))
+    // .filter(path => !path.findParent(p => p.isJSXElement()))
     .map(path => path.parentPath?.parentPath)
     .filter(isDefined)
     .filter(shouldBeReactiveStatement)
@@ -92,21 +92,21 @@ export const makeIdentifierReactive = (path: NodePath<Identifier>): void => {
     });
 };
 
-const convertToReactiveValue = (GETTER: string, SETTER: string, value: Node) => {
+export const convertToReactiveValue = (GETTER: string, SETTER: string, value: Node) => {
   const VALUE = cloneDeepWithoutLoc(value);
   return reactiveValue({ GETTER, SETTER, VALUE });
 };
 
-const convertToReactiveSetter = (SETTER: string, value: Node) => {
+export const convertToReactiveSetter = (SETTER: string, value: Node) => {
   const VALUE = cloneDeepWithoutLoc(value);
   return reactiveSetter({ SETTER, VALUE });
 };
 
-const convertToReactiveGetter = (GETTER: string) => {
+export const convertToReactiveGetter = (GETTER: string) => {
   return reactiveGetter({ GETTER });
 };
 
-const convertToReaction = (statement: Node) => {
+export const convertToReaction = (statement: Node) => {
   const STATEMENT = cloneDeepWithoutLoc(statement);
   return reaction({ STATEMENT });
 };

@@ -4,7 +4,8 @@ import type { Tag, Element } from "./types";
 import type { Read } from "./reactive";
 
 type Props = Record<string, Read<any>>;
-type Child = Read<string> | string;
+// type Child = Read<string> | string;
+type Child = ((parent: HTMLElement) => void) | string | number;
 
 type EventHandler = `on${string}`;
 
@@ -35,10 +36,26 @@ export function element<T extends Tag | (() => HTMLElement)>(
       Object.keys(props).map(name => setAttribute(element, name, props[name]));
     }
 
-    children.forEach(child => append(element, child));
+    // children.forEach(child => append(element, child));
+    children.forEach(child => {
+      if (typeof child === "function") {
+        child(element);
+      } else {
+        const text = document.createTextNode(child.toString());
+        element.append(text);
+      }
+    });
 
     return element as any;
   }
+}
+
+export function child<T>(fn: () => void): Child {
+  return (parent: HTMLElement) => {
+    reaction<Node | undefined>(current => {
+      return reconcile(parent, current, fn());
+    });
+  };
 }
 
 function setAttribute(element: HTMLElement, name: string, value: unknown) {
