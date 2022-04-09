@@ -14,7 +14,7 @@ export const children = (): PluginObj => ({
           .flatMap(path => path.get("expression"))
           .forEach(path => {
             if (path.isIdentifier()) {
-              identifier(path);
+              makeIdentifierReactive(path);
             } else {
               expression(path);
             }
@@ -30,11 +30,17 @@ const expression = (path: NodePath<Node>): void => {
   path.replaceWith(ast);
 };
 
-const identifier = (path: NodePath<Identifier>): void => {
+export const makeIdentifierReactive = (path: NodePath<Identifier>): void => {
   const name = path.node.name;
-  const binding = path.scope.getBinding(name)!;
+  const binding = path.scope.getBinding(name);
 
-  assertVariableDeclarator(binding.path.node);
+  if (!binding) {
+    return;
+  }
+
+  if (!binding.path.isVariableDeclarator()) {
+    return;
+  }
 
   const value = binding.path.node.init!;
   const parent = binding.path.parentPath!;
@@ -56,7 +62,7 @@ const identifier = (path: NodePath<Identifier>): void => {
 
   // Replaces accesors of `name` with `name()`
   binding.referencePaths
-    .filter(refPath => refPath !== path)
+    .filter(path => !path.findParent(p => p.isJSXElement()))
     .filter(path => path.isIdentifier())
     .forEach(path => {
       path.replaceWith(convertToReactiveGetter(getter));
@@ -64,19 +70,20 @@ const identifier = (path: NodePath<Identifier>): void => {
 
   // Replaces assignemtns `name = xxx` with `setName(xxx)`
   binding.constantViolations.forEach(path => {
-    assertAssignmentExpression(path.node);
-    path.replaceWith(convertToReactiveSetter(setter, path.node.right));
+    if (path.isAssignmentExpression()) {
+      path.replaceWith(convertToReactiveSetter(setter, path.node.right));
+    }
   });
 
   // Finds statements that should need to be re-evaluated reactively
   // and wraps them in reaction(() => { statement })
 
-  binding.referencePaths
-    .filter(refPath => refPath !== path)
-    .forEach(path => console.log(path.parentPath?.parentPath?.toString()));
+  console.log(binding.referencePaths);
+
+  // binding.referencePaths.forEach(path => console.log(!path.findParent(p => p.isJSXElement())));
 
   binding.referencePaths
-    .filter(refPath => refPath !== path)
+    .filter(path => !path.findParent(p => p.isJSXElement()))
     .map(path => path.parentPath?.parentPath)
     .filter(isDefined)
     .filter(shouldBeReactiveStatement)

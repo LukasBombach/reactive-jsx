@@ -1,3 +1,5 @@
+import { makeIdentifierReactive } from "./children";
+
 import type { NodePath, PluginObj } from "@babel/core";
 import type { JSXAttribute, FunctionDeclaration, FunctionExpression, ArrowFunctionExpression } from "@babel/types";
 
@@ -34,7 +36,11 @@ export const reactive = (): PluginObj => ({
 function findReactiveIdentifiersInFunction(
   path: NodePath<FunctionDeclaration | FunctionExpression | ArrowFunctionExpression>
 ) {
-  console.log("function", path);
+  path.get("body").traverse({
+    Identifier: path => {
+      makeIdentifierReactive(path);
+    },
+  });
 }
 
 function isEventHandler(path: NodePath<JSXAttribute>): boolean {

@@ -19,6 +19,19 @@ export const getServerSideProps = async (): Promise<{ props: { runtime: string }
   };
 };
 
+const source0 = `
+const Component = () => {
+  let count = 0;
+
+  return (
+    <button onClick={() => count = count + 1}>
+      Clicked {count}
+    </button>
+  )
+};
+
+document.body.append(<Component />);`;
+
 const source1 = `
 const Component = () => {
   let count = 0;
@@ -58,11 +71,11 @@ const Component = () => {
   let count = 0;
   
   function handleMouseDown() {
-  	count--;
+  	count = count - 1;
   }
 
   return (
-    <button onMouseDown={handleMouseDown} onMouseUp={() => count++} onHover={function () {}}>
+    <button onMouseDown={handleMouseDown} onMouseUp={() => count = count + 1} onHover={function () {}}>
       {count}
     </button>
   )
@@ -74,7 +87,7 @@ document.body.append(<Component />);
 const Home: NextPage<SsrProps> = ({ runtime }) => {
   return (
     <main className="h-screen">
-      <Playground initialSource={source3} runtime={runtime} />
+      <Playground initialSource={source0} runtime={runtime} />
     </main>
   );
 };
