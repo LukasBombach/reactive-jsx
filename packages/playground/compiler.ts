@@ -14,7 +14,6 @@ export async function compile(source: string, resolveFile: ResolveFile): Promise
     input: sourceFileName,
     plugins: [fs(source, resolveFile), babel()],
   });
-
   const { output } = await bundle.generate(outputOptions);
   return output[0].code;
 }
@@ -29,8 +28,5 @@ const fs = (source: string, resolveFile: ResolveFile): Plugin => ({
 
 const babel = (): Plugin => ({
   name: "babel",
-  transform(source) {
-    const { code } = transform(source, babelOptions);
-    return code;
-  },
+  transform: source => transform(source, babelOptions).code,
 });
