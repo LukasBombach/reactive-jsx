@@ -10,9 +10,9 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile }> = ({ 
   const [compiledSource, setSource] = useCompiler(source, resolveFile);
 
   return (
-    <div className="grid grid-cols-2 gap-2 bg-[#282c34]">
-      <Editor value={source} onChange={setSource} />
-      <Editor value={compiledSource} readOnly />
+    <div className="grid grid-cols-12 gap-4 bg-[#282c34] rounded-xl p-6 overflow-hidden">
+      <Editor value={source} onChange={setSource} className="col-span-7" />
+      <Editor value={compiledSource} readOnly className="col-span-5" />
     </div>
   );
 };

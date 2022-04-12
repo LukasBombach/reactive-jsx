@@ -14,5 +14,9 @@ const Component = () => {
 document.body.append(<Component />);`;
 
 export default function Home() {
-  return <Playground source={source.trim()} resolveFile={() => null} />;
+  return (
+    <main className="container mx-auto">
+      <Playground source={source.trim()} resolveFile={() => null} />
+    </main>
+  );
 }
