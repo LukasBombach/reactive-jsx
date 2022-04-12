@@ -26,12 +26,13 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile }> = ({ 
 
   return (
     <div className="grid grid-cols-2 gap-2">
-      <Editor source={source} />
+      <Editor source={source} onChange={setSource} />
       <Editor source={compiledSource} />
     </div>
   );
 };
 
-export const Editor: VFC<{ source?: string; className?: string }> = ({ source, className }) => (
-  <CodeMirror value={source} theme="dark" extensions={[javascript({ jsx: true })]} className={className} />
-);
+export const Editor: VFC<{ source?: string; onChange?: (value: string) => void; className?: string }> = ({
+  source,
+  className,
+}) => <CodeMirror value={source} theme="dark" extensions={[javascript({ jsx: true })]} className={className} />;
