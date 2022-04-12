@@ -1,37 +1,34 @@
 import { rollup } from "rollup";
 import { transform, availablePresets } from "@babel/standalone";
 
-import type { Plugin } from "rollup";
+import type { Plugin, OutputOptions } from "rollup";
 
 export type ResolveFile = (fileName: string) => Promise<string | null>;
 
-const file = "bundle.js";
-const format = "iife";
-const { env, react } = availablePresets;
-const babelOptions = { presets: [env, react] };
+const sourceFileName = "source.js";
+const outputOptions: OutputOptions = { file: "bundle.js", format: "iife" };
+const babelOptions = { presets: [availablePresets.env, availablePresets.react] };
 
 export async function compile(source: string, resolveFile: ResolveFile): Promise<string> {
   const bundle = await rollup({
-    input: "source",
-    treeshake: false,
+    input: sourceFileName,
     plugins: [fs(source, resolveFile), babel()],
-    // output: [{ file, format }],
   });
 
-  const { output } = await bundle.generate({ file, format });
+  const { output } = await bundle.generate(outputOptions);
   return output[0].code;
 }
 
 const fs = (source: string, resolveFile: ResolveFile): Plugin => ({
-  name: "fs plugin",
+  name: "fs",
   async load(id) {
-    if (id === "source") return source;
+    if (id === sourceFileName) return source;
     return await resolveFile(id);
   },
 });
 
 const babel = (): Plugin => ({
-  name: "babel plugin",
+  name: "babel",
   transform(source) {
     const { code } = transform(source, babelOptions);
     return code;
