@@ -11,12 +11,12 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile }> = ({ 
 
   return (
     <div className="grid grid-cols-2 gap-2 bg-[#282c34]">
-      <Editor source={source} onChange={setSource} />
-      <Editor source={compiledSource} />
+      <Editor value={source} onChange={setSource} />
+      <Editor value={compiledSource} readOnly />
     </div>
   );
 };
 
 export const Editor: VFC<ReactCodeMirrorProps> = props => (
-  <CodeMirror theme="dark" extensions={[javascript({ jsx: true, typescript: true })]} {...props} />
+  <CodeMirror theme="dark" height="100%" extensions={[javascript({ jsx: true, typescript: true })]} {...props} />
 );

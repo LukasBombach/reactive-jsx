@@ -1,4 +1,6 @@
-import { Playground } from "@reactive-jsx/playground";
+import dynamic from "next/dynamic";
+
+const Playground = dynamic(() => import("@reactive-jsx/playground"), { ssr: false });
 
 const source = `
 const Component = () => {
