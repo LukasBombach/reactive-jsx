@@ -11,8 +11,8 @@ const Component = () => {
   )
 };
 
-document.body.append(<Component />);`.trim();
+document.body.append(<Component />);`;
 
 export default function Home() {
-  return <Playground source={source} resolveFile={() => null} />;
+  return <Playground source={source.trim()} resolveFile={() => null} />;
 }
