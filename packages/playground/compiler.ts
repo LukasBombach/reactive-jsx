@@ -14,6 +14,7 @@ export async function compile(source: string, resolveFile: ResolveFile): Promise
     input: sourceFileName,
     plugins: [fs(source, resolveFile), babel()],
   });
+
   const { output } = await bundle.generate(outputOptions);
   await bundle.close();
   return output[0].code;
