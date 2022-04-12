@@ -1,5 +1,5 @@
 {
-  "name": "@reactive-jsx/playground",
+  "name": "@reactive-jsx/playground-app",
   "version": "0.0.0",
   "private": true,
   "scripts": {

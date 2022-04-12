@@ -11,6 +11,9 @@ const nextConfig = {
   },
 };
 
-module.exports = withTM(["@reactive-jsx/babel-plugin", "@reactive-jsx/transpiler", "@reactive-jsx/bundler"])(
-  nextConfig
-);
+module.exports = withTM([
+  "@reactive-jsx/playground",
+  "@reactive-jsx/babel-plugin",
+  "@reactive-jsx/transpiler",
+  "@reactive-jsx/bundler",
+])(nextConfig);
