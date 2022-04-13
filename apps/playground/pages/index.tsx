@@ -15,7 +15,8 @@ document.body.append(<Component />);`;
 
 export default function Home() {
   return (
-    <main className="container mx-auto">
+    <main className="container mx-auto grid gap-6 py-8">
+      <h1 className="font-bold leading-tight text-5xl">Playground</h1>
       <Playground source={source.trim()} resolveFile={() => null} />
     </main>
   );
