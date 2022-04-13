@@ -13,7 +13,7 @@ export function useCompiler(
   // todo race conditions
   useEffect(() => {
     compile(source, resolveFile)
-      .then(setCompiledSource)
+      .then(src => setCompiledSource(src.trim()))
       .catch(error => console.warn(error));
   }, [source]);
 

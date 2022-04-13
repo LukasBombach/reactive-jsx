@@ -5,7 +5,7 @@ import type { Plugin, OutputOptions } from "rollup";
 
 export type ResolveFile = (fileName: string) => Promise<string | null>;
 
-const sourceFileName = "source.js";
+const sourceFileName = "app.js";
 const outputOptions: OutputOptions = { file: "bundle.js", format: "iife" };
 const babelOptions = { presets: [availablePresets.env, availablePresets.react] };
 
