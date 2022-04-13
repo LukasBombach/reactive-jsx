@@ -3,6 +3,12 @@ import { compile } from "./compiler";
 
 import type { ResolveFile } from "./compiler";
 
+const worker = new Worker(new URL("./compiler.worker.ts", import.meta.url));
+
+worker.onmessage = function (e) {
+  console.log("Message received from worker", e.data);
+};
+
 export function useCompiler(
   initialSource: string,
   resolveFile: ResolveFile
@@ -12,6 +18,8 @@ export function useCompiler(
 
   // todo race conditions
   useEffect(() => {
+    worker.postMessage(source);
+
     compile(source, resolveFile)
       .then(src => setCompiledSource(src.trim()))
       .catch(error => console.warn(error));
