@@ -8,6 +8,7 @@
     "@babel/standalone": "7.17.9",
     "@codemirror/lang-javascript": "0.19.7",
     "@uiw/react-codemirror": "4.6.0",
+    "react-singleton-hook": "3.3.0",
     "rollup": "2.70.1"
   },
   "devDependencies": {

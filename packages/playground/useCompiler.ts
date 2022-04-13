@@ -1,17 +1,6 @@
 import { useState, useEffect, useId } from "react";
-import { compile } from "./compiler";
 
 import type { ResolveFile } from "./compiler";
-
-let worker: Worker | undefined;
-
-if (typeof Worker !== "undefined") {
-  worker = new Worker(new URL("./compiler.worker.ts", import.meta.url));
-
-  worker.onmessage = function (e) {
-    console.log("Message received from worker", e.data);
-  };
-}
 
 export function useCompiler(
   initialSource: string,
@@ -19,20 +8,32 @@ export function useCompiler(
 ): [compiledSource: string | undefined, setSource: (source: string) => void] {
   const [source, setSource] = useState(initialSource);
   const [compiledSource, setCompiledSource] = useState<string>();
+  const worker = useWorker();
   const id = useId();
 
-  // todo race conditions
   useEffect(() => {
     if (worker) {
+      const listener = (e: MessageEvent<string>) => setCompiledSource(e.data.trim());
+      worker.addEventListener("message", listener);
       worker.postMessage({ id, source });
+      return () => worker.removeEventListener("message", listener);
     }
-
-    compile(source, resolveFile)
-      .then(src => setCompiledSource(src.trim()))
-      .catch(error => console.warn(error));
-  }, [source]);
+  }, [source, worker]);
 
   return [compiledSource, setSource];
 }
 
-function useWorker() {}
+let workerSingleton: Worker | undefined;
+
+function useWorker() {
+  const [worker, setWorker] = useState<Worker>();
+
+  useEffect(() => {
+    if (!worker) {
+      workerSingleton = workerSingleton || new Worker(new URL("./compiler.worker.ts", import.meta.url));
+      setWorker(workerSingleton);
+    }
+  }, [worker]);
+
+  return worker;
+}

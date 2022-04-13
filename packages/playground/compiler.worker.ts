@@ -5,6 +5,7 @@ export interface Message {
   source: string;
 }
 
+// todo race condidions
 onmessage = function ({ data }) {
   assertMessage(data);
 
