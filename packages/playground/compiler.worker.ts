@@ -1,11 +1,28 @@
 import { compile } from "./compiler";
 
-onmessage = function ({ data }) {
-  if (typeof data !== "string") {
-    throw new Error("expected to receive a string");
-  }
+export interface Message {
+  id: string;
+  source: string;
+}
 
-  compile(data, async () => null)
+onmessage = function ({ data }) {
+  assertMessage(data);
+
+  compile(data.source, async () => null)
     .then(src => postMessage(src))
     .catch(error => console.warn(error));
 };
+
+function assertMessage(data: any): asserts data is Message {
+  if (typeof data !== "object" || data === null) {
+    throw new Error("expected message to be an object");
+  }
+
+  if (!Object.hasOwn(data, "id") || typeof data.id !== "string") {
+    throw new Error("expected message to have an id of type string");
+  }
+
+  if (!Object.hasOwn(data, "source") || typeof data.source !== "string") {
+    throw new Error("expected message to have an source of type string");
+  }
+}

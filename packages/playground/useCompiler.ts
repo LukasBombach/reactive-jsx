@@ -24,7 +24,7 @@ export function useCompiler(
   // todo race conditions
   useEffect(() => {
     if (worker) {
-      worker.postMessage(source);
+      worker.postMessage({ id, source });
     }
 
     compile(source, resolveFile)
