@@ -15,14 +15,14 @@ onmessage = function ({ data }) {
 
 function assertMessage(data: any): asserts data is Message {
   if (typeof data !== "object" || data === null) {
-    throw new Error("expected message to be an object");
+    throw new Error(`expected message to be an object, got ${JSON.stringify(data)}`);
   }
 
   if (!Object.hasOwn(data, "id") || typeof data.id !== "string") {
-    throw new Error("expected message to have an id of type string");
+    throw new Error(`expected message to have an id of type string, got ${JSON.stringify(data.id)}`);
   }
 
   if (!Object.hasOwn(data, "source") || typeof data.source !== "string") {
-    throw new Error("expected message to have an source of type string");
+    throw new Error(`expected message to have an source of type string, got ${JSON.stringify(data.source)}`);
   }
 }
