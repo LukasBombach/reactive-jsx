@@ -18,5 +18,11 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile }> = ({ 
 };
 
 export const Editor: VFC<ReactCodeMirrorProps> = props => (
-  <CodeMirror theme="dark" height="100%" extensions={[javascript({ jsx: true, typescript: true })]} {...props} />
+  <CodeMirror
+    basicSetup={false}
+    theme="dark"
+    height="100%"
+    extensions={[javascript({ jsx: true, typescript: true })]}
+    {...props}
+  />
 );
