@@ -9,7 +9,6 @@ const sourceFileName = "app.js";
 const outputOptions: OutputOptions = { file: "bundle.js", format: "iife" };
 const babelOptions = { presets: [availablePresets.env, availablePresets.react] };
 
-// todo Web Worker
 export async function compile(source: string, resolveFile: ResolveFile): Promise<string> {
   const bundle = await rollup({
     input: sourceFileName,
