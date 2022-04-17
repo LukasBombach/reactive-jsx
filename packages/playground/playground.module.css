@@ -1,0 +1,5 @@
+.splitPane {
+  display: grid;
+  grid-template-columns: var(--split-at, 50%) 14px 1fr;
+  grid-template-rows: 1fr;
+}
