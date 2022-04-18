@@ -5,7 +5,7 @@ const Component = () => {
   let count = 0;
 
   return (
-    <button onClick={() => count++}>
+    <button onClick={() => count = count + 1}>
       Clicked {count}
     </button>
   )

@@ -11,4 +11,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withTM(["@reactive-jsx/playground"])(nextConfig);
+module.exports = withTM(["@reactive-jsx/playground", "@reactive-jsx/babel"])(nextConfig);

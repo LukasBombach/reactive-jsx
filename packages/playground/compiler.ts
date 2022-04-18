@@ -1,5 +1,6 @@
 import { rollup } from "rollup";
 import { transform, availablePresets } from "@babel/standalone";
+import { insertImports, reactive } from "@reactive-jsx/babel";
 
 import type { Plugin, OutputOptions } from "rollup";
 
@@ -7,7 +8,7 @@ export type ResolveFile = (fileName: string) => Promise<string | null>;
 
 const sourceFileName = "app.js";
 const outputOptions: OutputOptions = { file: "bundle.js", format: "iife" };
-const babelOptions = { presets: [availablePresets.env, availablePresets.react] };
+const babelOptions = { presets: [availablePresets.env, availablePresets.react], plugins: [reactive, insertImports] };
 
 export async function compile(source: string, resolveFile: ResolveFile): Promise<string> {
   const bundle = await rollup({
