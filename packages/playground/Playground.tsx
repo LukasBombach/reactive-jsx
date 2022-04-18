@@ -7,6 +7,7 @@ import type { VFC } from "react";
 import type { ReactCodeMirrorProps } from "@uiw/react-codemirror";
 import type { ResolveFile } from "./compiler";
 
+// todo optimize markup & css
 export const Playground: VFC<{ source: string; resolveFile: ResolveFile }> = ({ source, resolveFile }) => {
   const [compiledSource, setSource] = useCompiler(source, resolveFile);
 

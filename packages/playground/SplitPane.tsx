@@ -41,13 +41,13 @@ export const SplitPane: FC<{ children: [ReactNode, ReactNode]; intitialPos?: num
 
   return (
     <section
-      className="relative grid grid-rows-1 grid-cols-[var(--split,50%)_1fr] bg-[#282c34] rounded-xl overflow-hidden drop-shadow-md"
+      className="relative grid grid-rows-1 grid-cols-[var(--split,55%)_1fr] bg-[#282c34] rounded-xl overflow-hidden drop-shadow-md"
       ref={container}
     >
       {left}
       {right}
       <div
-        className="absolute w-1 h-24 bg-[#ffffff10] rounded-xl cursor-col-resize top-[50%] left-[var(--split,50%)] -translate-y-[50%]"
+        className="absolute w-1 h-24 bg-[#ffffff10] rounded-xl cursor-col-resize top-[55%] left-[var(--split,55%)] -translate-y-[55%]"
         onMouseDown={onMouseDown}
         ref={handle}
       />
