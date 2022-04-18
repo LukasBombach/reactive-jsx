@@ -53,7 +53,9 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile }> = ({ 
 
   const onMouseDown: MouseEventHandler<HTMLDivElement> = e => {
     var rect = e.target.getBoundingClientRect();
+
     mousePos.current = e.clientX - rect.left;
+    console.log("rect.left", rect.left, "e.clientX", e.clientX, "mousePos.current", mousePos.current);
   };
 
   const onMouseUp = () => {
@@ -66,8 +68,8 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile }> = ({ 
     const h = e.currentTarget;
     const c = container.current.getBoundingClientRect();
 
-    const left = e.clientX - mousePos.current - c.left; // todo scrolling
-    const newPos = (left / c.width) * 100;
+    const left = e.clientX - mousePos.current - c.left - 24; // todo scrolling
+    const newPos = (left / (c.width - 48)) * 100;
 
     setPos(newPos);
   };
