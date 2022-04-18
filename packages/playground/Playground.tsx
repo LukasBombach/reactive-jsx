@@ -22,8 +22,8 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile }> = ({ 
         </div>
       </header>
       <SplitPane>
-        <Editor value={source} onChange={setSource} />
-        <Editor value={compiledSource} readOnly />
+        <Editor className="p-6" value={source} onChange={setSource} />
+        <Editor className="p-6" value={compiledSource} readOnly />
       </SplitPane>
     </section>
   );
