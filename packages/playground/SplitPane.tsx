@@ -41,7 +41,7 @@ export const SplitPane: FC<{ children: [ReactNode, ReactNode]; intitialPos?: num
 
   return (
     <section
-      className="relative grid grid-rows-1 grid-cols-[var(--split,55%)_1fr] bg-[#282c34] rounded-xl overflow-hidden drop-shadow-md"
+      className="relative grid grid-rows-1 grid-cols-[var(--split,55%)_calc(100%-var(--split,45%))] bg-[#282c34] rounded-xl overflow-hidden drop-shadow-md"
       ref={container}
     >
       {left}
