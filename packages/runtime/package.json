@@ -3,21 +3,12 @@
   "version": "0.0.0",
   "license": "MIT",
   "type": "module",
-  "source": "src/index.ts",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.module.js",
+  "main": "./dist/index.js",
   "types": "dist/index.d.ts",
-  "exports": {
-    "require": "./dist/index.cjs",
-    "default": "./dist/index.modern.js"
-  },
-  "files": [
-    "dist/*"
-  ],
   "scripts": {
-    "dev": "microbundle -w -f modern --compress false --sourcemap false",
-    "build": "microbundle -f modern",
-    "build-as-string": "node scripts/exportAsString"
+    "build": "yarn build:bundle && yarn build:as-string",
+    "build:bundle": "microbundle -i src/index.ts -o dist/bundle.js --no-pkg-main -f modern",
+    "build:as-string": "node scripts/exportAsString"
   },
   "devDependencies": {
     "@reactive-jsx/config": "*",

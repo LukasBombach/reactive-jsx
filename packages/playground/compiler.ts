@@ -1,6 +1,7 @@
 import { rollup } from "rollup";
 import { transform, availablePresets } from "@babel/standalone";
 import { insertImports, reactive } from "@reactive-jsx/babel";
+import runtime from "@reactive-jsx/runtime";
 
 import type { Plugin, OutputOptions } from "rollup";
 
@@ -47,11 +48,15 @@ const fs = (source: string, resolveFile: ResolveFile): Plugin => ({
   resolveId: id => id,
   load: async id => {
     if (id === sourceFileName) return source;
+    if (id === "@reactive-jsx/runtime") return runtime;
     return await resolveFile(id);
   },
 });
 
 const babel = (): Plugin => ({
   name: "babel",
-  transform: source => transform(source, babelOptions).code,
+  transform: (source, id) => {
+    if (id === "@reactive-jsx/runtime") return source;
+    return transform(source, babelOptions).code;
+  },
 });
