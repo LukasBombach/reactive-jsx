@@ -16,7 +16,8 @@
   ],
   "scripts": {
     "dev": "microbundle -w -f modern --compress false --sourcemap false",
-    "build": "microbundle -f modern"
+    "build": "microbundle -f modern",
+    "build-as-string": "node scripts/exportAsString"
   },
   "devDependencies": {
     "@reactive-jsx/config": "*",
