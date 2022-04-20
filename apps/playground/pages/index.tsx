@@ -29,7 +29,11 @@ document.body.append(<Button />, <Result />);`;
 export default function Home() {
   return (
     <main className="container mx-auto grid gap-6 py-8">
-      <h1 className="font-bold leading-tight text-5xl">Playground</h1>
+      <h1 className="font-bold leading-tight text-5xl">
+        React meet Svelte meet Solid:
+        <br />
+        Reactive JSX
+      </h1>
       <blockquote className="pl-3 border-l-4 border-slate-200 text-sm text-slate-400">
         Note: When this shows up in the git history, this text will be super emberrassing. I am writing this text only
         to find a narrative which I can write code examples for. This way I can find an idea which features to
