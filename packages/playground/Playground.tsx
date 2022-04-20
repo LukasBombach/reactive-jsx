@@ -25,7 +25,7 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile }> = ({ 
             <span className="text-xs text-slate-200 py-1">app.js</span>
           </div>
         </div>
-        <Editor className="p-6" value={source} onChange={setSource} />
+        <Editor className="p-6" value={source.trim()} onChange={setSource} />
       </div>
       <div>
         <div className="grid grid-cols-12 gap-4 p-6 bg-[#ffffff0a] px-6 py-3">
