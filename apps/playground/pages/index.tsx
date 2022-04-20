@@ -35,16 +35,17 @@ export default function Home() {
         to find a narrative which I can write code examples for. This way I can find an idea which features to
         implement.
       </blockquote>
-      <p>What if you could write react components like this?</p>
+      {/* <p>What if you could write react components like this?</p>
       <Playground source={initialExample} resolveFile={() => null} />
       <p>
         No <code>setCount</code>, no <code>useEffect</code>. You just define a variable and then change it. The
         component is updated accordingly.
-      </p>
+      </p> 
       <p>
         Well, you can, try it. You find <code>Context</code> annoying and a hassle to work with? So do I, why can't we
         just define a variable and use it in more than one component? You can!
       </p>
+      */}
       <Playground source={insteadOfReactContext} resolveFile={() => null} />
     </main>
   );

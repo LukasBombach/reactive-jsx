@@ -15,7 +15,7 @@ import type { ResolveFile } from "./compiler";
 // todo optimize heights (keep it) when switching tabs
 export const Playground: VFC<{ source: string; resolveFile: ResolveFile }> = ({ source, resolveFile }) => {
   const [compiledSource, setSource] = useCompiler(source, resolveFile);
-  const [rightPane, setRightPane] = useState<"result" | "js">("result");
+  const [rightPane, setRightPane] = useState<"result" | "js">("js");
 
   return (
     <SplitPane>
