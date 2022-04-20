@@ -5,6 +5,7 @@ import type { FC, MouseEventHandler, ReactNode } from "react";
 // todo cleanup
 // todo moving the pane has a little overshoot left and right
 // todo respect hor. scrolling in calcs
+// todo mouse events get lost when hovering the iframe of the result
 export const SplitPane: FC<{ children: [ReactNode, ReactNode]; intitialPos?: number }> = ({ children }) => {
   const container = useRef<HTMLDivElement | null>(null);
   const handle = useRef<HTMLDivElement | null>(null);
