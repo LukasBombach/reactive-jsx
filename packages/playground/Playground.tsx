@@ -1,7 +1,8 @@
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
-import { SplitPane } from "./SplitPane";
 import { useCompiler } from "./useCompiler";
+import { SplitPane } from "./SplitPane";
+import { Result } from "./Result";
 
 import type { VFC } from "react";
 import type { ReactCodeMirrorProps } from "@uiw/react-codemirror";
@@ -28,7 +29,8 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile }> = ({ 
             <button className="text-xs text-slate-200 py-1 border-b border-amber-400 cursor-pointer">JS Output</button>
           </div>
         </div>
-        <Editor className="p-6" value={compiledSource} readOnly />
+        <Result value={compiledSource} />
+        {/* <Editor className="p-6" value={compiledSource} readOnly /> */}
       </div>
     </SplitPane>
   );
