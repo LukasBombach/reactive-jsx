@@ -14,7 +14,7 @@ const Component = () => {
 document.body.append(<Component />);`;
 
 const insteadOfReactContext = `
-let count = 0;
+let count = 42;
 
 const Result = () => <h1>The answer is {count}</h1>;
 
@@ -24,7 +24,7 @@ const Button = () => (
   </button>
 );
 
-document.body.append(<Result />, <Button />);`;
+document.body.append(<Button />, <Result />);`;
 
 export default function Home() {
   return (

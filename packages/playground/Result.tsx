@@ -21,7 +21,9 @@ export const Result: VFC<ResultProps> = ({ value = "", ...props }) => {
     if (!ref?.contentWindow) return;
     const script = document.createElement("script");
     script.textContent = value;
-    ref.contentWindow.document.body.replaceChildren(script);
+    const styles = document.createElement("style");
+    styles.innerText = `body { background: #282C34; color: #E2E8F0; font-family: sans-serif; }`;
+    ref.contentWindow.document.body.replaceChildren(styles, script);
   });
 
   return <iframe {...props} ref={setRef}></iframe>;

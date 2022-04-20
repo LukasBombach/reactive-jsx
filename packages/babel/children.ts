@@ -64,6 +64,7 @@ export const makeIdentifierReactive = (path: NodePath<Identifier>): void => {
   binding.referencePaths
     // .filter(path => !path.findParent(p => p.isJSXElement()))
     .filter(path => path.isIdentifier())
+    .filter(path => !path.parentPath?.isCallExpression()) // these have already been transformed
     .forEach(path => {
       path.replaceWith(convertToReactiveGetter(getter));
     });
