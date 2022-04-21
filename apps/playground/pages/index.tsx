@@ -16,13 +16,13 @@ document.body.append(<Component />);`;
 const insteadOfReactContext = `
 let count = 42;
 
-const Result = () => <h1>The answer is {count}</h1>;
-
 const Button = () => (
   <button onClick={() => count = count + 1}>
     Clicked {count}
   </button>
 );
+
+const Result = () => <h1>The answer is {count}</h1>;
 
 document.body.append(<Button />, <Result />);`;
 
@@ -30,9 +30,10 @@ export default function Home() {
   return (
     <main className="container mx-auto grid gap-6 py-8">
       <h1 className="font-bold leading-tight text-5xl">
-        React meet Svelte meet Solid:
+        Exploring compile time reactive JSX
+        {/* React meet Svelte meet Solid:
         <br />
-        Reactive JSX
+        Reactive JSX */}
       </h1>
       <blockquote className="pl-3 border-l-4 border-slate-200 text-sm text-slate-400">
         Note: When this shows up in the git history, this text will be super emberrassing. I am writing this text only
