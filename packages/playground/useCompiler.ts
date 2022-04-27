@@ -1,12 +1,6 @@
-import { useState, useEffect, useId } from "react";
+import { useState, useEffect } from "react";
 
 import type { ResolveFile } from "./compiler";
-
-let worker: Worker | undefined;
-
-if (typeof Worker !== "undefined") {
-  worker = worker || new Worker(new URL("./compiler.worker.ts", import.meta.url));
-}
 
 export function useCompiler(
   initialSource: string,
@@ -14,16 +8,24 @@ export function useCompiler(
 ): [compiledSource: string | undefined, setSource: (source: string) => void] {
   const [source, setSource] = useState(initialSource);
   const [compiledSource, setCompiledSource] = useState<string>();
-  const id = useId();
+  const worker = useWorker();
 
   useEffect(() => {
     if (worker) {
-      const listener = (e: MessageEvent<string>) => setCompiledSource(e.data.trim());
+      const listener = (e: MessageEvent<string>) => setCompiledSource(e.data);
       worker.addEventListener("message", listener);
-      worker.postMessage({ id, source });
+      worker.postMessage({ source });
       return () => worker && worker.removeEventListener("message", listener);
     }
   }, [source, worker]);
 
   return [compiledSource, setSource];
+}
+
+function useWorker(): Worker | undefined {
+  const [worker, setWorker] = useState<Worker>();
+  useEffect(() => {
+    if (!worker) setWorker(new Worker(new URL("./compiler.worker.ts", import.meta.url)));
+  });
+  return worker;
 }
