@@ -28,9 +28,11 @@ export function element<T extends Tag | (() => HTMLElement)>(
   ...children: Child[]
 ): T extends Tag ? Element<T> : HTMLElement {
   if (isFunction(tag)) {
-    return tag() as any;
+    return (tag as any)(props);
   } else {
     const element = document.createElement(tag);
+
+    console.log(props);
 
     if (props) {
       Object.keys(props).map(name => setAttribute(element, name, props[name]));
@@ -68,7 +70,7 @@ function setAttribute(element: HTMLElement, name: string, value: unknown) {
   }
 }
 
-function append(element: HTMLElement, child: unknown) {
+/* function append(element: HTMLElement, child: unknown) {
   if (isString(child) || isNumber(child) || isBigInt(child)) {
     const text = document.createTextNode(child.toString());
     element.append(text);
@@ -82,7 +84,7 @@ function append(element: HTMLElement, child: unknown) {
       return reconcile(element, current, child());
     });
   }
-}
+} */
 
 function reconcile(element: HTMLElement, current: Node | undefined, next: unknown): Node {
   if (isNumber(next) || isBigInt(next)) {
