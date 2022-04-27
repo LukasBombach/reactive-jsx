@@ -55,7 +55,7 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile; classNa
           </div>
         </div>
         {rightPane === "result" ? (
-          <Result className="p-6" value={compiledSource} />
+          <Result className="p-6 h-full w-full" value={compiledSource} />
         ) : rightPane === "js" ? (
           <Editor className="p-6" value={compiledSource} readOnly />
         ) : null}
