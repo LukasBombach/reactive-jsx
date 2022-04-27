@@ -48,10 +48,14 @@ export const SplitPane: FC<{ children: [ReactNode, ReactNode]; className?: strin
     };
   });
 
+  /**
+   * GOLDEN RATIO = 62%
+   */
+
   return (
     <section
       className={[
-        "relative grid grid-rows-1 grid-cols-[var(--split,62%)_calc(100%-var(--split,calc(100%-62%)))] bg-[#282c34] rounded-xl overflow-hidden drop-shadow-md",
+        "relative grid grid-rows-1 grid-cols-[var(--split,40%)_calc(100%-var(--split,calc(100%-40%)))] bg-[#282c34] rounded-xl overflow-hidden drop-shadow-md",
         className,
       ].join(" ")}
       ref={container}
@@ -59,7 +63,7 @@ export const SplitPane: FC<{ children: [ReactNode, ReactNode]; className?: strin
       {left}
       {right}
       <div
-        className="absolute w-1 h-24 bg-[#ffffff10] rounded-xl cursor-col-resize top-[62%] left-[var(--split,62%)] -translate-y-[62%]"
+        className="absolute w-1 h-24 bg-[#ffffff10] rounded-xl cursor-col-resize top-[40%] left-[var(--split,40%)] -translate-y-[40%]"
         onMouseDown={onMouseDown}
         ref={handle}
       />

@@ -1,6 +1,6 @@
 import template from "@babel/template";
 import { CallExpression, cloneDeepWithoutLoc, Identifier } from "@babel/types";
-import { makeIdentifierReactive } from "./children";
+import { makeIdentifierReactive } from "./identifiers";
 
 import type { NodePath, PluginObj } from "@babel/core";
 import type { JSXAttribute, FunctionDeclaration, FunctionExpression, ArrowFunctionExpression } from "@babel/types";
@@ -40,11 +40,11 @@ export const reactive = (): PluginObj => ({
           .flatMap(path => path.get("expression"))
           .forEach(path => {
             if (path.isIdentifier()) {
-              path.replaceWith(convertToChildGetter(path.node));
+              console.info("👧🏻", "omitting identifier", path.toString(), path);
             } else if (path.isCallExpression()) {
               path.replaceWith(convertToChild(path.node));
             } else {
-              console.warn("cannot handle child of type", path.type);
+              console.warn("👧🏻", "cannot handle child of type", path.type);
             }
           });
       },
