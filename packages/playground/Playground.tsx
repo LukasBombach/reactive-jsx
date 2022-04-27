@@ -19,7 +19,7 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile; classNa
   className,
 }) => {
   const [compiledSource, setSource] = useCompiler(source, resolveFile);
-  const [rightPane, setRightPane] = useState<"result" | "js">("js");
+  const [rightPane, setRightPane] = useState<"result" | "js">("result");
 
   return (
     <SplitPane className={className}>
