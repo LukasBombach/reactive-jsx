@@ -28,7 +28,7 @@ document.body.append(<Button />, <Result />);`;
 
 export default function Home() {
   return (
-    <main className="px-8 py-4 sm:px-16 sm:py-12 xl:px-48 xl:py-24 grid gap-8 text-slate-800 bg-stone-50">
+    <main className="px-8 py-4 sm:px-16 sm:py-12 xl:px-48 xl:py-24 grid gap-8 text-slate-800 bg-grey-50">
       <h1 className="leading-tight text-7xl max-w-screen-sm font-garamond">Exploring compile time reactive JSX</h1>
       <blockquote className="pl-3 border-l-4 border-slate-200 text-slate-500 max-w-screen-sm">
         Note: When this shows up in the git history, this text will be super emberrassing. I am writing this text only
