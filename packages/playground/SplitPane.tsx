@@ -6,7 +6,10 @@ import type { FC, MouseEventHandler, ReactNode } from "react";
 // todo moving the pane has a little overshoot left and right
 // todo respect hor. scrolling in calcs
 // todo mouse events get lost when hovering the iframe of the result
-export const SplitPane: FC<{ children: [ReactNode, ReactNode]; intitialPos?: number }> = ({ children }) => {
+export const SplitPane: FC<{ children: [ReactNode, ReactNode]; className?: string; intitialPos?: number }> = ({
+  children,
+  className,
+}) => {
   const container = useRef<HTMLDivElement | null>(null);
   const handle = useRef<HTMLDivElement | null>(null);
   const mousePos = useRef<number | null>(null);
@@ -42,7 +45,10 @@ export const SplitPane: FC<{ children: [ReactNode, ReactNode]; intitialPos?: num
 
   return (
     <section
-      className="relative grid grid-rows-1 grid-cols-[var(--split,55%)_calc(100%-var(--split,45%))] bg-[#282c34] rounded-xl overflow-hidden drop-shadow-md"
+      className={[
+        "relative grid grid-rows-1 grid-cols-[var(--split,55%)_calc(100%-var(--split,45%))] bg-[#282c34] rounded-xl overflow-hidden drop-shadow-md",
+        className,
+      ].join(" ")}
       ref={container}
     >
       {left}

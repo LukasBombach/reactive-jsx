@@ -13,12 +13,16 @@ import type { ResolveFile } from "./compiler";
 // todo cleanup tab code
 // todo instead of un / remounting tabs, hide / display them to keep state
 // todo optimize heights (keep it) when switching tabs
-export const Playground: VFC<{ source: string; resolveFile: ResolveFile }> = ({ source, resolveFile }) => {
+export const Playground: VFC<{ source: string; resolveFile: ResolveFile; className?: string }> = ({
+  source,
+  resolveFile,
+  className,
+}) => {
   const [compiledSource, setSource] = useCompiler(source, resolveFile);
   const [rightPane, setRightPane] = useState<"result" | "js">("js");
 
   return (
-    <SplitPane>
+    <SplitPane className={className}>
       <div>
         <div className="grid grid-cols-12 gap-4 p-6 bg-[#ffffff0a] px-6 py-3">
           <div className="col-span-7 flex gap-4">

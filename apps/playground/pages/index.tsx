@@ -28,29 +28,24 @@ document.body.append(<Button />, <Result />);`;
 
 export default function Home() {
   return (
-    <main className="container pl-10 grid gap-6 py-8 max-w-prose">
-      <h1 className="font-bold leading-tight text-5xl max-w-prose">
-        Exploring compile time reactive JSX
-        {/* React meet Svelte meet Solid:
-        <br />
-        Reactive JSX */}
-      </h1>
-      <blockquote className="pl-3 border-l-4 border-slate-200 text-sm text-slate-400 max-w-prose">
+    <main className="px-8 py-4 sm:px-16 sm:py-12 xl:px-48 xl:py-24 grid gap-8 text-slate-800 bg-stone-50">
+      <h1 className="leading-tight text-7xl max-w-screen-sm font-garamond">Exploring compile time reactive JSX</h1>
+      <blockquote className="pl-3 border-l-4 border-slate-200 text-slate-500 max-w-screen-sm">
         Note: When this shows up in the git history, this text will be super emberrassing. I am writing this text only
         to find a narrative which I can write code examples for. This way I can find an idea which features to
         implement.
       </blockquote>
-      <p className="max-w-prose">What if you could write react components like this?</p>
-      <Playground className="max-w-screen-xl" source={initialExample} resolveFile={() => null} />
-      <p className="max-w-prose">
+      <p className="max-w-screen-sm">What if you could write react components like this?</p>
+      <Playground className="max-w-screen-lg" source={initialExample} resolveFile={() => null} />
+      <p className="max-w-screen-sm">
         No <code>setCount</code>, no <code>useEffect</code>. You just define a variable and then change it. The
         component is updated accordingly.
       </p>
-      <p className="max-w-prose">
+      <p className="max-w-screen-sm">
         Well, you can, try it. You find <code>Context</code> annoying and a hassle to work with? So do I, why can't we
         just define a variable and use it in more than one component? You can!
       </p>
-      <Playground className="max-w-screen-xl" source={insteadOfReactContext} resolveFile={() => null} />
+      <Playground className="max-w-screen-lg" source={insteadOfReactContext} resolveFile={() => null} />
     </main>
   );
 }
