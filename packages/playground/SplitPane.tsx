@@ -6,6 +6,7 @@ import type { FC, MouseEventHandler, ReactNode } from "react";
 // todo moving the pane has a little overshoot left and right
 // todo respect hor. scrolling in calcs
 // todo mouse events get lost when hovering the iframe of the result
+// todo [1 ]the pointer events thing is a cheap hack to prevent losing the mouse when moving over iframes and such
 export const SplitPane: FC<{ children: [ReactNode, ReactNode]; className?: string; intitialPos?: number }> = ({
   children,
   className,
@@ -20,6 +21,7 @@ export const SplitPane: FC<{ children: [ReactNode, ReactNode]; className?: strin
     e.stopPropagation();
     var rect = (e.target as HTMLDivElement).getBoundingClientRect();
     mousePos.current = e.clientX - rect.left;
+    document.body.style.pointerEvents = "none"; // [1]
   };
 
   const onMouseMove = (e: MouseEvent) => {
@@ -32,7 +34,10 @@ export const SplitPane: FC<{ children: [ReactNode, ReactNode]; className?: strin
     handle.current?.style.setProperty("--split", cappedPos + "%");
   };
 
-  const onMouseUp = () => (mousePos.current = null);
+  const onMouseUp = () => {
+    mousePos.current = null;
+    document.body.style.pointerEvents = "auto"; // [1]
+  };
 
   useEffect(() => {
     document.addEventListener("mousemove", onMouseMove);

@@ -24,7 +24,7 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile; classNa
   return (
     <SplitPane className={className}>
       <div>
-        <div className="grid grid-cols-12 gap-4 p-6 bg-[#ffffff0a] px-6 py-3">
+        <div className="grid grid-cols-12 gap-4 p-6 bg-[#ffffff0a] px-6 py-3 whitespace-nowrap">
           <div className="col-span-7 flex gap-4">
             <span className="text-xs text-slate-200 py-1">app.js</span>
           </div>
@@ -32,7 +32,7 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile; classNa
         <Editor className="p-6" value={source.trim()} onChange={setSource} />
       </div>
       <div>
-        <div className="grid grid-cols-12 gap-4 p-6 bg-[#ffffff0a] px-6 py-3">
+        <div className="grid grid-cols-12 gap-4 p-6 bg-[#ffffff0a] px-6 py-3 whitespace-nowrap">
           <div className="col-span-5 flex gap-4">
             <button
               className={[
