@@ -6,8 +6,8 @@
   "main": "./dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "nodemon --watch ./src --exec \"yarn dev:bundle && yarn build:as-string\"",
-    "dev:bundle": "microbundle -i src/index.ts -o dist/bundle.js --no-pkg-main --compress false --sourcemap false --generateTypes false -f modern",
+    "dev": "nodemon -w src -e ts -x \"yarn dev:bundle && yarn build:as-string\"",
+    "dev:bundle": "microbundle -i src/index.ts -o dist/bundle.js --no-pkg-main --compress false --sourcemap false  -f modern",
     "build": "yarn build:bundle && yarn build:as-string",
     "build:bundle": "microbundle -i src/index.ts -o dist/bundle.js --no-pkg-main -f modern",
     "build:as-string": "node scripts/exportAsString"
