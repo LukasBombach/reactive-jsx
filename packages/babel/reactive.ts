@@ -40,12 +40,22 @@ export const reactive = (): PluginObj => ({
           .flatMap(path => path.get("expression"))
           .forEach(path => {
             if (path.isIdentifier()) {
-              console.info("👧🏻", "omitting identifier", path.toString(), path);
-            } else if (path.isCallExpression()) {
+              console.log("child", path);
+
               path.replaceWith(convertToChild(path.node));
             } else {
               console.warn("👧🏻", "cannot handle child of type", path.type);
             }
+
+            /* console.log("👧🏻", path.parentPath?.toString());
+
+            if (path.parentPath && path.parentPath.isCallExpression()) {
+              path.parentPath.replaceWith(convertToChild(path.parentPath.node));
+            } else if (path.isIdentifier()) {
+              console.info("👧🏻", "omitting identifier", path.toString(), path);
+            } else {
+              console.warn("👧🏻", "cannot handle child of type", path.type);
+            } */
           });
       },
     },
@@ -68,7 +78,7 @@ function isEventHandler(path: NodePath<JSXAttribute>): boolean {
   return typeof name === "string" ? nameIsEventHandler.test(name) : nameIsEventHandler.test(name.name);
 }
 
-const convertToChildGetter = (identifier: Identifier) => {
+/* const convertToChildGetter = (identifier: Identifier) => {
   const IDENTIFIER = cloneDeepWithoutLoc(identifier);
   return childGetter({ IDENTIFIER });
 };
@@ -76,8 +86,9 @@ const convertToChildGetter = (identifier: Identifier) => {
 const childGetter = template.statement`
   ReactiveJsx.child(() => IDENTIFIER());
 `;
+*/
 
-const convertToChild = (identifier: CallExpression) => {
+const convertToChild = (identifier: Identifier) => {
   const IDENTIFIER = cloneDeepWithoutLoc(identifier);
   return child({ IDENTIFIER });
 };

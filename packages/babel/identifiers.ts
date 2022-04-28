@@ -34,21 +34,32 @@ export const makeIdentifierReactive = (path: NodePath<Identifier>): void => {
   // Creates a reative value `let name = xxx` becomes `const [name, setName] = value(xxx);`
   parent.replaceWith(convertToReactiveValue(getter, setter, value));
 
+  // binding.referencePaths.forEach(path => {
+  //   console.log(path.toString(), "|", path.parentPath?.toString());
+  //   console.log(path);
+  // });
+
   // Replaces accesors of `name` with `name()`
+  console.log("ref paths", binding.referencePaths);
   binding.referencePaths
-    .map(path => {
+    /* .map(path => {
       console.log(path.parentPath?.toString());
       return path;
-    })
+    }) */
     .filter(path => path.isIdentifier())
-    .filter(path => !path.parentPath?.isCallExpression()) // these have already been transformed
+    // we want to forward the reactive function objects to the runtime.element fn for it to execute
+    // .filter(path => !path.findParent(parent => parent.isJSXElement()))
+    // these have already been transformed to function calls
+    // .filter(path => !path.parentPath?.isCallExpression())
     .forEach(path => {
-      path.replaceWith(convertToReactiveGetter(getter));
+      path.replaceWith(reactiveGetter({ GETTER: getter }));
     });
 
   // Replaces assignemtns `name = xxx` with `setName(xxx)`
   binding.constantViolations.forEach(path => {
     if (path.isAssignmentExpression()) {
+      // console.log(path.node.right);
+      // console.log(path);
       path.replaceWith(convertToReactiveSetter(setter, path.node.right));
     }
   });
@@ -71,10 +82,6 @@ const convertToReactiveValue = (GETTER: string, SETTER: string, value: Node) => 
 const convertToReactiveSetter = (SETTER: string, value: Node) => {
   const VALUE = cloneDeepWithoutLoc(value);
   return reactiveSetter({ SETTER, VALUE });
-};
-
-const convertToReactiveGetter = (GETTER: string) => {
-  return reactiveGetter({ GETTER });
 };
 
 const convertToReaction = (statement: Node) => {
