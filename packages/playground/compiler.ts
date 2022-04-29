@@ -1,6 +1,6 @@
 import { rollup } from "rollup";
 import { transform, availablePresets } from "@babel/standalone";
-import { insertImports, reactive } from "@reactive-jsx/babel";
+import reactiveJsxPlugin from "@reactive-jsx/babel";
 import runtime from "@reactive-jsx/runtime";
 
 import type { Plugin, OutputOptions } from "rollup";
@@ -29,7 +29,7 @@ const babelOptions = {
       },
     ],
   ],
-  plugins: [reactive, insertImports],
+  plugins: [reactiveJsxPlugin],
 };
 
 export async function compile(source: string, resolveFile: ResolveFile): Promise<string> {

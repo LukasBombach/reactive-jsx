@@ -32,7 +32,7 @@ export const reactive = (): PluginObj => ({
         }
       }
     },
-    JSXElement: {
+    /* JSXElement: {
       enter(path) {
         path
           .get("children")
@@ -47,18 +47,18 @@ export const reactive = (): PluginObj => ({
               console.warn("👧🏻", "cannot handle child of type", path.type);
             }
 
-            /* console.log("👧🏻", path.parentPath?.toString());
+            // console.log("👧🏻", path.parentPath?.toString());
 
-            if (path.parentPath && path.parentPath.isCallExpression()) {
-              path.parentPath.replaceWith(convertToChild(path.parentPath.node));
-            } else if (path.isIdentifier()) {
-              console.info("👧🏻", "omitting identifier", path.toString(), path);
-            } else {
-              console.warn("👧🏻", "cannot handle child of type", path.type);
-            } */
+            // if (path.parentPath && path.parentPath.isCallExpression()) {
+            //   path.parentPath.replaceWith(convertToChild(path.parentPath.node));
+            // } else if (path.isIdentifier()) {
+            //   console.info("👧🏻", "omitting identifier", path.toString(), path);
+            // } else {
+            //   console.warn("👧🏻", "cannot handle child of type", path.type);
+            // }
           });
       },
-    },
+    }, */
   },
 });
 

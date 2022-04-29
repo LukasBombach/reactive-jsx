@@ -52,7 +52,8 @@ export const makeIdentifierReactive = (path: NodePath<Identifier>): void => {
     // these have already been transformed to function calls
     // .filter(path => !path.parentPath?.isCallExpression())
     .forEach(path => {
-      path.replaceWith(reactiveGetter({ GETTER: getter }));
+      console.log(path);
+      // path.replaceWith(reactiveGetter({ GETTER: getter }));
     });
 
   // Replaces assignemtns `name = xxx` with `setName(xxx)`
@@ -60,7 +61,9 @@ export const makeIdentifierReactive = (path: NodePath<Identifier>): void => {
     if (path.isAssignmentExpression()) {
       // console.log(path.node.right);
       // console.log(path);
-      path.replaceWith(convertToReactiveSetter(setter, path.node.right));
+      const newPath = convertToReactiveSetter(setter, path.node.right);
+      debugger;
+      path.replaceWith(newPath);
     }
   });
 
