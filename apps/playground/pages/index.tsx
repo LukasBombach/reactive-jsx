@@ -34,7 +34,7 @@ const Name = ({ name }) => {
   let age = 30;
 
   return (
-    <button onClick={() => age = age + 1}>
+    <button onClick={() => { age = age + 1; console.log(age); }} name={\`button-\${age}\`} value={age}>
       His name is {name}. He is {age} years old.
     </button>
   );

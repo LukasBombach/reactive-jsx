@@ -1,4 +1,4 @@
-import type { NodePath, Node, PluginObj } from "@babel/core";
+import type { NodePath, Node, PluginObj, Visitor } from "@babel/core";
 import type { JSXAttribute, ArrowFunctionExpression, FunctionExpression, AssignmentExpression } from "@babel/types";
 
 interface State {
@@ -6,13 +6,14 @@ interface State {
   debug: any[];
 }
 
-function reactiveJsxPlugin(): PluginObj {
+function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
   return {
     name: "Reactive JSX",
     visitor: {
       Program: {
-        enter(path) {
-          const state = { assignments: [], debug: [] };
+        enter(path, state) {
+          state.assignments = [];
+          state.debug = [];
 
           path.traverse({ JSXAttribute: path => collectAssignments(path, state) });
 
