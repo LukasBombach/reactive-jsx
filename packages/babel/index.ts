@@ -1,9 +1,9 @@
-import type { NodePath, Node, PluginObj, Visitor } from "@babel/core";
-import type { JSXAttribute, ArrowFunctionExpression, FunctionExpression, AssignmentExpression } from "@babel/types";
+import type { NodePath, Node, Visitor } from "@babel/core";
+import type { JSXAttribute, ArrowFunctionExpression, FunctionExpression } from "@babel/types";
+import type { Binding } from "@babel/traverse";
 
 interface State {
-  assignments: NodePath<AssignmentExpression>[];
-  debug: any[];
+  bindings: Binding[];
 }
 
 function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
@@ -12,12 +12,11 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
     visitor: {
       Program: {
         enter(path, state) {
-          state.assignments = [];
-          state.debug = [];
+          state.bindings = [];
 
           path.traverse({ JSXAttribute: path => collectAssignments(path, state) });
 
-          console.debug("assignments", ...state.assignments);
+          console.debug("bindings", ...state.bindings);
         },
       },
     },
@@ -37,7 +36,18 @@ function collectAssignments(path: NodePath<JSXAttribute>, state: State) {
   if (isAnyTypeOfFunctionExpression(expression)) {
     expression.traverse({
       AssignmentExpression: assignment => {
-        state.assignments.push(assignment);
+        const left = assignment.get("left");
+        if (!left.isIdentifier()) return;
+
+        const name = left.node.name;
+        const binding = path.scope.getBinding(name);
+
+        if (!binding) return;
+        if (!binding.path.isVariableDeclarator()) return;
+        if (binding.kind === "const") return;
+        if (binding.constantViolations.length === 0) return;
+
+        state.bindings.push(binding);
       },
     });
     return;
