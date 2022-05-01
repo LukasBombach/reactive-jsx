@@ -26,7 +26,7 @@ const Result = () => <h1>The answer is {count}</h1>;
 
 document.body.append(<Button />, <Result />);`;
 
-const developmentCode = `
+const developmentCode1 = `
 const first = 'Rick';
 const last = 'Astley';
 
@@ -42,11 +42,31 @@ const Name = ({ name }) => {
 
 document.body.append(<Name name={first} />);`;
 
+const developmentCode2 = `
+const name = "John";
+
+const Age = ({ name }) => {
+	let age = 30;
+
+	function handleClick() {
+		age = age + 1;
+    console.log("Age is set to", age);
+	}
+
+  return (
+    <button onClick={handleClick} value={age} name={\`button with age of \${age}\`}>
+      {name}'s age is {age % 2 === 0 ? "even" : "odd"} ({age})
+    </button>
+  );
+};
+
+document.body.append(<Age name={first} />);`;
+
 export default function Home() {
   return (
     <main className="px-8 py-4 sm:px-16 sm:py-12 xl:px-48 xl:py-24 grid gap-8 text-slate-800 bg-grey-50">
       <h1 className="leading-tight text-7xl max-w-screen-sm font-garamond">Exploring compile time reactive JSX</h1>
-      <Playground className="max-w-screen-lg" source={developmentCode} resolveFile={() => null} />
+      <Playground className="max-w-screen-lg" source={developmentCode2} resolveFile={() => null} />
       {/* <blockquote className="pl-3 border-l-4 border-slate-200 text-slate-500 max-w-screen-sm">
         Note: When this shows up in the git history, this text will be super emberrassing. I am writing this text only
         to find a narrative which I can write code examples for. This way I can find an idea which features to

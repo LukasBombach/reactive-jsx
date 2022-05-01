@@ -3,8 +3,10 @@ import { reaction } from "./_old/reactive";
 import type { Getter } from "./reactive";
 
 type TagName = keyof JSX.IntrinsicElements;
+type ChildPrimive = string | number | boolean | null | undefined;
+
 type Component = (props: Props) => HTMLElement;
-type Child = string | number;
+type Child = ChildPrimive | ((element: HTMLElement) => void);
 type Props = Record<string, string | Getter<any>>;
 
 export function el(type: TagName | Component, props: Props = {}, ...children: Child[]): HTMLElement {
@@ -32,8 +34,14 @@ export function el(type: TagName | Component, props: Props = {}, ...children: Ch
         const text = document.createTextNode(child.toString());
         element.append(text);
       }
+
+      if (typeof child === "function") {
+        child(element);
+      }
     }
 
     return element;
   }
+
+  throw new Error("components are not supported yet");
 }

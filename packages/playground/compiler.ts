@@ -29,7 +29,9 @@ const babelOptions = {
       },
     ],
   ],
-  plugins: [reactiveJsxPlugin],
+  plugins: [
+    /* reactiveJsxPlugin */
+  ],
 };
 
 export async function compile(source: string, resolveFile: ResolveFile): Promise<string> {
