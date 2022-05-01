@@ -1,7 +1,11 @@
-import { value, reaction } from "./reactive";
-import { element, child } from "./element";
+type TagName = keyof JSX.IntrinsicElements;
+type Component = (props: Props) => HTMLElement;
+type Child = HTMLElement | Text;
+type Props = object;
 
-export type { Read, Write } from "./reactive";
-export type { Tag, Element, Component } from "./types";
-
-export default { value, reaction, element, child };
+export function el(type: TagName | Component, props: Props, ...children: Child[]): HTMLElement {
+  if (typeof type === "string") {
+    const element = document.createElement(type);
+    return element;
+  }
+}
