@@ -6,7 +6,7 @@ type TagName = keyof JSX.IntrinsicElements;
 type ChildPrimive = string | number | boolean | null | undefined;
 
 type Component = (props: Props) => HTMLElement;
-type Child = ChildPrimive | ((element: HTMLElement) => void);
+type Child = ChildPrimive | (() => ChildPrimive);
 type Props = Record<string, string | Getter<any>>;
 
 export function el(type: TagName | Component, props: Props = {}, ...children: Child[]): HTMLElement {
@@ -36,7 +36,7 @@ export function el(type: TagName | Component, props: Props = {}, ...children: Ch
       }
 
       if (typeof child === "function") {
-        child(element);
+        // child();
       }
     }
 

@@ -46,15 +46,15 @@ const developmentCode2 = `
 const name = "John";
 
 const Age = ({ name }) => {
-	let age = 30;
+  let age = 30;
 
-	function handleClick() {
-		age = age + 1;
-    console.log("Age is set to", age);
-	}
+  // function handleClick() {
+  // 	age = age + 1;
+  //   console.log("Age is set to", age);
+  // }
 
   return (
-    <button onClick={handleClick} value={age} name={\`button with age of \${age}\`}>
+    <button onClick={() => age = age + 1} value={age} name={\`button with age of \${age}\`}>
       {name}'s age is {age % 2 === 0 ? "even" : "odd"} ({age})
     </button>
   );
