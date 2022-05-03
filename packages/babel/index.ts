@@ -3,7 +3,7 @@ import type { JSXAttribute, ArrowFunctionExpression, FunctionExpression } from "
 import type { Binding } from "@babel/traverse";
 
 interface State {
-  bindings: Binding[];
+  reactiveBindings: Binding[];
 }
 
 function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
@@ -12,31 +12,33 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
     visitor: {
       Program: {
         enter(path, state) {
-          state.bindings = [];
+          state.reactiveBindings = [];
 
-          path.traverse({ JSXAttribute: path => collectAssignments(path, state) });
+          path.traverse({
+            JSXAttribute: path => {
+              collectReactiveBindings(path, state);
+              collectVariablesInAttributes(path, state);
+            },
+          });
 
-          console.debug("bindings", ...state.bindings);
+          console.debug("reactiveBindings", state.reactiveBindings);
         },
       },
     },
   };
 }
 
-function collectAssignments(path: NodePath<JSXAttribute>, state: State) {
+function collectReactiveBindings(path: NodePath<JSXAttribute>, state: State) {
   if (!isEventHandler(path)) return;
 
+  // todo this can be simplified by traversing the path directly (I guess?)
   const expression = path.get("value").get("expression");
-
-  if (Array.isArray(expression)) {
-    console.warn("unexpectedly received an array as expression, stopping", expression);
-    return;
-  }
+  assertNotAnArray(expression);
 
   if (isAnyTypeOfFunctionExpression(expression)) {
     expression.traverse({
-      AssignmentExpression: assignment => {
-        const left = assignment.get("left");
+      AssignmentExpression: path => {
+        const left = path.get("left");
         if (!left.isIdentifier()) return;
 
         const name = left.node.name;
@@ -47,13 +49,18 @@ function collectAssignments(path: NodePath<JSXAttribute>, state: State) {
         if (binding.kind === "const") return;
         if (binding.constantViolations.length === 0) return;
 
-        state.bindings.push(binding);
+        state.reactiveBindings.push(binding);
       },
     });
-    return;
   }
+}
 
-  console.debug("unknown expression", expression.toString());
+function collectVariablesInAttributes(path: NodePath<JSXAttribute>, state: State) {
+  path.traverse({
+    Identifier: path => {
+      console.debug(path.parentPath?.toString());
+    },
+  });
 }
 
 function isEventHandler(path: NodePath<JSXAttribute>): boolean {
@@ -66,6 +73,12 @@ function isAnyTypeOfFunctionExpression(
   path: NodePath<Node>
 ): path is NodePath<ArrowFunctionExpression | FunctionExpression> {
   return path.isFunctionExpression() || path.isArrowFunctionExpression();
+}
+
+function assertNotAnArray<T>(value: T | T[]): asserts value is T {
+  if (Array.isArray(value)) {
+    throw new Error("Expected value not to be an array");
+  }
 }
 
 export default reactiveJsxPlugin;
