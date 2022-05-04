@@ -58,7 +58,8 @@ function collectReactiveBindings(path: NodePath<JSXAttribute>, state: State) {
 function collectVariablesInAttributes(path: NodePath<JSXAttribute>, state: State) {
   path.traverse({
     Identifier: path => {
-      console.debug(path.parentPath?.toString());
+      const isAssignment = path.parentPath?.isAssignmentExpression() && path.parentPath?.get("left") === path;
+      if (!isAssignment) console.debug(path.parentPath?.toString());
     },
   });
 }
