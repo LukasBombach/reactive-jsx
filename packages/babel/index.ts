@@ -1,9 +1,10 @@
 import type { NodePath, Node, Visitor } from "@babel/core";
-import type { JSXAttribute, ArrowFunctionExpression, FunctionExpression } from "@babel/types";
+import type { JSXElement, JSXAttribute, ArrowFunctionExpression, FunctionExpression, Identifier } from "@babel/types";
 import type { Binding } from "@babel/traverse";
 
 interface State {
   reactiveBindings: Binding[];
+  identifiers: NodePath<Identifier>[];
 }
 
 function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
@@ -13,15 +14,22 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
       Program: {
         enter(path, state) {
           state.reactiveBindings = [];
+          state.identifiers = [];
 
           path.traverse({
+            JSXElement: path => {
+              collectIdentifiers(path, state);
+            },
             JSXAttribute: path => {
               collectReactiveBindings(path, state);
-              collectVariablesInAttributes(path, state);
             },
           });
 
           console.debug("reactiveBindings", state.reactiveBindings);
+          console.debug(
+            "identifiers",
+            state.identifiers.map(path => path.parentPath?.toString())
+          );
         },
       },
     },
@@ -55,11 +63,12 @@ function collectReactiveBindings(path: NodePath<JSXAttribute>, state: State) {
   }
 }
 
-function collectVariablesInAttributes(path: NodePath<JSXAttribute>, state: State) {
+function collectIdentifiers(path: NodePath<JSXElement>, state: State) {
   path.traverse({
     Identifier: path => {
       const isAssignment = path.parentPath?.isAssignmentExpression() && path.parentPath?.get("left") === path;
-      if (!isAssignment) console.debug(path.parentPath?.toString());
+      if (isAssignment) return;
+      state.identifiers.push(path);
     },
   });
 }
