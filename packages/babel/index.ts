@@ -134,7 +134,7 @@ function createSetter(name: string, VALUE: Expression) {
 }
 
 const declaration = template.statement`
-  const [GETTER, SETTER] = ReactiveJsx.value(VALUE);
+  const [GETTER, SETTER] = rjsx.val(VALUE);
 `;
 
 const getter = template.statement`
