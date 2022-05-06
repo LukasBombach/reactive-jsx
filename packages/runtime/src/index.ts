@@ -1,6 +1,6 @@
 import { reaction } from "./_old/reactive";
 
-import type { Getter } from "./reactive";
+import type { Getter, Setter } from "./reactive";
 
 type TagName = keyof JSX.IntrinsicElements;
 type ChildPrimive = string | number | boolean | null | undefined;
@@ -44,4 +44,8 @@ export function el(type: TagName | Component, props: Props = {}, ...children: Ch
   }
 
   throw new Error("components are not supported yet");
+}
+
+export function val<T>(initialValue: T): [getter: Getter<T>, setter: Setter<T>] {
+  return [() => initialValue, () => {}];
 }

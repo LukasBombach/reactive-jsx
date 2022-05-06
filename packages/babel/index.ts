@@ -7,7 +7,7 @@ import {
   JSXExpressionContainer,
 } from "@babel/types";
 
-import type { NodePath, Node, Visitor } from "@babel/core";
+import type { NodePath, Node, Visitor, PluginObj } from "@babel/core";
 import type { JSXAttribute, ArrowFunctionExpression, FunctionExpression, Identifier } from "@babel/types";
 import type { Binding } from "@babel/traverse";
 
@@ -29,7 +29,7 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
             },
           });
 
-          console.debug("bindings", state.bindings);
+          path.unshiftContainer("body", importRuntime);
 
           state.bindings
             .flatMap(binding => binding.referencePaths)
@@ -134,7 +134,7 @@ function createSetter(name: string, VALUE: Expression) {
 }
 
 const declaration = template.statement`
-  const [GETTER, SETTER] = rjsx.val(VALUE);
+  const [GETTER, SETTER] = val(VALUE);
 `;
 
 const getter = template.statement`
@@ -148,5 +148,9 @@ const setter = template.statement`
 const asFunction = template.statement`
   () => VALUE
 `;
+
+const importRuntime = template.ast(`
+  import { el, val } from "@reactive-jsx/runtime";
+`);
 
 export default reactiveJsxPlugin;
