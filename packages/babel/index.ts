@@ -43,6 +43,9 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
             });
 
           state.bindings.forEach(binding => {
+            if (!binding.path.isVariableDeclarator()) return;
+            if (!isIdentifier(binding.path.node.id)) return;
+            if (!binding.path.node.init) return;
             const VALUE = cloneDeepWithoutLoc(binding.path.node.init);
             const GETTER = binding.path.node.id.name;
             const SETTER = `set${GETTER[0].toUpperCase()}${GETTER.substring(1)}`;
