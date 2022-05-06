@@ -1,5 +1,11 @@
 import template from "@babel/template";
-import { AssignmentExpression, cloneDeepWithoutLoc, Expression, isIdentifier } from "@babel/types";
+import {
+  AssignmentExpression,
+  cloneDeepWithoutLoc,
+  Expression,
+  isIdentifier,
+  isJSXExpressionContainer,
+} from "@babel/types";
 
 import type { NodePath, Node, Visitor } from "@babel/core";
 import type { JSXAttribute, ArrowFunctionExpression, FunctionExpression, Identifier } from "@babel/types";
@@ -50,6 +56,23 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
             const GETTER = binding.path.node.id.name;
             const SETTER = `set${GETTER[0].toUpperCase()}${GETTER.substring(1)}`;
             binding.path.parentPath.replaceWith(declaration({ GETTER, SETTER, VALUE }));
+          });
+
+          path.traverse({
+            JSXElement: path => {
+              const attributes = path.get("openingElement").get("attributes");
+              const children = path.get("children");
+
+              /* attributes
+                .filter((path): path is NodePath<JSXAttribute> => path.isJSXAttribute())
+                .filter(path => !isEventHandler(path))
+                .map(path => path.get("expression"))
+                .filter((path): path is NodePath<Expression> => !Array.isArray(path) && path.isExpression())
+                .forEach(path => {
+                  const VALUE = cloneDeepWithoutLoc(path.node);
+                  path.replaceWith(asFunction({ VALUE }));
+                }); */
+            },
           });
         },
       },
@@ -109,6 +132,10 @@ const getter = template.statement`
 
 const setter = template.statement`
   SETTER(VALUE)
+`;
+
+const asFunction = template.statement`
+  () => VALUE
 `;
 
 export default reactiveJsxPlugin;
