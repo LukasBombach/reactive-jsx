@@ -2,12 +2,11 @@ import template from "@babel/template";
 import { AssignmentExpression, cloneDeepWithoutLoc } from "@babel/types";
 
 import type { NodePath, Node, Visitor } from "@babel/core";
-import type { JSXElement, JSXAttribute, ArrowFunctionExpression, FunctionExpression, Identifier } from "@babel/types";
+import type { JSXAttribute, ArrowFunctionExpression, FunctionExpression, Identifier } from "@babel/types";
 import type { Binding } from "@babel/traverse";
 
 interface State {
   bindings: Binding[];
-  // identifiers: NodePath<Identifier>[];
 }
 
 function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
@@ -17,12 +16,8 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
       Program: {
         enter(path, state) {
           state.bindings = [];
-          // state.identifiers = [];
 
           path.traverse({
-            // JSXElement: path => {
-            //   collectIdentifiers(path, state);
-            // },
             JSXAttribute: path => {
               collectbindings(path, state);
             },
@@ -30,32 +25,20 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
 
           console.debug("bindings", state.bindings);
 
-          // console.debug(
-          //   "identifiers",
-          //   state.identifiers.map(path => path.parentPath?.toString())
-          // );
-
-          // path.traverse({
-          //   JSXAttribute: path => {
-          //     convertReferencesToGetters(path, state);
-          //   },
-          // });
-
-          /* const referencePaths =  */ state.bindings
+          state.bindings
             .flatMap(binding => binding.referencePaths)
-            .filter((path): path is NodePath<Identifier> => path.isIdentifier()) // this really is here for TS
+            .filter((path): path is NodePath<Identifier> => path.isIdentifier())
             .forEach(path => {
               path.replaceWith(getter({ NAME: path.node.name }));
             });
 
           state.bindings
             .flatMap(binding => binding.constantViolations)
-            .filter((path): path is NodePath<AssignmentExpression> => path.isAssignmentExpression()) // this really is here for TS
+            .filter((path): path is NodePath<AssignmentExpression> => path.isAssignmentExpression())
             .forEach(path => {
               console.log(path);
               // const NAME = path.node.left;
               // const VALUE = cloneDeepWithoutLoc(path.node.right);
-
               // path.replaceWith(setter({ NAME: path.node.name }));
             });
         },
@@ -71,16 +54,6 @@ const getter = template.statement`
 const setter = template.statement`
   NAME(VALUE)
 `;
-
-// function convertReferencesToGetters(path: NodePath<JSXAttribute>, state: State) {
-//   path.traverse({
-//     Identifier: path => {
-//       const isAssignment = path.parentPath?.isAssignmentExpression() && path.parentPath?.get("left") === path;
-//       if (isAssignment) return;
-//       state.identifiers.push(path);
-//     },
-//   });
-// }
 
 function collectbindings(path: NodePath<JSXAttribute>, state: State) {
   if (!isEventHandler(path)) return;
@@ -108,16 +81,6 @@ function collectbindings(path: NodePath<JSXAttribute>, state: State) {
     });
   }
 }
-
-// function collectIdentifiers(path: NodePath<JSXElement>, state: State) {
-//   path.traverse({
-//     Identifier: path => {
-//       const isAssignment = path.parentPath?.isAssignmentExpression() && path.parentPath?.get("left") === path;
-//       if (isAssignment) return;
-//       state.identifiers.push(path);
-//     },
-//   });
-// }
 
 function isEventHandler(path: NodePath<JSXAttribute>): boolean {
   const identifier = path.get("name").node.name;
