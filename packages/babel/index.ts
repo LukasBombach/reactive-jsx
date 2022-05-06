@@ -41,8 +41,8 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
 
           const referencePaths = state.bindings
             .flatMap(binding => binding.referencePaths)
+            .filter((path): path is NodePath<Identifier> => path.isIdentifier()) // this really is here for TS
             .forEach(path => {
-              console.log(path);
               path.replaceWith(getter({ GETTER: path.node.name }));
             });
         },
