@@ -74,6 +74,15 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
                   const VALUE = cloneDeepWithoutLoc(path.node);
                   path.replaceWith(asFunction({ VALUE }));
                 });
+
+              children
+                .filter((path): path is NodePath<JSXExpressionContainer> => path.isJSXExpressionContainer())
+                .map(path => path.get("expression"))
+                .filter((path): path is NodePath<Expression> => path.isExpression())
+                .forEach(path => {
+                  const VALUE = cloneDeepWithoutLoc(path.node);
+                  path.replaceWith(asFunction({ VALUE }));
+                });
             },
           });
         },
