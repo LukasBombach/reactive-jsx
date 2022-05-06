@@ -4,7 +4,7 @@ import {
   cloneDeepWithoutLoc,
   Expression,
   isIdentifier,
-  isJSXExpressionContainer,
+  JSXExpressionContainer,
 } from "@babel/types";
 
 import type { NodePath, Node, Visitor } from "@babel/core";
@@ -63,15 +63,17 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
               const attributes = path.get("openingElement").get("attributes");
               const children = path.get("children");
 
-              /* attributes
+              attributes
                 .filter((path): path is NodePath<JSXAttribute> => path.isJSXAttribute())
                 .filter(path => !isEventHandler(path))
+                .map(path => path.get("value"))
+                .filter((path): path is NodePath<JSXExpressionContainer> => path.isJSXExpressionContainer())
                 .map(path => path.get("expression"))
-                .filter((path): path is NodePath<Expression> => !Array.isArray(path) && path.isExpression())
+                .filter((path): path is NodePath<Expression> => path.isExpression())
                 .forEach(path => {
                   const VALUE = cloneDeepWithoutLoc(path.node);
                   path.replaceWith(asFunction({ VALUE }));
-                }); */
+                });
             },
           });
         },

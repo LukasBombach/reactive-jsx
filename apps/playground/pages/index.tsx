@@ -51,7 +51,7 @@ const Age = ({ name }) => {
   age = age + 2;
 
   return (
-    <button onClick={() => age = age + 1} value={age} name={\`button with age of \${age}\`}>
+    <button onClick={() => age = age + 1} tabIndex="0" value={age} name={\`button with age of \${age}\`}>
       {name}'s age is {age % 2 === 0 ? "even" : "odd"} ({age})
     </button>
   );
