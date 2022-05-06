@@ -24,8 +24,8 @@ const babelOptions = {
     [
       availablePresets.react,
       {
-        pragma: "el",
-        pragmaFrag: "frag",
+        pragma: "rjsx.el",
+        pragmaFrag: "rjsx.frag",
       },
     ],
   ],

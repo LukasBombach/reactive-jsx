@@ -134,7 +134,7 @@ function createSetter(name: string, VALUE: Expression) {
 }
 
 const declaration = template.statement`
-  const [GETTER, SETTER] = val(VALUE);
+  const [GETTER, SETTER] = rjsx.val(VALUE);
 `;
 
 const getter = template.statement`
@@ -150,7 +150,7 @@ const asFunction = template.statement`
 `;
 
 const importRuntime = template.ast(`
-  import { el, val } from "@reactive-jsx/runtime";
+  import rjsx from "@reactive-jsx/runtime";
 `);
 
 export default reactiveJsxPlugin;
