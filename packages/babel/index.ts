@@ -1,4 +1,6 @@
 import template from "@babel/template";
+import { AssignmentExpression, cloneDeepWithoutLoc } from "@babel/types";
+
 import type { NodePath, Node, Visitor } from "@babel/core";
 import type { JSXElement, JSXAttribute, ArrowFunctionExpression, FunctionExpression, Identifier } from "@babel/types";
 import type { Binding } from "@babel/traverse";
@@ -39,11 +41,22 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
           //   },
           // });
 
-          const referencePaths = state.bindings
+          /* const referencePaths =  */ state.bindings
             .flatMap(binding => binding.referencePaths)
             .filter((path): path is NodePath<Identifier> => path.isIdentifier()) // this really is here for TS
             .forEach(path => {
-              path.replaceWith(getter({ GETTER: path.node.name }));
+              path.replaceWith(getter({ NAME: path.node.name }));
+            });
+
+          state.bindings
+            .flatMap(binding => binding.constantViolations)
+            .filter((path): path is NodePath<AssignmentExpression> => path.isAssignmentExpression()) // this really is here for TS
+            .forEach(path => {
+              console.log(path);
+              // const NAME = path.node.left;
+              // const VALUE = cloneDeepWithoutLoc(path.node.right);
+
+              // path.replaceWith(setter({ NAME: path.node.name }));
             });
         },
       },
@@ -52,7 +65,11 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
 }
 
 const getter = template.statement`
-  GETTER()
+  NAME()
+`;
+
+const setter = template.statement`
+  NAME(VALUE)
 `;
 
 // function convertReferencesToGetters(path: NodePath<JSXAttribute>, state: State) {

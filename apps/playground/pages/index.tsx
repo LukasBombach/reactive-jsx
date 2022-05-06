@@ -48,6 +48,8 @@ const name = "John";
 const Age = ({ name }) => {
   let age = 30;
 
+  age = age + 2;
+
   return (
     <button onClick={() => age = age + 1} value={age} name={\`button with age of \${age}\`}>
       {name}'s age is {age % 2 === 0 ? "even" : "odd"} ({age})
