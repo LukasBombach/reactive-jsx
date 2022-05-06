@@ -1,4 +1,4 @@
-import { reaction } from "./_old/reactive";
+import { reaction, value } from "./_old/reactive";
 
 import type { Getter, Setter } from "./reactive";
 
@@ -36,7 +36,19 @@ function el(type: TagName | Component, props: Props = {}, ...children: Child[]):
       }
 
       if (typeof child === "function") {
-        // child();
+        reaction(() => {
+          const value = child();
+
+          if (typeof value === "string") {
+            const text = document.createTextNode(value);
+            element.append(text);
+          }
+
+          if (typeof value === "number") {
+            const text = document.createTextNode(value.toString());
+            element.append(text);
+          }
+        });
       }
     }
 
@@ -47,7 +59,8 @@ function el(type: TagName | Component, props: Props = {}, ...children: Child[]):
 }
 
 function val<T>(initialValue: T): [getter: Getter<T>, setter: Setter<T>] {
-  return [() => initialValue, () => {}];
+  return value(initialValue);
+  // return [() => initialValue, () => {}];
 }
 
 export default { el, val };
