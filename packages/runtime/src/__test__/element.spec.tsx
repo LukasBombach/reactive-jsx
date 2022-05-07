@@ -1,27 +1,27 @@
 import rjsx from "..";
 
 describe("element: built in elements", () => {
-  test("x", () => {
+  test("a tagname returns its html element", () => {
     const el = rjsx.el("div");
     expect(el).toBeInstanceOf(HTMLDivElement);
   });
 
-  test("x", () => {
+  test("no props = no attributes", () => {
     const el = rjsx.el("div");
     expect(el.attributes).toHaveLength(0);
   });
 
-  test("x", () => {
+  test("no children = no childnodes", () => {
     const el = rjsx.el("div");
     expect(el.childNodes).toHaveLength(0);
   });
 
-  test("x", () => {
+  test("a prop = an attribute", () => {
     const el = rjsx.el("div", { id: "id" });
     expect(el.getAttribute("id")).toBe("id");
   });
 
-  test("x", () => {
+  test("a text child = the text being rendered", () => {
     const el = rjsx.el("div", {}, "text");
     expect(el.innerText).toBe("text");
   });
