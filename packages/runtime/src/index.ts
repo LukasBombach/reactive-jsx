@@ -9,7 +9,7 @@ type Component = (props: Props) => HTMLElement;
 type Child = ChildPrimive | (() => ChildPrimive);
 type Props = Record<string, string | Getter<any>>;
 
-function el(type: TagName | Component, props: Props = {}, ...children: Child[]): HTMLElement {
+export function el(type: TagName | Component, props: Props = {}, ...children: Child[]): HTMLElement {
   if (typeof type === "string") {
     const element = document.createElement(type);
 
@@ -60,7 +60,7 @@ function el(type: TagName | Component, props: Props = {}, ...children: Child[]):
   }
 }
 
-function val<T>(initialValue: T): [getter: Getter<T>, setter: Setter<T>] {
+export function val<T>(initialValue: T): [getter: Getter<T>, setter: Setter<T>] {
   //return value(initialValue);
   return [() => initialValue, () => {}];
 }
