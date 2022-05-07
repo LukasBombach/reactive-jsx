@@ -39,6 +39,8 @@ function el(type: TagName | Component, props: Props = {}, ...children: Child[]):
         reaction(() => {
           const value = child();
 
+          console.log(value);
+
           if (typeof value === "string") {
             const text = document.createTextNode(value);
             element.append(text);
@@ -59,8 +61,8 @@ function el(type: TagName | Component, props: Props = {}, ...children: Child[]):
 }
 
 function val<T>(initialValue: T): [getter: Getter<T>, setter: Setter<T>] {
-  return value(initialValue);
-  // return [() => initialValue, () => {}];
+  //return value(initialValue);
+  return [() => initialValue, () => {}];
 }
 
 export default { el, val };
