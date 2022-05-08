@@ -7,8 +7,8 @@ import {
   JSXExpressionContainer,
 } from "@babel/types";
 
-import type { NodePath, Node, Visitor, PluginObj } from "@babel/core";
-import type { JSXAttribute, ArrowFunctionExpression, FunctionExpression, Identifier } from "@babel/types";
+import type { NodePath, Node, Visitor } from "@babel/core";
+import type { JSXAttribute, ArrowFunctionExpression, FunctionExpression, Identifier, JSXElement } from "@babel/types";
 import type { Binding } from "@babel/traverse";
 
 interface State {
@@ -62,6 +62,9 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
             JSXElement: path => {
               const attributes = path.get("openingElement").get("attributes");
               const children = path.get("children");
+              const isComponent = openingElementIsCapitalized(path);
+
+              if (isComponent) return;
 
               attributes
                 .filter((path): path is NodePath<JSXAttribute> => path.isJSXAttribute())
@@ -89,6 +92,12 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
       },
     },
   };
+}
+
+function openingElementIsCapitalized(path: NodePath<JSXElement>): boolean {
+  const namePath = path.get("openingElement").get("name");
+  if (!namePath.isJSXIdentifier()) return false;
+  return /[A-Z]/.test(namePath.node.name.charAt(0));
 }
 
 function collectbindings(path: NodePath<JSXAttribute>, state: State) {

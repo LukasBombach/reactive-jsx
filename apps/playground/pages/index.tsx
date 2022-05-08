@@ -57,7 +57,7 @@ const Age = ({ name }) => {
   );
 };
 
-document.body.append(<Age name={first} />);`;
+document.body.append(<Age name={name} />);`;
 
 export default function Home() {
   return (
