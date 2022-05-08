@@ -15,8 +15,13 @@ export function el(type: TagName | Component, props: Props = {}, ...children: Ch
 
     // Props
     for (const name in props) {
+      const isEventHandler = /^on[A-Z]/.test(name);
       const value = props[name];
-      if (typeof value === "function") {
+
+      if (isEventHandler && typeof value === "function") {
+        const eventName = name.substring(2).toLowerCase();
+        element.addEventListener(eventName, value);
+      } else if (typeof value === "function") {
         reaction(() => element.setAttribute(name, value()));
       } else {
         element.setAttribute(name, value);
