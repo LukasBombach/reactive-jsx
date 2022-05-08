@@ -29,8 +29,8 @@ describe("element: built in elements", () => {
 
 describe("element: components", () => {
   test("x", () => {
-    const Comp = () => <div />;
-    const el = rjsx.el(<Comp />);
-    expect(el).toBeInstanceOf(HTMLDivElement);
+    // const Comp = () => <div />;
+    // const el = rjsx.el(<Comp />);
+    // expect(el).toBeInstanceOf(HTMLDivElement);
   });
 });
