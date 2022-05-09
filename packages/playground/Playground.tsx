@@ -5,7 +5,7 @@ import { useCompiler } from "./useCompiler";
 import { SplitPane } from "./SplitPane";
 import { Result } from "./Result";
 
-import type { VFC } from "react";
+import type { VFC, FC, ReactNode } from "react";
 import type { ReactCodeMirrorProps } from "@uiw/react-codemirror";
 import type { ResolveFile } from "./compiler";
 
@@ -21,9 +21,20 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile; classNa
   const [compiledSource, setSource] = useCompiler(source, resolveFile);
   const [rightPane, setRightPane] = useState<"result" | "js">("js");
 
+  const Pane: FC<{ children: ReactNode }> = ({ children }) => (
+    <div className="grid grid-cols-1 grid-rows-[48px,1fr]">
+      <div className="grid grid-cols-12 gap-4 p-6 bg-[#ffffff0a] px-6 py-3 whitespace-nowrap">header</div>
+      <div className="text-xs text-slate-200">{children}</div>
+    </div>
+  );
+
   return (
     <SplitPane className={className}>
-      <div>
+      <Pane>
+        <Editor className="p-6" value={source.trim()} onChange={setSource} />
+      </Pane>
+      <Pane>body</Pane>
+      {/* <div>
         <div className="grid grid-cols-12 gap-4 p-6 bg-[#ffffff0a] px-6 py-3 whitespace-nowrap">
           <div className="col-span-7 flex gap-4">
             <span className="text-xs text-slate-200 py-1">app.js</span>
@@ -59,7 +70,7 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile; classNa
         ) : rightPane === "js" ? (
           <Editor className="p-6 h-full" value={compiledSource} readOnly />
         ) : null}
-      </div>
+      </div> */}
     </SplitPane>
   );
 };

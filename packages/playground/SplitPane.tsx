@@ -55,7 +55,7 @@ export const SplitPane: FC<{ children: [ReactNode, ReactNode]; className?: strin
   return (
     <section
       className={[
-        "relative grid grid-rows-1 grid-cols-[var(--split,40%)_calc(100%-var(--split,calc(100%-40%)))] bg-[#282c34] rounded-xl overflow-hidden drop-shadow-md",
+        "relative grid grid-rows-1 grid-cols-[var(--split,40%)_calc(100%-var(--split,40%))] bg-[#282c34] rounded-xl overflow-hidden drop-shadow-md",
         className,
       ].join(" ")}
       ref={container}
