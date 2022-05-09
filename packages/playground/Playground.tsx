@@ -34,7 +34,7 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile; classNa
   const jsHighlight = rightPane === "js" ? "border-b border-amber-400" : "";
 
   return (
-    <SplitPane className={className}>
+    <SplitPane className={["touch-manipulation", className].join(" ")}>
       <Pane>
         <PaneHeader>
           <div className="col-span-7 flex gap-4">

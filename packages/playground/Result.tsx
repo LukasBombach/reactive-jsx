@@ -22,7 +22,7 @@ export const Result: VFC<ResultProps> = ({ value = "", ...props }) => {
     const script = document.createElement("script");
     script.textContent = value;
     const styles = document.createElement("style");
-    styles.innerText = `body { background: #282C34; color: #E2E8F0; font-family: sans-serif; }`;
+    styles.innerText = `body { background: #282C34; color: #E2E8F0; font-family: sans-serif; touch-action: manipulation; }`;
     ref.contentWindow.document.body.replaceChildren(styles, script);
   });
 

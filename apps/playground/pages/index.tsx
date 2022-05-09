@@ -1,76 +1,23 @@
-import type { FC, ReactNode } from "react";
-
-type TC<P = {}> = FC<{ children: ReactNode } & P>;
-
-const linkBrands = {
-  twitter: "text-[#55ACEE]",
-  github: "text-[#333333] dark:text-[#cdd9e5] font-medium",
-  dribbble: "text-[#EA4C89]",
-  tonline: "text-[#EA4C89]",
-} as const;
-
-const DevTo = () => (
-  <picture>
-    <img
-      src="dev-black.png"
-      alt="Logo of the website dev.to"
-      width={1998 / 20}
-      height={1998 / 20}
-      className="inline-block h-[1em] w-auto border rounded dark:border-slate-400"
-    />
-  </picture>
-);
-
-const Medium = () => (
-  <picture>
-    <source srcSet="Medium-Logo-White-RGB@1x.png" media="(prefers-color-scheme: dark)"></source>
-    <img
-      src="Medium-Logo-Black-RGB@1x.png"
-      alt="Logo of the website Medium.com"
-      width={4488 / 44}
-      height={1114 / 44}
-      className="inline-block h-[1.2em] w-auto border rounded dark:border-slate-400"
-    />
-  </picture>
-);
-
-const Layout: TC = ({ children }) => (
-  <div className="grid grid-cols-1 gap-y-12 sm:gap-y-16 p-8 sm:p-24">{children}</div>
-);
-
-const H1: TC = ({ children }) => <h1 className="text-4xl font-garamond pb-5 sm:pb-8 max-w-screen-sm">{children}</h1>;
-const Intro: TC = ({ children }) => <p className="leading-7 text-sm max-w-screen-sm">{children}</p>;
-const H2: TC = ({ children }) => <h1 className="font-bold text-lg pb-1 sm:pb-2 max-w-screen-sm">{children}</h1>;
-
-const BrandLink: TC<{
-  href: string;
-  brand?: keyof typeof linkBrands;
-}> = p => (
-  <a href={p.href} className={linkBrands[p.brand]}>
-    {p.children}
-  </a>
-);
-
-const ArticleList: TC = ({ children }) => (
-  <ul className="grid grid-cols-1 divide-y dark:divide-slate-700 text-sm max-w-screen-sm leading-6">{children}</ul>
-);
-
-const Article: TC<{ href: string }> = p => (
-  <li className="py-4">
-    <a href={p.href}>{p.children}</a>
-  </li>
-);
-
-const Title: TC = ({ children }) => <span className="block font-semibold">{children}</span>;
-const Description: TC = ({ children }) => <span className="block text-slate-500">{children}</span>;
-
-const Fin = () => <span className="italic text-slate-300 text-sm">Le Fin.</span>;
+import {
+  Layout,
+  PageTitle,
+  Intro,
+  BrandLink,
+  ArticlesHeadline,
+  ArticleList,
+  Article,
+  Title,
+  Description,
+  DevTo,
+  Medium,
+  Fin,
+} from "components";
 
 export default function HomePage() {
   return (
     <Layout>
       <header>
-        <H1>Unfinished thought</H1>
+        <PageTitle>Unfinished thought</PageTitle>
         <Intro>
           Hi, my name is Lukas Bombach, I work as a front end developer for{" "}
           <BrandLink brand="tonline" href="https://www.t-online.de/">
@@ -98,7 +45,7 @@ export default function HomePage() {
         </Intro>
       </header>
       <main>
-        <H2>Articles</H2>
+        <ArticlesHeadline>Articles</ArticlesHeadline>
         <ArticleList>
           <Article href="/exploring-reactive-jsx">
             <Title>Exploring compile time reactive JSX</Title>
