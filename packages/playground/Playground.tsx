@@ -19,31 +19,28 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile; classNa
   className,
 }) => {
   const [compiledSource, setSource] = useCompiler(source, resolveFile);
-  const [rightPane, setRightPane] = useState<"result" | "js">("js");
+  const [rightPane, setRightPane] = useState<"result" | "js">("result");
 
   const Pane: FC<{ children: ReactNode }> = ({ children }) => (
-    <div className="grid grid-cols-1 grid-rows-[48px,1fr]">
-      <div className="grid grid-cols-12 gap-4 p-6 bg-[#ffffff0a] px-6 py-3 whitespace-nowrap">header</div>
-      <div className="text-xs text-slate-200">{children}</div>
-    </div>
+    <div className="grid grid-cols-1 grid-rows-[48px,1fr]">{children}</div>
+  );
+
+  const PaneHeader: FC<{ children: ReactNode }> = ({ children }) => (
+    <div className="grid grid-cols-12 gap-4 p-6 bg-[#ffffff0a] px-6 py-3 whitespace-nowrap">{children}</div>
   );
 
   return (
     <SplitPane className={className}>
       <Pane>
-        <Editor className="p-6" value={source.trim()} onChange={setSource} />
-      </Pane>
-      <Pane>body</Pane>
-      {/* <div>
-        <div className="grid grid-cols-12 gap-4 p-6 bg-[#ffffff0a] px-6 py-3 whitespace-nowrap">
+        <PaneHeader>
           <div className="col-span-7 flex gap-4">
             <span className="text-xs text-slate-200 py-1">app.js</span>
           </div>
-        </div>
+        </PaneHeader>
         <Editor className="p-6" value={source.trim()} onChange={setSource} />
-      </div>
-      <div>
-        <div className="grid grid-cols-12 gap-4 p-6 bg-[#ffffff0a] px-6 py-3 whitespace-nowrap">
+      </Pane>
+      <Pane>
+        <PaneHeader>
           <div className="col-span-5 flex gap-4">
             <button
               className={[
@@ -64,13 +61,13 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile; classNa
               JS Output
             </button>
           </div>
-        </div>
+        </PaneHeader>
         {rightPane === "result" ? (
           <Result className="p-6 h-full w-full" value={compiledSource} />
         ) : rightPane === "js" ? (
           <Editor className="p-6 h-full" value={compiledSource} readOnly />
         ) : null}
-      </div> */}
+      </Pane>
     </SplitPane>
   );
 };
