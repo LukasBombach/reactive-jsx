@@ -39,7 +39,7 @@ export function value<T>(value: T): [read: Read<T>, write: Write<T>] {
   return [read, write];
 }
 
-export function reaction<T>(fn: (current: T) => T) {
+export function reaction<T>(fn: (current: T | undefined) => T) {
   let val: T;
   const execute = () => {
     cleanup(running);
