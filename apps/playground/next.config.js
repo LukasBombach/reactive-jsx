@@ -5,6 +5,7 @@ const withTM = require("next-transpile-modules");
  **/
 const nextConfig = {
   reactStrictMode: true,
+  experimental: { images: { layoutRaw: true } },
   webpack: (config, { webpack }) => {
     config.plugins.push(new webpack.ContextReplacementPlugin(/@babel\/standalone/));
     return config;
