@@ -1,5 +1,7 @@
 import type { FC, ReactNode } from "react";
 
+export { PostCredit } from "./PostCredit";
+
 type TC<P = {}> = FC<{ children: ReactNode } & P>;
 
 const linkBrands = {
@@ -35,12 +37,10 @@ export const Medium = () => (
 );
 
 export const Layout: TC = ({ children }) => (
-  <div className="grid grid-cols-1 gap-y-12 sm:gap-y-16 p-8 sm:p-24">{children}</div>
+  <div className="grid grid-cols-1 gap-y-12 sm:gap-y-16 p-8 py-16 sm:p-24">{children}</div>
 );
 
-export const PageTitle: TC = ({ children }) => (
-  <h1 className="text-4xl font-garamond pb-5 sm:pb-8 max-w-screen-sm">{children}</h1>
-);
+export const PageTitle: TC = ({ children }) => <h1 className="text-6xl font-garamond max-w-screen-sm">{children}</h1>;
 
 export const BlogTitle: TC = ({ children }) => (
   <h1 className="text-6xl font-garamond pb-5 sm:pb-8 max-w-screen-sm">{children}</h1>
@@ -48,7 +48,9 @@ export const BlogTitle: TC = ({ children }) => (
 
 export const Intro: TC = ({ children }) => <p className="leading-7 text-sm max-w-screen-sm">{children}</p>;
 
-export const P: TC = ({ children }) => <p className="leading-7 text-sm my-5 max-w-screen-sm">{children}</p>;
+export const P: TC<{ className?: string }> = ({ children, className }) => (
+  <p className={["leading-7 text-sm mb-5 max-w-screen-sm", className].join(" ")}>{children}</p>
+);
 export const Code: TC = ({ children }) => (
   <code className="font-mono text-xs bg-slate-200 dark:text-slate-800 leading-6 px-[6px] rounded inline-block">
     {children}

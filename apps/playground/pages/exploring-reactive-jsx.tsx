@@ -1,5 +1,5 @@
 import { Playground } from "@reactive-jsx/playground";
-import { Layout, BlogTitle, P, Code } from "components";
+import { Layout, BlogTitle, P, Code, PostCredit } from "components";
 
 const initialExample = `
 const Component = () => {
@@ -30,16 +30,16 @@ document.body.append(<Button />, <Result />);`;
 export default function ExploringReactiveJsx() {
   return (
     <Layout>
+      <PostCredit date={new Date("5/26/2022")} />
       <header>
         <BlogTitle>Exploring compile time reactive JSX</BlogTitle>
-        {/* <Playground className="max-w-screen-lg" source={developmentCode2} resolveFile={() => null} /> */}
-        <blockquote className="pl-3 border-l-4 border-slate-200 text-slate-500 max-w-screen-sm">
+        <blockquote className="pl-3 border-l-2 sm:pl-3 sm:border-l-4 border-slate-200 text-slate-500 max-w-screen-sm">
           Writing simpler components by transpiling away the hard parts
         </blockquote>
       </header>
       <main>
-        <P>What if you could write react components like this?</P>
-        <Playground className="max-w-screen-lg" source={initialExample} resolveFile={() => null} />
+        <P>What if you could write components like this?</P>
+        <Playground className="my-6 max-w-screen-lg" source={initialExample} resolveFile={() => null} />
         <P>
           No <Code>setCount</Code>, no <Code>useEffect</Code>. You just define a variable and then change it. The
           component is updated accordingly.

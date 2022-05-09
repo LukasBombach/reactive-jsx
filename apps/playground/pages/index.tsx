@@ -1,6 +1,8 @@
 import {
   Layout,
   PageTitle,
+  BlogTitle,
+  P,
   Intro,
   BrandLink,
   ArticlesHeadline,
@@ -17,8 +19,8 @@ export default function HomePage() {
   return (
     <Layout>
       <header>
-        <PageTitle>Unfinished thought</PageTitle>
-        <Intro>
+        <BlogTitle>Unfinished thought</BlogTitle>
+        <P>
           Hi, my name is Lukas Bombach, I work as a front end developer for{" "}
           <BrandLink brand="tonline" href="https://www.t-online.de/">
             t-online.de
@@ -42,7 +44,7 @@ export default function HomePage() {
             Dribbble
           </BrandLink>
           .
-        </Intro>
+        </P>
       </header>
       <main>
         <ArticlesHeadline>Articles</ArticlesHeadline>
