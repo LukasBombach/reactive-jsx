@@ -9,9 +9,16 @@ import type { VFC, FC, ReactNode } from "react";
 import type { ReactCodeMirrorProps } from "@uiw/react-codemirror";
 import type { ResolveFile } from "./compiler";
 
+const Pane: FC<{ children: ReactNode }> = ({ children }) => (
+  <div className="grid grid-cols-1 grid-rows-[48px,1fr]">{children}</div>
+);
+
+const PaneHeader: FC<{ children: ReactNode }> = ({ children }) => (
+  <div className="grid grid-cols-12 gap-4 p-6 bg-[#ffffff0a] px-6 py-3 whitespace-nowrap">{children}</div>
+);
+
 // todo optimize markup & css
 // todo cleanup tab code
-// todo instead of un / remounting tabs, hide / display them to keep state
 // todo optimize heights (keep it) when switching tabs
 export const Playground: VFC<{ source: string; resolveFile: ResolveFile; className?: string }> = ({
   source,
@@ -21,13 +28,10 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile; classNa
   const [compiledSource, setSource] = useCompiler(source, resolveFile);
   const [rightPane, setRightPane] = useState<"result" | "js">("result");
 
-  const Pane: FC<{ children: ReactNode }> = ({ children }) => (
-    <div className="grid grid-cols-1 grid-rows-[48px,1fr]">{children}</div>
-  );
-
-  const PaneHeader: FC<{ children: ReactNode }> = ({ children }) => (
-    <div className="grid grid-cols-12 gap-4 p-6 bg-[#ffffff0a] px-6 py-3 whitespace-nowrap">{children}</div>
-  );
+  const resultVisible = rightPane === "result" ? "block" : "hidden";
+  const jsVisible = rightPane === "js" ? "block" : "hidden";
+  const resultHighlight = rightPane === "result" ? "border-b border-amber-400" : "";
+  const jsHighlight = rightPane === "js" ? "border-b border-amber-400" : "";
 
   return (
     <SplitPane className={className}>
@@ -43,30 +47,21 @@ export const Playground: VFC<{ source: string; resolveFile: ResolveFile; classNa
         <PaneHeader>
           <div className="col-span-5 flex gap-4">
             <button
-              className={[
-                "text-xs text-slate-200 py-1 cursor-pointer",
-                rightPane === "result" && "border-b border-amber-400",
-              ].join(" ")}
+              className={["text-xs text-slate-200 py-1 cursor-pointer", resultHighlight].join(" ")}
               onClick={() => setRightPane("result")}
             >
               Result
             </button>
             <button
-              className={[
-                "text-xs text-slate-200 py-1 cursor-pointer",
-                rightPane === "js" && "border-b border-amber-400",
-              ].join(" ")}
+              className={["text-xs text-slate-200 py-1 cursor-pointer", jsHighlight].join(" ")}
               onClick={() => setRightPane("js")}
             >
               JS Output
             </button>
           </div>
         </PaneHeader>
-        {rightPane === "result" ? (
-          <Result className="p-6 h-full w-full" value={compiledSource} />
-        ) : rightPane === "js" ? (
-          <Editor className="p-6 h-full" value={compiledSource} readOnly />
-        ) : null}
+        <Result className={["p-6 h-full w-full", resultVisible].join(" ")} value={compiledSource} />
+        <Editor className={["p-6 h-full", jsVisible].join(" ")} value={compiledSource} readOnly />
       </Pane>
     </SplitPane>
   );

@@ -63,7 +63,7 @@ export const SplitPane: FC<{ children: [ReactNode, ReactNode]; className?: strin
       {left}
       {right}
       <div
-        className="absolute w-1 h-24 bg-[#ffffff10] rounded-xl cursor-col-resize top-[62%] left-[var(--split,62%)] -translate-y-[62%]"
+        className="absolute w-1 h-24 bg-[#ffffff10] rounded-xl cursor-col-resize top-[50%] left-[var(--split,62%)] -translate-y-[50%]"
         onMouseDown={onMouseDown}
         ref={handle}
       />
