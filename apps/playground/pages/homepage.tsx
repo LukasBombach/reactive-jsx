@@ -35,12 +35,12 @@ const Medium = () => (
 );
 
 const Layout: TC = ({ children }) => (
-  <div className="grid grid-cols-1 gap-y-10 sm:gap-y-16 p-8 sm:p-24">{children}</div>
+  <div className="grid grid-cols-1 gap-y-12 sm:gap-y-16 p-8 sm:p-24">{children}</div>
 );
 
-const H1: TC = ({ children }) => <h1 className="text-4xl font-garamond pb-4 sm:pb-8 max-w-screen-sm">{children}</h1>;
+const H1: TC = ({ children }) => <h1 className="text-4xl font-garamond pb-5 sm:pb-8 max-w-screen-sm">{children}</h1>;
 const Intro: TC = ({ children }) => <p className="leading-7 text-sm max-w-screen-sm">{children}</p>;
-const H2: TC = ({ children }) => <h1 className="font-bold text-lg pb-2 sm:pb-4 max-w-screen-sm">{children}</h1>;
+const H2: TC = ({ children }) => <h1 className="font-bold text-lg pb-1 sm:pb-2 max-w-screen-sm">{children}</h1>;
 
 const BrandLink: TC<{
   href: string;
@@ -109,7 +109,7 @@ export default function HomePage() {
               How to write a tree-shakable component library <DevTo />
             </Title>
             <Description>
-              You probably don't need all components on all pages. A walkthrough on making tree-shaking happen
+              You don't need all components on all pages. A walkthrough on making tree-shaking happen
             </Description>
           </Article>
           <Article href="https://medium.com/@luke_schmuke/how-we-achieved-the-best-web-performance-with-partial-hydration-20fab9c808d5">
