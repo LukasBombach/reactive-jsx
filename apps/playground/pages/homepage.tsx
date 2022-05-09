@@ -1,76 +1,110 @@
-import Image from "next/image";
-import mediumLogo from "../public/Medium-Logo-White-RGB@1x.png";
-import devToLogo from "../public/dev-black.png";
-
 import type { FC, ReactNode } from "react";
 
-const page = "px-8 py-4 sm:px-16 sm:py-12 xl:px-48 xl:py-24 grid gap-8";
-const title = "leading-tight text-7xl max-w-screen-sm font-garamond";
-const articles = "leading-tight text-4xl max-w-screen-sm font-garamond";
-// const tonline = "text-[#E20074]";
-const twitter = "text-[#55ACEE]";
-const github = "text-[#333333] dark:text-[#cdd9e5]";
-const dribbble = "text-[#EA4C89]";
+type TC<P = {}> = FC<{ children: ReactNode } & P>;
+
+const linkBrands = {
+  twitter: "text-[#55ACEE]",
+  github: "text-[#333333] dark:text-[#cdd9e5] font-medium",
+  dribbble: "text-[#EA4C89]",
+  tonline: "text-[#EA4C89]",
+} as const;
+
+const articleLogos = {
+  devto: (
+    <picture>
+      <img
+        src="dev-black.png"
+        alt="Logo of the website dev.to"
+        width={1998 / 20}
+        height={1998 / 20}
+        className="inline-block h-[1em] w-auto border rounded dark:border-slate-400"
+      />
+    </picture>
+  ),
+  medium: (
+    <picture>
+      <source srcSet="Medium-Logo-White-RGB@1x.png" media="(prefers-color-scheme: dark)"></source>
+      <img
+        src="Medium-Logo-Black-RGB@1x.png"
+        alt="Logo of the website Medium.com"
+        width={4488 / 44}
+        height={1114 / 44}
+        className="inline-block h-[1.2em] w-auto border rounded dark:border-slate-400"
+      />
+    </picture>
+  ),
+} as const;
+
+const Main: TC = ({ children }) => <main className="px-8 py-4 sm:px-16 sm:py-12 xl:px-24 xl:py-24">{children}</main>;
+
+const H1: TC = ({ children }) => <h1 className="text-4xl font-garamond pb-8 max-w-screen-sm">{children}</h1>;
+const Intro: TC = ({ children }) => <p className="leading-7 text-sm pb-16 max-w-screen-sm">{children}</p>;
+const H2: TC = ({ children }) => <h1 className="font-bold text-lg pb-4 max-w-screen-sm">{children}</h1>;
+
+const BrandLink: TC<{
+  href: string;
+  brand?: keyof typeof linkBrands;
+}> = p => (
+  <a href={p.href} className={linkBrands[p.brand]}>
+    {p.children}
+  </a>
+);
+
+const ArticleList: TC = ({ children }) => (
+  <ul className="grid grid-cols-1 divide-y dark:divide-slate-700 text-sm pb-16 max-w-screen-sm">{children}</ul>
+);
+
+const Article: TC<{ href: string; logo?: "medium" | "devto" }> = p => (
+  <li className="py-4">
+    <a href={p.href}>
+      {p.children} {articleLogos[p.logo]}
+    </a>
+  </li>
+);
+
+const Fin = () => <div className="italic text-slate-300 text-sm">fin</div>;
 
 export default function HomePage() {
   return (
-    <main className={page}>
-      <h1 className={title}>Unfinished thought</h1>
-      <p>
+    <Main>
+      <H1>Unfinished thought</H1>
+      <Intro>
         Hi, my name is Lukas Bombach, I work as a front end developer for{" "}
-        <a className={dribbble} href="https://www.t-online.de/">
+        <BrandLink brand="tonline" href="https://www.t-online.de/">
           t-online.de
-        </a>{" "}
+        </BrandLink>{" "}
         in Berlin.
         <br />
         This is my blog where I post experimental code and thoughts on software development.
         <br />
         You can find me elsewhere on{" "}
-        <a className={twitter} href="https://twitter.com/luke_schmuke">
+        <BrandLink brand="twitter" href="https://twitter.com/luke_schmuke">
           Twitter
-        </a>
+        </BrandLink>
         ,{" "}
-        <a className={github} href="https://github.com/LukasBombach/">
+        <BrandLink brand="github" href="https://github.com/LukasBombach/">
           GitHub
-        </a>{" "}
+        </BrandLink>{" "}
         and{" "}
-        <a className={dribbble} href="https://dribbble.com/luke_schmuke">
+        <BrandLink brand="dribbble" href="https://dribbble.com/luke_schmuke">
           Dribbble
-        </a>
+        </BrandLink>
         .
-      </p>
-      <h2 className={articles}>Articles</h2>
-      <ul className="grid grid-cols-1 divide-y dark:divide-slate-700 max-w-screen-sm">
-        <li className="py-6">
-          <a href="/">Exploring compile time reactive JSX</a>
-        </li>
-        <li className="py-6">
-          <a href="https://dev.to/lukasbombach/how-to-write-a-tree-shakable-component-library-4ied">
-            How to write a tree-shakable component library{" "}
-            <Image
-              src={devToLogo}
-              alt="Logo of the website dev.to"
-              width={1998 / 20}
-              height={1998 / 20}
-              layout="raw"
-              className="inline-block h-[1em] w-auto border rounded dark:border-slate-400"
-            />
-          </a>
-        </li>
-        <li className="py-6">
-          <a href="https://medium.com/@luke_schmuke/how-we-achieved-the-best-web-performance-with-partial-hydration-20fab9c808d5">
-            The case of partial hydration (with Next and Preact){" "}
-            <Image
-              src={mediumLogo}
-              alt="Logo of the website Medium.com"
-              width={4488 / 44}
-              height={1114 / 44}
-              layout="raw"
-              className="inline-block h-[1em] w-auto border rounded dark:border-slate-400"
-            />
-          </a>
-        </li>
-      </ul>
-    </main>
+      </Intro>
+      <H2>Articles</H2>
+      <ArticleList>
+        <Article href="/">Exploring compile time reactive JSX</Article>
+        <Article href="https://dev.to/lukasbombach/how-to-write-a-tree-shakable-component-library-4ied" logo="devto">
+          How to write a tree-shakable component library
+        </Article>
+        <Article
+          href="https://medium.com/@luke_schmuke/how-we-achieved-the-best-web-performance-with-partial-hydration-20fab9c808d5"
+          logo="medium"
+        >
+          The case of partial hydration (with Next and Preact)
+        </Article>
+      </ArticleList>
+      <Fin />
+    </Main>
   );
 }
