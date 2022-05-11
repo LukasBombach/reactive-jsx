@@ -1,6 +1,5 @@
 import { Playground } from "@reactive-jsx/playground";
 import { Layout, BlogTitle, P, Code, PostCredit } from "components";
-import { Head } from "next/document";
 
 const initialExample = `
 const Component = () => {
@@ -36,9 +35,9 @@ export default function ExploringReactiveJsx() {
       </header>
       <main>
         <P>
-          <em className="pb-px border-b-[3px] border-b-sky-300">React is a good libary</em>. It promotes a clean and
-          simple mental model for writing user interfaces. With components we can define reusable chunks of our UI and
-          orchestrate everything to a whole that is greater than the sum of its parts.
+          <em className="pb-px border-b-[3px] border-b-sky-300">React is a very good libary</em>. It promotes a clean
+          and simple mental model for writing user interfaces. With components we can define reusable chunks of our UI
+          and orchestrate everything to a whole that is greater than the sum of its parts.
         </P>
 
         <P>
