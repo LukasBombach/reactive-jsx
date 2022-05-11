@@ -49,7 +49,7 @@ export const BlogTitle: TC = ({ children }) => (
 export const Intro: TC = ({ children }) => <p className="leading-7 text-sm max-w-screen-sm">{children}</p>;
 
 export const P: TC<{ className?: string }> = ({ children, className }) => (
-  <p className={["leading-7 text-sm mb-5 max-w-screen-sm", className].join(" ")}>{children}</p>
+  <p className={["leading-7 text-sm mb-6 max-w-screen-sm", className].join(" ")}>{children}</p>
 );
 export const Code: TC = ({ children }) => (
   <code className="font-mono text-xs bg-slate-200 dark:text-slate-800 leading-5 px-[4px] rounded inline-block">
@@ -83,4 +83,4 @@ export const Article: TC<{ href: string }> = p => (
 export const Title: TC = ({ children }) => <span className="block font-semibold">{children}</span>;
 export const Description: TC = ({ children }) => <span className="block text-slate-500">{children}</span>;
 
-export const Fin = () => <span className="italic text-slate-300 text-sm">Le Fin.</span>;
+export const Fin = () => <span className="italic text-slate-400 text-xs">Le Fin.</span>;

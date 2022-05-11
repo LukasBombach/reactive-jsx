@@ -55,7 +55,7 @@ export default function ExploringReactiveJsx() {
           <span className="pb-px border-b-[3px] border-b-sky-300">Can we not write components like this?</span>
         </P>
 
-        <Playground className="my-8 max-w-screen-sm" source={initialExample} />
+        <Playground className="my-10 max-w-screen-sm" source={initialExample} />
 
         <P>
           No need for <Code>useState</Code> or <Code>setCode</Code>, all you need to do is declare a variable and change
@@ -67,7 +67,7 @@ export default function ExploringReactiveJsx() {
           is just a a piece of data, shared across multiple components. It should be as easy as that.
         </P>
 
-        <Playground className="my-8 max-w-screen-sm" source={insteadOfReactContext} />
+        <Playground className="my-10 max-w-screen-sm" source={insteadOfReactContext} />
 
         <P>
           It is possible to do this. By transpiling the{" "}
@@ -75,7 +75,7 @@ export default function ExploringReactiveJsx() {
           <em className="pb-px border-b-[3px] border-b-rose-300">verbose code that makes this happen</em>.
         </P>
 
-        <h2 className="font-bold text-2xl pt-6 pb-3 max-w-screen-sm">Why</h2>
+        <h2 className="font-bold text-2xl pt-8 pb-3 max-w-screen-sm">Why</h2>
 
         <P>
           The motivation behind this, is that code should be readable. By readable, I mean that it communicates what it
@@ -90,9 +90,9 @@ export default function ExploringReactiveJsx() {
           . And of course a big chunk of the infamous Book "Clean Code" by Uncle Bob explores this idea in detail.
         </P>
 
-        <h2 className="font-bold text-2xl pt-6 pb-3 max-w-screen-sm">How</h2>
+        <h2 className="font-bold text-2xl pt-8 pb-3 max-w-screen-sm">How</h2>
 
-        {/* <Playground className="my-8 max-w-screen-sm" source={""} /> */}
+        {/* <Playground className="my-10 max-w-screen-sm" source={""} /> */}
 
         {/* <h2 className="font-bold text-2xl pt-6 pb-3 max-w-screen-sm">Every abstraction introduces problems</h2>
 

@@ -1,9 +1,7 @@
 import {
   Layout,
-  PageTitle,
   BlogTitle,
   P,
-  Intro,
   BrandLink,
   ArticlesHeadline,
   ArticleList,
