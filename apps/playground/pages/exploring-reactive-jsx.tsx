@@ -58,11 +58,11 @@ export default function ExploringReactiveJsx() {
 
         <P>
           No need for <Code>useState</Code> or <Code>setCode</Code>, all you need to do is declare a variable and change
-          it. The DOM will update accordingly. That's good, right? It's easy. It's what you want it to do.
+          it. The DOM will update accordingly. That's good, right? It's easy. It's what you <em>want</em> it to do.
         </P>
 
         <P>
-          In regards to data <Code>Context</Code> can become specifically cumbersome. In my mind, <Code>Context</Code>{" "}
+          In regards to data, <Code>Context</Code> can become specifically cumbersome. In my mind, <Code>Context</Code>{" "}
           is just a a piece of data, shared across multiple components. It should be as easy as that.
         </P>
 
@@ -73,6 +73,8 @@ export default function ExploringReactiveJsx() {
           <em className="pb-px border-b-[3px] border-b-sky-300">simple code that expresses your intention</em>, to more{" "}
           <em className="pb-px border-b-[3px] border-b-rose-300">verbose code that makes this happen</em>.
         </P>
+
+        <P>Try it out, these are functional playgrounds.</P>
 
         <h2 className="font-bold text-2xl pt-8 pb-3 max-w-screen-sm">Why</h2>
 
