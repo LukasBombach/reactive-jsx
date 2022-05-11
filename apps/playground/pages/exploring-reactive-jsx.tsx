@@ -71,7 +71,7 @@ export default function ExploringReactiveJsx() {
         </P>
         <P>
           The intention behind this, is that code should be readable. By readable, I mean that it communicates what it
-          is supposed to do in simple terms and with little noise helper code.
+          is supposed to do in simple terms and with little noise from helper code.
         </P>
         <P>
           I have yet to see someone express this as eloquently as the author of Svelte, Rich Harris, in his talk{" "}
@@ -80,6 +80,7 @@ export default function ExploringReactiveJsx() {
           </a>
           . And of course a big chunk of the infamous Book "Clean Code" by Uncle Bob explores this idea in detail.
         </P>
+        <h2 className="font-bold text-2xl pt-6 pb-3 max-w-screen-sm">Every abstraction introduces problems</h2>
         <P>
           While Svelte is a <em>good framework</em>, it comes with batteries included, an extra battery pack and a
           docking station for all your needs. This is a matter of liking and use-case, but I am not a fan of themplate

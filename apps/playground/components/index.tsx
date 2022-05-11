@@ -58,7 +58,7 @@ export const Code: TC = ({ children }) => (
 );
 
 export const ArticlesHeadline: TC = ({ children }) => (
-  <h1 className="font-bold text-lg pb-1 sm:pb-2 max-w-screen-sm">{children}</h1>
+  <h2 className="font-bold text-lg pb-1 sm:pb-2 max-w-screen-sm">{children}</h2>
 );
 
 export const BrandLink: TC<{
