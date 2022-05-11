@@ -75,7 +75,7 @@ export const ArticleList: TC = ({ children }) => (
 );
 
 export const Article: TC<{ href: string }> = p => (
-  <li className="py-4 active:scale-[0.99] sm:active:scale-100">
+  <li className="py-4">
     <a href={p.href}>{p.children}</a>
   </li>
 );

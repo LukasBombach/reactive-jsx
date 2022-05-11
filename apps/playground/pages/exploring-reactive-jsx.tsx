@@ -83,7 +83,7 @@ export default function ExploringReactiveJsx() {
 
         <P>
           I have yet to see someone express this notion as eloquently as the author of Svelte, Rich Harris, in his talk{" "}
-          <a href="https://www.youtube.com/watch?v=BzX4aTRPzno" className="text-sky-700">
+          <a href="https://www.youtube.com/watch?v=BzX4aTRPzno" className="text-sky-700 hover:text-sky-500">
             "Write Less, Do More" at the JSCAMP 2019
           </a>
           . And of course a big chunk of the infamous Book "Clean Code" by Uncle Bob explores this idea in detail.
