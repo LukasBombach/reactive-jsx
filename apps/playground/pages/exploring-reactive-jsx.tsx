@@ -66,10 +66,8 @@ export default function ExploringReactiveJsx() {
         <Playground className="my-8 max-w-screen-lg" source={insteadOfReactContext} />
         <P>
           It is possible to do this. By transpiling the{" "}
-          <em className="pb-px border-b-[3px] border-b-sky-300">simple code</em>, the code that{" "}
-          <em className="pb-px border-b-[3px] border-b-sky-300">expresses your intention</em>, to more{" "}
-          <em className="pb-px border-b-[3px] border-b-rose-300">verbose code</em>, the code that{" "}
-          <em className="pb-px border-b-[3px] border-b-rose-300">makes this happen</em>.
+          <em className="pb-px border-b-[3px] border-b-sky-300">simple code that expresses your intention</em>, to more{" "}
+          <em className="pb-px border-b-[3px] border-b-rose-300">verbose code that makes this happen</em>.
         </P>
         <P>
           The intention behind this, is that code should be readable. By readable, I mean that it communicates what it
@@ -80,6 +78,7 @@ export default function ExploringReactiveJsx() {
           <a href="https://www.youtube.com/watch?v=BzX4aTRPzno" className="text-sky-600">
             <em>Write Less, Do More</em> at the JSCAMP 2019
           </a>
+          . And of course a big chunk of the infamous Book "Clean Code" by Uncle Bob explores this idea in detail.
         </P>
       </main>
     </Layout>
