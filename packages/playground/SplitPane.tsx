@@ -55,7 +55,7 @@ export const SplitPane: FC<{ children: [ReactNode, ReactNode]; className?: strin
   return (
     <section
       className={[
-        "relative grid grid-rows-1 grid-cols-[var(--split,62%)_calc(100%-var(--split,62%))] bg-[#282c34] rounded-xl overflow-hidden drop-shadow-md",
+        "relative grid grid-rows-1 grid-cols-[var(--split,68%)_calc(100%-var(--split,68%))] bg-[#282c34] rounded-xl overflow-hidden drop-shadow-md",
         className,
       ].join(" ")}
       ref={container}
@@ -63,7 +63,7 @@ export const SplitPane: FC<{ children: [ReactNode, ReactNode]; className?: strin
       {left}
       {right}
       <div
-        className="absolute w-1 h-24 bg-[#ffffff10] rounded-xl cursor-col-resize top-[50%] left-[var(--split,62%)] -translate-y-[50%]"
+        className="absolute w-1 h-24 bg-[#ffffff10] rounded-xl cursor-col-resize top-[50%] left-[var(--split,68%)] -translate-y-[50%]"
         onMouseDown={onMouseDown}
         ref={handle}
       />
