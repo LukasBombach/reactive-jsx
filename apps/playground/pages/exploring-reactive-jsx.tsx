@@ -8,7 +8,7 @@ const Component = () => {
 
   return (
     <button onClick={() => count = count + 1}>
-      Clicked {count} {count === 1 ? "time" : "times"}
+      Clicked: {count}
     </button>
   )
 };
@@ -41,22 +41,30 @@ export default function ExploringReactiveJsx() {
           orchestrate everything to a whole that is greater than the sum of its parts.
         </P>
 
+        <P>
+          At some point though, it gets less simple. Hooks and Context bloat code and less trivial examples of{" "}
+          <Code>useEffect</Code> demand an understanding of reactive programming, deserting the simple model of
+          components and life cycles.
+        </P>
+
         {/* <P>
           <span className="pb-px border-b-[3px] border-b-sky-300">What if you could write components like this?</span>
-        </P>*/}
+        </P> */}
 
-        {/* <P>What if you could write components like this?</P> */}
+        <P>
+          <span className="pb-px border-b-[3px] border-b-sky-300">Can we not write components like this?</span>
+        </P>
 
         <Playground className="my-8 max-w-screen-sm" source={initialExample} />
 
         <P>
           No need for <Code>useState</Code> or <Code>setCode</Code>, all you need to do is declare a variable and change
-          it. The DOM will update accordingly. That's good, right? It's easy. It's straight forward.
+          it. The DOM will update accordingly. That's good, right? It's easy. It's what you want it to do.
         </P>
 
         <P>
-          <Code>Context</Code> can become cumbersome. In my mind, what I am doing with <Code>Context</Code>, is
-          declaring a variable and sharing it across multiple components. It should be as easy as that.
+          In regards to data <Code>Context</Code> can become specifically cumbersome. In my mind, <Code>Context</Code>{" "}
+          is just a a piece of data, shared across multiple components. It should be as easy as that.
         </P>
 
         <Playground className="my-8 max-w-screen-sm" source={insteadOfReactContext} />
@@ -67,20 +75,24 @@ export default function ExploringReactiveJsx() {
           <em className="pb-px border-b-[3px] border-b-rose-300">verbose code that makes this happen</em>.
         </P>
 
+        <h2 className="font-bold text-2xl pt-6 pb-3 max-w-screen-sm">Why</h2>
+
         <P>
           The motivation behind this, is that code should be readable. By readable, I mean that it communicates what it
           is supposed to do in simple terms and with little noise from helper code.
         </P>
 
         <P>
-          I have yet to see someone express this as eloquently as the author of Svelte, Rich Harris, in his talk{" "}
+          I have yet to see someone express this notion as eloquently as the author of Svelte, Rich Harris, in his talk{" "}
           <a href="https://www.youtube.com/watch?v=BzX4aTRPzno" className="text-sky-700">
             "Write Less, Do More" at the JSCAMP 2019
           </a>
           . And of course a big chunk of the infamous Book "Clean Code" by Uncle Bob explores this idea in detail.
         </P>
 
-        <Playground className="my-8 max-w-screen-sm" source={""} />
+        <h2 className="font-bold text-2xl pt-6 pb-3 max-w-screen-sm">How</h2>
+
+        {/* <Playground className="my-8 max-w-screen-sm" source={""} /> */}
 
         {/* <h2 className="font-bold text-2xl pt-6 pb-3 max-w-screen-sm">Every abstraction introduces problems</h2>
 
