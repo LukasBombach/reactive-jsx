@@ -83,9 +83,9 @@ export default function ExploringReactiveJsx() {
         <h2 className="font-bold text-2xl pt-6 pb-3 max-w-screen-sm">Every abstraction introduces problems</h2>
         <P>
           While Svelte is a <em>good framework</em>, it comes with batteries included, an extra battery pack and a
-          docking station for all your needs. This is a matter of liking and use-case, but I am not a fan of themplate
+          docking station for all your needs. This is a matter of liking and use-case, but I am not a fan of template
           languages, <em>personally</em>. Am I willing to go as far as <Code>JSX</Code>, but Svelte deviates from
-          standard ecma too much <em>for my liking</em>.
+          standard ecma script too much <em>for my liking</em>.
         </P>
         <P>Reactive JSX works event without Componets, it just returns DOM elements (example withuot compoenents)</P>
       </main>
