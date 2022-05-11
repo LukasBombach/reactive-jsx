@@ -36,10 +36,18 @@ export default function ExploringReactiveJsx() {
       </header>
       <main>
         <P>
-          <span className="pb-px border-b-[3px] border-b-sky-300">What if you could write components like this?</span>
+          <em className="pb-px border-b-[3px] border-b-sky-300">React is a good libary</em>. It promotes a clean and
+          simple mental model for writing user interfaces. With components we can define reusable chunks of our UI and
+          orchestrate everything to a whole that is greater than the sum of its parts.
         </P>
 
-        <Playground className="my-8 max-w-screen-md" source={initialExample} />
+        {/* <P>
+          <span className="pb-px border-b-[3px] border-b-sky-300">What if you could write components like this?</span>
+        </P>*/}
+
+        {/* <P>What if you could write components like this?</P> */}
+
+        <Playground className="my-8 max-w-screen-sm" source={initialExample} />
 
         <P>
           No need for <Code>useState</Code> or <Code>setCode</Code>, all you need to do is declare a variable and change
@@ -51,7 +59,7 @@ export default function ExploringReactiveJsx() {
           declaring a variable and sharing it across multiple components. It should be as easy as that.
         </P>
 
-        <Playground className="my-8 max-w-screen-md" source={insteadOfReactContext} />
+        <Playground className="my-8 max-w-screen-sm" source={insteadOfReactContext} />
 
         <P>
           It is possible to do this. By transpiling the{" "}
@@ -72,7 +80,7 @@ export default function ExploringReactiveJsx() {
           . And of course a big chunk of the infamous Book "Clean Code" by Uncle Bob explores this idea in detail.
         </P>
 
-        <Playground className="my-8 max-w-screen-md" source={""} />
+        <Playground className="my-8 max-w-screen-sm" source={""} />
 
         {/* <h2 className="font-bold text-2xl pt-6 pb-3 max-w-screen-sm">Every abstraction introduces problems</h2>
 
