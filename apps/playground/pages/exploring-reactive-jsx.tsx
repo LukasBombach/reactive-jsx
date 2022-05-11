@@ -68,7 +68,7 @@ export default function ExploringReactiveJsx() {
         </P>
 
         <P>
-          The intention behind this, is that code should be readable. By readable, I mean that it communicates what it
+          The motivation behind this, is that code should be readable. By readable, I mean that it communicates what it
           is supposed to do in simple terms and with little noise from helper code.
         </P>
 
