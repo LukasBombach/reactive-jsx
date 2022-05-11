@@ -20,7 +20,7 @@ let count = 42;
 
 const Button = () => <button onClick={() => count = count + 1}>Click</button>;
 
-const Result = () => <h1>The answer is {count}</h1>;
+const Result = () => <p>The answer is {count}</p>;
 
 document.body.append(<Button />, <Result />);`;
 
@@ -39,7 +39,7 @@ export default function ExploringReactiveJsx() {
           <span className="pb-px border-b-[3px] border-b-sky-300">What if you could write components like this?</span>
         </P>
 
-        <Playground className="my-8 max-w-screen-lg" source={initialExample} />
+        <Playground className="my-8 max-w-screen-md" source={initialExample} />
 
         <P>
           No need for <Code>useState</Code> or <Code>setCode</Code>, all you need to do is declare a variable and change
@@ -51,7 +51,7 @@ export default function ExploringReactiveJsx() {
           declaring a variable and sharing it across multiple components. It should be as easy as that.
         </P>
 
-        <Playground className="my-8 max-w-screen-lg" source={insteadOfReactContext} />
+        <Playground className="my-8 max-w-screen-md" source={insteadOfReactContext} />
 
         <P>
           It is possible to do this. By transpiling the{" "}
@@ -66,13 +66,15 @@ export default function ExploringReactiveJsx() {
 
         <P>
           I have yet to see someone express this as eloquently as the author of Svelte, Rich Harris, in his talk{" "}
-          <a href="https://www.youtube.com/watch?v=BzX4aTRPzno" className="text-sky-600">
+          <a href="https://www.youtube.com/watch?v=BzX4aTRPzno" className="text-sky-700">
             "Write Less, Do More" at the JSCAMP 2019
           </a>
           . And of course a big chunk of the infamous Book "Clean Code" by Uncle Bob explores this idea in detail.
         </P>
 
-        <h2 className="font-bold text-2xl pt-6 pb-3 max-w-screen-sm">Every abstraction introduces problems</h2>
+        <Playground className="my-8 max-w-screen-md" source={""} />
+
+        {/* <h2 className="font-bold text-2xl pt-6 pb-3 max-w-screen-sm">Every abstraction introduces problems</h2>
 
         <P>
           While Svelte is a <em>good framework</em>, it comes with batteries included, an extra battery pack and a
@@ -81,7 +83,7 @@ export default function ExploringReactiveJsx() {
           standard ecma script too much <em>for my liking</em>.
         </P>
 
-        <P>Reactive JSX works event without Componets, it just returns DOM elements (example withuot compoenents)</P>
+        <P>Reactive JSX works event without Componets, it just returns DOM elements (example withuot compoenents)</P> */}
       </main>
     </Layout>
   );
