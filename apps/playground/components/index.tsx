@@ -52,7 +52,7 @@ export const P: TC<{ className?: string }> = ({ children, className }) => (
   <p className={["leading-7 text-sm mb-5 max-w-screen-sm", className].join(" ")}>{children}</p>
 );
 export const Code: TC = ({ children }) => (
-  <code className="font-mono text-xs bg-slate-200 dark:text-slate-800 leading-6 px-[6px] rounded inline-block">
+  <code className="font-mono text-xs bg-slate-200 dark:text-slate-800 leading-5 px-[4px] rounded inline-block">
     {children}
   </code>
 );

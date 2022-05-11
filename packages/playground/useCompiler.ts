@@ -4,7 +4,7 @@ import type { ResolveFile } from "./compiler";
 
 export function useCompiler(
   initialSource: string,
-  resolveFile: ResolveFile
+  resolveFile: ResolveFile = () => Promise.resolve(null)
 ): [compiledSource: string | undefined, setSource: (source: string) => void] {
   const [source, setSource] = useState(initialSource);
   const [compiledSource, setCompiledSource] = useState<string>();

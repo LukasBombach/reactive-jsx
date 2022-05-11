@@ -20,7 +20,7 @@ const PaneHeader: FC<{ children: ReactNode }> = ({ children }) => (
 // todo optimize markup & css
 // todo cleanup tab code
 // todo optimize heights (keep it) when switching tabs
-export const Playground: VFC<{ source: string; resolveFile: ResolveFile; className?: string }> = ({
+export const Playground: VFC<{ source: string; resolveFile?: ResolveFile; className?: string }> = ({
   source,
   resolveFile,
   className,
