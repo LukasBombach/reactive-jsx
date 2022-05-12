@@ -63,6 +63,12 @@ export default function ExploringReactiveJsx() {
           <em className="pb-px border-b-[3px] border-b-rose-300">verbose code that makes this happen</em>.
         </P>
 
+        <P className="flex justify-center space-x-4 pt-12 pb">
+          <div className="w-1 h-1 rounded-full bg-slate-300"></div>
+          <div className="w-1 h-1 rounded-full bg-slate-300"></div>
+          <div className="w-1 h-1 rounded-full bg-slate-300"></div>
+        </P>
+
         <P className="font-semibold text-center pt-12">
           Try it out, these are all functional &amp; editable playgrounds.
         </P>
