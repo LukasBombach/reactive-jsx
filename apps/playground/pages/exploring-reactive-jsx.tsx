@@ -46,10 +46,6 @@ export default function ExploringReactiveJsx() {
           components and life cycles.
         </P>
 
-        {/* <P>
-          <span className="pb-px border-b-[3px] border-b-sky-300">What if you could write components like this?</span>
-        </P> */}
-
         <P>
           <span className="pb-px border-b-[3px] border-b-sky-300">Can we not write components like this?</span>
         </P>
@@ -62,25 +58,40 @@ export default function ExploringReactiveJsx() {
         </P>
 
         <P>
+          This is, in fact, possible. By transpiling the{" "}
+          <em className="pb-px border-b-[3px] border-b-sky-300">simple code that expresses your intention</em>, to more{" "}
+          <em className="pb-px border-b-[3px] border-b-rose-300">verbose code that makes this happen</em>.
+        </P>
+
+        <P className="font-semibold text-center pt-12">
+          Try it out, these are all functional &amp; editable playgrounds.
+        </P>
+
+        <P className="flex justify-center space-x-4 pt-12 pb-4">
+          <div className="w-1 h-1 rounded-full bg-slate-300"></div>
+          <div className="w-1 h-1 rounded-full bg-slate-300"></div>
+          <div className="w-1 h-1 rounded-full bg-slate-300"></div>
+        </P>
+
+        <h2 className="font-bold text-2xl pt-8 pb-3 max-w-screen-sm">More examples</h2>
+
+        <P>
           In regards to data, <Code>Context</Code> can become specifically cumbersome. In my mind, <Code>Context</Code>{" "}
           is just a a piece of data, shared across multiple components. It should be as easy as that.
         </P>
 
         <Playground className="my-10 max-w-screen-sm" source={insteadOfReactContext} />
 
-        <P>
-          It is possible to do this. By transpiling the{" "}
-          <em className="pb-px border-b-[3px] border-b-sky-300">simple code that expresses your intention</em>, to more{" "}
-          <em className="pb-px border-b-[3px] border-b-rose-300">verbose code that makes this happen</em>.
-        </P>
-
-        <P>Try it out, these are functional playgrounds.</P>
-
         <h2 className="font-bold text-2xl pt-8 pb-3 max-w-screen-sm">Why</h2>
 
         <P>
-          The motivation behind this, is that code should be readable. By readable, I mean that it communicates what it
-          is supposed to do in simple terms and with little noise from helper code.
+          The motivation behind this, is that code should be readable and comprehensible. By this, I mean that it
+          communicates what it is supposed to do in simple terms and with little noise from helper code.
+        </P>
+
+        <P>
+          It will reveal more clearly how it works to our colleagues and our future selves. It helps us to get to our
+          goals faster and make less mistakes.
         </P>
 
         <P>
