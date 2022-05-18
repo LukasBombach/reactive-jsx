@@ -7,9 +7,24 @@ const Component = () => {
 
   return (
     <button onClick={() => count = count + 1}>
-      Clicked: {count}
+      You clicked {count} {count === 1 ? 'time' : 'times'}
     </button>
-  )
+  );
+};
+
+document.body.append(<Component />);`;
+
+const useEffect = `
+const Component = () => {
+  let count = 0;
+
+  document.title = \`You clicked \${count} \${count === 1 ? 'time' : 'times'}\`;
+
+  return (
+    <button onClick={() => count = count + 1}>
+      You clicked {count} {count === 1 ? 'time' : 'times'}
+    </button>
+  );
 };
 
 document.body.append(<Component />);`;
@@ -17,7 +32,20 @@ document.body.append(<Component />);`;
 const insteadOfReactContext = `
 let count = 42;
 
-const Button = () => <button onClick={() => count = count + 1}>Click</button>;
+const Button = () => <button onClick={() => count = count + 1}>Click me</button>;
+
+const Result = () => <p>The answer is {count}</p>;
+
+document.body.append(<Button />, <Result />);`;
+
+const insteadOfReactContextExtreme = `
+let count = 42;
+
+function incCount() {
+  count = count + 1;
+}
+
+const Button = () => <button onClick={incCount}>Click me</button>;
 
 const Result = () => <p>The answer is {count}</p>;
 
@@ -79,7 +107,24 @@ export default function ExploringReactiveJsx() {
           <div className="w-1 h-1 rounded-full bg-slate-300"></div>
         </P>
 
-        <h2 className="font-bold text-2xl pt-8 pb-3 max-w-screen-sm">More examples</h2>
+        <h2 className="font-bold text-2xl pt-8 pb-3 max-w-screen-sm">How it works</h2>
+
+        <P>Explanation with images</P>
+
+        <h2 className="font-bold text-2xl pt-8 pb-3 max-w-screen-sm">Things you can do</h2>
+
+        <h3 className="font-bold text-md pt-8 pb-3 max-w-screen-sm">
+          Side Effects aka <Code>useEffect</Code>
+        </h3>
+
+        <P>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil veritatis quis ab iste pariatur quibusdam.
+          Deserunt ex laudantium quam voluptates.
+        </P>
+
+        <Playground className="my-10 max-w-screen-sm" source={useEffect} />
+
+        <h3 className="font-bold text-md pt-8 pb-3 max-w-screen-sm">Context</h3>
 
         <P>
           In regards to data, <Code>Context</Code> can become specifically cumbersome. In my mind, <Code>Context</Code>{" "}
@@ -87,6 +132,13 @@ export default function ExploringReactiveJsx() {
         </P>
 
         <Playground className="my-10 max-w-screen-sm" source={insteadOfReactContext} />
+
+        <P>
+          You can even go further and put the functionality to increase the counter <em>where you like</em>. You don't
+          have to follow the requirements of the framework, but are free to decide the structure of your code.
+        </P>
+
+        <Playground className="my-10 max-w-screen-sm" source={insteadOfReactContextExtreme} />
 
         <h2 className="font-bold text-2xl pt-8 pb-3 max-w-screen-sm">Why</h2>
 
@@ -108,7 +160,14 @@ export default function ExploringReactiveJsx() {
           . And of course a big chunk of the infamous Book "Clean Code" by Uncle Bob explores this idea in detail.
         </P>
 
-        <h2 className="font-bold text-2xl pt-8 pb-3 max-w-screen-sm">How</h2>
+        <h3 className="font-bold text-md pt-8 pb-3 max-w-screen-sm">
+          <em className="pb-px border-b-[3px] border-b-sky-300">A hammer</em>, not an{" "}
+          <em className="pb-px border-b-[3px] border-b-rose-300">"insert-nail-here-machine"</em>
+        </h3>
+
+        <P>By XXX reactive JSX does not have to put enables yyy instead of constrains zzz</P>
+
+        {/* <h2 className="font-bold text-2xl pt-8 pb-3 max-w-screen-sm">How</h2> */}
 
         {/* <Playground className="my-10 max-w-screen-sm" source={""} /> */}
 
