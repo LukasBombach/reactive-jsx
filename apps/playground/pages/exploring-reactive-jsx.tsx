@@ -92,9 +92,9 @@ export default function ExploringReactiveJsx() {
         </P>
 
         <P className="flex justify-center space-x-4 pt-12 pb">
-          <div className="w-1 h-1 rounded-full bg-slate-300"></div>
-          <div className="w-1 h-1 rounded-full bg-slate-300"></div>
-          <div className="w-1 h-1 rounded-full bg-slate-300"></div>
+          <span className="w-1 h-1 rounded-full bg-slate-300"></span>
+          <span className="w-1 h-1 rounded-full bg-slate-300"></span>
+          <span className="w-1 h-1 rounded-full bg-slate-300"></span>
         </P>
 
         <P className="font-semibold text-center pt-12">
@@ -102,9 +102,9 @@ export default function ExploringReactiveJsx() {
         </P>
 
         <P className="flex justify-center space-x-4 pt-12 pb-4">
-          <div className="w-1 h-1 rounded-full bg-slate-300"></div>
-          <div className="w-1 h-1 rounded-full bg-slate-300"></div>
-          <div className="w-1 h-1 rounded-full bg-slate-300"></div>
+          <span className="w-1 h-1 rounded-full bg-slate-300"></span>
+          <span className="w-1 h-1 rounded-full bg-slate-300"></span>
+          <span className="w-1 h-1 rounded-full bg-slate-300"></span>
         </P>
 
         <h2 className="font-bold text-2xl pt-8 pb-3 max-w-screen-sm">How it works</h2>
