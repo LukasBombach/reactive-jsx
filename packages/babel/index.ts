@@ -14,7 +14,6 @@ import type {
   FunctionExpression,
   Identifier,
   JSXElement,
-  Statement,
   UpdateExpression,
 } from "@babel/types";
 import type { Binding } from "@babel/traverse";
@@ -39,90 +38,76 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
 
           path.unshiftContainer("body", importRuntime);
 
-          state.bindings
-            .flatMap(binding => binding.referencePaths)
-            .forEach(path => {
-              console.log("referencePath    ", path.type, path.toString(), path.parentPath?.toString());
-            });
-
-          state.bindings
-            .flatMap(binding => binding.constantViolations)
-            .forEach(path => {
-              console.log("constantViolation", path.type, path.toString());
-            });
-
-          // getters
-          state.bindings
-            .flatMap(binding => binding.referencePaths)
-            .filter((path): path is NodePath<Identifier> => path.isIdentifier())
-            .forEach(path => {
-              path.replaceWith(getter({ GETTER: path.node.name }));
-            });
-
-          // setters: assignment expressions
-          state.bindings
-            .flatMap(binding => binding.constantViolations)
-            .filter((path): path is NodePath<AssignmentExpression> => path.isAssignmentExpression())
-            .forEach(path => {
-              if (!isIdentifier(path.node.left)) return;
-              const name = path.node.left.name;
-              const value = cloneDeepWithoutLoc(path.node.right);
-              path.replaceWith(createSetter(name, value));
-            });
-
-          // setters: update expressions
-          state.bindings
-            .flatMap(binding => binding.constantViolations)
-            .filter((path): path is NodePath<UpdateExpression> => path.isUpdateExpression())
-
-            .forEach(path => {
-              const name = path.get("argument");
-
-              if (path.node.operator === "++") {
-              }
-            });
-
-          // declarations
-          state.bindings.forEach(binding => {
+          for (const binding of state.bindings) {
             if (!binding.path.isVariableDeclarator()) return;
             if (!isIdentifier(binding.path.node.id)) return;
             if (!binding.path.node.init) return;
-            const VALUE = cloneDeepWithoutLoc(binding.path.node.init);
+
             const GETTER = binding.path.node.id.name;
             const SETTER = `set${GETTER[0].toUpperCase()}${GETTER.substring(1)}`;
+
+            // getters
+            binding.referencePaths
+              .filter((path): path is NodePath<Identifier> => path.isIdentifier())
+              .forEach(path => {
+                path.replaceWith(getter({ GETTER }));
+              });
+
+            // setters: assignment expressions
+            binding.constantViolations
+              .filter((path): path is NodePath<AssignmentExpression> => path.isAssignmentExpression())
+              .forEach(path => {
+                path.replaceWith(setter({ SETTER, VALUE: cloneDeepWithoutLoc(path.node.right) }));
+              });
+
+            // setters: update expressions
+            binding.constantViolations
+              .filter((path): path is NodePath<UpdateExpression> => path.isUpdateExpression())
+              .forEach(path => {
+                if (path.node.operator === "++") {
+                  path.replaceWith(add({ SETTER, GETTER, VALUE: "1" }));
+                }
+                if (path.node.operator === "--") {
+                  path.replaceWith(sub({ SETTER, GETTER, VALUE: "1" }));
+                }
+              });
+
+            // declaration
+            const VALUE = cloneDeepWithoutLoc(binding.path.node.init);
             binding.path.parentPath.replaceWith(declaration({ GETTER, SETTER, VALUE }));
-          });
 
-          path.traverse({
-            JSXElement: path => {
-              const attributes = path.get("openingElement").get("attributes");
-              const children = path.get("children");
-              const isComponent = openingElementIsCapitalized(path);
+            // jsx elements (attributes and children)
+            path.traverse({
+              JSXElement: path => {
+                const attributes = path.get("openingElement").get("attributes");
+                const children = path.get("children");
+                const isComponent = openingElementIsCapitalized(path);
 
-              if (isComponent) return;
+                if (isComponent) return;
 
-              attributes
-                .filter((path): path is NodePath<JSXAttribute> => path.isJSXAttribute())
-                .filter(path => !isEventHandler(path))
-                .map(path => path.get("value"))
-                .filter((path): path is NodePath<JSXExpressionContainer> => path.isJSXExpressionContainer())
-                .map(path => path.get("expression"))
-                .filter((path): path is NodePath<Expression> => path.isExpression())
-                .forEach(path => {
-                  const VALUE = cloneDeepWithoutLoc(path.node);
-                  path.replaceWith(asFunction({ VALUE }));
-                });
+                attributes
+                  .filter((path): path is NodePath<JSXAttribute> => path.isJSXAttribute())
+                  .filter(path => !isEventHandler(path))
+                  .map(path => path.get("value"))
+                  .filter((path): path is NodePath<JSXExpressionContainer> => path.isJSXExpressionContainer())
+                  .map(path => path.get("expression"))
+                  .filter((path): path is NodePath<Expression> => path.isExpression())
+                  .forEach(path => {
+                    const VALUE = cloneDeepWithoutLoc(path.node);
+                    path.replaceWith(asFunction({ VALUE }));
+                  });
 
-              children
-                .filter((path): path is NodePath<JSXExpressionContainer> => path.isJSXExpressionContainer())
-                .map(path => path.get("expression"))
-                .filter((path): path is NodePath<Expression> => path.isExpression())
-                .forEach(path => {
-                  const VALUE = cloneDeepWithoutLoc(path.node);
-                  path.replaceWith(asFunction({ VALUE }));
-                });
-            },
-          });
+                children
+                  .filter((path): path is NodePath<JSXExpressionContainer> => path.isJSXExpressionContainer())
+                  .map(path => path.get("expression"))
+                  .filter((path): path is NodePath<Expression> => path.isExpression())
+                  .forEach(path => {
+                    const VALUE = cloneDeepWithoutLoc(path.node);
+                    path.replaceWith(asFunction({ VALUE }));
+                  });
+              },
+            });
+          }
         },
       },
     },
@@ -186,11 +171,6 @@ function isFunctionExpression(path: NodePath<Node>): path is NodePath<ArrowFunct
   return path.isFunctionExpression() || path.isArrowFunctionExpression();
 }
 
-function createSetter(name: string, VALUE: Expression | Statement) {
-  const SETTER = `set${name[0].toUpperCase()}${name.substring(1)}`;
-  return setter({ SETTER, VALUE });
-}
-
 const declaration = template.statement`
   const [GETTER, SETTER] = rjsx.val(VALUE);
 `;
@@ -204,11 +184,11 @@ const setter = template.statement`
 `;
 
 const add = template.statement`
-  GETTER() + VALUE
+  SETTER(GETTER() + VALUE)
 `;
 
 const sub = template.statement`
-  GETTER() + VALUE
+  SETTER(GETTER() - VALUE)
 `;
 
 const asFunction = template.statement`
