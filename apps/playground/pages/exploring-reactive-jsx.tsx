@@ -6,12 +6,14 @@ const Component = () => {
   let count = 0;
 
   if (count <= 5) {
-    document.title = \`Count is \${count}\`;
+    document.title = \`(nested side effect)  Count is \${count}\`;
 
     for(let i = 0; i <= count; i++) {
       console.log("counted", i, "times");
     }
   }
+
+  document.title = \`(unique side effect) Count is \${count}\`;
 
   return <button onClick={() => count++}>Click me</button>;
 };

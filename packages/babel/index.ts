@@ -77,9 +77,31 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
              * - filter statements which are nested in other statements
              * - make the remaining statements reactive
              */
+
+            /**
+             * next todo
+             * this needs to be done outside of this per-binding-loop and instead
+             * for all bindings at the same time. So that if multiple bindings make the same
+             * statement reactive, this will only happen once
+             */
+
+            const statements: NodePath<Node>[] = [];
+
             binding.referencePaths.forEach(path => {
-              const reactiveStatement = findReactiveStatement(path);
+              const statement = path.getStatementParent();
+              if (!statement) return;
+              if (statement.isReturnStatement()) return;
+              if (statements.some(parent => statement.isDescendant(parent))) return;
+              statements.push(statement);
+
+              // const reactiveStatement = findReactiveStatement(path);
               // console.log("reactiveStatement", reactiveStatement);
+            });
+            statements.forEach(statement => console.log(statement.toString()));
+
+            statements.forEach(path => {
+              const VALUE = cloneDeepWithoutLoc(path.node);
+              path.replaceWith(reaction({ VALUE }));
             });
 
             // declaration
@@ -122,15 +144,6 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
       },
     },
   };
-}
-
-function findReactiveStatement(path: NodePath<Node>) {
-  // debugger;
-  // console.log(path.parentPath?.toString());
-
-  console.log(path.getStatementParent()?.toString());
-
-  return null;
 }
 
 function openingElementIsCapitalized(path: NodePath<JSXElement>): boolean {
@@ -192,6 +205,10 @@ function isFunctionExpression(path: NodePath<Node>): path is NodePath<ArrowFunct
 
 const declaration = template.statement`
   const [GETTER, SETTER] = rjsx.val(VALUE);
+`;
+
+const reaction = template.statement`
+  rjsx.react(() => { VALUE });
 `;
 
 const getter = template.statement`
