@@ -8,7 +8,15 @@ import {
 } from "@babel/types";
 
 import type { NodePath, Node, Visitor } from "@babel/core";
-import type { JSXAttribute, ArrowFunctionExpression, FunctionExpression, Identifier, JSXElement } from "@babel/types";
+import type {
+  JSXAttribute,
+  ArrowFunctionExpression,
+  FunctionExpression,
+  Identifier,
+  JSXElement,
+  Statement,
+  UpdateExpression,
+} from "@babel/types";
 import type { Binding } from "@babel/traverse";
 
 interface State {
@@ -33,11 +41,25 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
 
           state.bindings
             .flatMap(binding => binding.referencePaths)
+            .forEach(path => {
+              console.log("referencePath    ", path.type, path.toString(), path.parentPath?.toString());
+            });
+
+          state.bindings
+            .flatMap(binding => binding.constantViolations)
+            .forEach(path => {
+              console.log("constantViolation", path.type, path.toString());
+            });
+
+          // getters
+          state.bindings
+            .flatMap(binding => binding.referencePaths)
             .filter((path): path is NodePath<Identifier> => path.isIdentifier())
             .forEach(path => {
               path.replaceWith(getter({ GETTER: path.node.name }));
             });
 
+          // setters: assignment expressions
           state.bindings
             .flatMap(binding => binding.constantViolations)
             .filter((path): path is NodePath<AssignmentExpression> => path.isAssignmentExpression())
@@ -48,6 +70,19 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
               path.replaceWith(createSetter(name, value));
             });
 
+          // setters: update expressions
+          state.bindings
+            .flatMap(binding => binding.constantViolations)
+            .filter((path): path is NodePath<UpdateExpression> => path.isUpdateExpression())
+
+            .forEach(path => {
+              const name = path.get("argument");
+
+              if (path.node.operator === "++") {
+              }
+            });
+
+          // declarations
           state.bindings.forEach(binding => {
             if (!binding.path.isVariableDeclarator()) return;
             if (!isIdentifier(binding.path.node.id)) return;
@@ -123,6 +158,20 @@ function collectbindings(path: NodePath<JSXAttribute>, state: State) {
 
         state.bindings.push(binding);
       },
+      UpdateExpression: path => {
+        const argument = path.get("argument");
+        if (!argument.isIdentifier()) return;
+
+        const name = argument.node.name;
+        const binding = path.scope.getBinding(name);
+
+        if (!binding) return;
+        if (!binding.path.isVariableDeclarator()) return;
+        if (binding.kind === "const") return;
+        if (binding.constantViolations.length === 0) return;
+
+        state.bindings.push(binding);
+      },
     });
   }
 }
@@ -137,7 +186,7 @@ function isFunctionExpression(path: NodePath<Node>): path is NodePath<ArrowFunct
   return path.isFunctionExpression() || path.isArrowFunctionExpression();
 }
 
-function createSetter(name: string, VALUE: Expression) {
+function createSetter(name: string, VALUE: Expression | Statement) {
   const SETTER = `set${name[0].toUpperCase()}${name.substring(1)}`;
   return setter({ SETTER, VALUE });
 }
@@ -152,6 +201,14 @@ const getter = template.statement`
 
 const setter = template.statement`
   SETTER(VALUE)
+`;
+
+const add = template.statement`
+  GETTER() + VALUE
+`;
+
+const sub = template.statement`
+  GETTER() + VALUE
 `;
 
 const asFunction = template.statement`

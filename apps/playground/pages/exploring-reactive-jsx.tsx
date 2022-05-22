@@ -6,7 +6,7 @@ const Component = () => {
   let count = 0;
 
   return (
-    <button onClick={() => count = count + 1}>
+    <button onClick={() => count++}>
       You clicked {count} {count === 1 ? 'time' : 'times'}
     </button>
   );
@@ -62,7 +62,7 @@ export default function ExploringReactiveJsx() {
         </blockquote>
       </header>
       <main>
-        <P>
+        {/* <P>
           <em className="pb-px border-b-[3px] border-b-sky-300">React is a very good libary</em>. It promotes a clean
           and simple mental model for writing user interfaces. With components we can define reusable chunks of our UI
           and orchestrate everything to a whole that is greater than the sum of its parts.
@@ -76,11 +76,11 @@ export default function ExploringReactiveJsx() {
 
         <P>
           <span className="pb-px border-b-[3px] border-b-sky-300">Can we not write components like this?</span>
-        </P>
+        </P> */}
 
         <Playground className="my-10 max-w-screen-sm" source={initialExample} />
 
-        <P>
+        {/* <P>
           No need for <Code>useState</Code> or <Code>setCode</Code>, all you need to do is declare a variable and change
           it. The DOM will update accordingly. That's good, right? It's easy. It's what you <em>want</em> it to do.
         </P>
@@ -165,7 +165,7 @@ export default function ExploringReactiveJsx() {
           <em className="pb-px border-b-[3px] border-b-rose-300">"insert-nail-here-machine"</em>
         </h3>
 
-        <P>By XXX reactive JSX does not have to put enables yyy instead of constrains zzz</P>
+        <P>By XXX reactive JSX does not have to put enables yyy instead of constrains zzz</P> */}
 
         {/* <h2 className="font-bold text-2xl pt-8 pb-3 max-w-screen-sm">How</h2> */}
 
