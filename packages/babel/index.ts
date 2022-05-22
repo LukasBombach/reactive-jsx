@@ -39,38 +39,48 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
           path.unshiftContainer("body", importRuntime);
 
           for (const binding of state.bindings) {
+            // x
             if (!binding.path.isVariableDeclarator()) return;
             if (!isIdentifier(binding.path.node.id)) return;
             if (!binding.path.node.init) return;
 
+            // replacements
             const GETTER = binding.path.node.id.name;
             const SETTER = `set${GETTER[0].toUpperCase()}${GETTER.substring(1)}`;
 
-            // getters
+            // reactive getters
             binding.referencePaths
               .filter((path): path is NodePath<Identifier> => path.isIdentifier())
               .forEach(path => {
                 path.replaceWith(getter({ GETTER }));
               });
 
-            // setters: assignment expressions
+            // reactive assignment expressions
             binding.constantViolations
               .filter((path): path is NodePath<AssignmentExpression> => path.isAssignmentExpression())
               .forEach(path => {
                 path.replaceWith(setter({ SETTER, VALUE: cloneDeepWithoutLoc(path.node.right) }));
               });
 
-            // setters: update expressions
+            // reactive update expressions
             binding.constantViolations
               .filter((path): path is NodePath<UpdateExpression> => path.isUpdateExpression())
               .forEach(path => {
-                if (path.node.operator === "++") {
-                  path.replaceWith(add({ SETTER, GETTER, VALUE: "1" }));
-                }
-                if (path.node.operator === "--") {
-                  path.replaceWith(sub({ SETTER, GETTER, VALUE: "1" }));
-                }
+                if (path.node.operator === "++") path.replaceWith(add({ SETTER, GETTER, VALUE: "1" }));
+                if (path.node.operator === "--") path.replaceWith(sub({ SETTER, GETTER, VALUE: "1" }));
               });
+
+            // reactive statements
+            /**
+             * todo
+             * - collect all statements with path.getStatementParent()
+             * - filter statements which are nested in other statements
+             * - make the remaining statements reactive
+             */
+            binding.referencePaths.forEach(path => {
+              const reactiveStatement = findReactiveStatement(path);
+              // console.log("reactiveStatement", reactiveStatement);
+            });
 
             // declaration
             const VALUE = cloneDeepWithoutLoc(binding.path.node.init);
@@ -112,6 +122,15 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
       },
     },
   };
+}
+
+function findReactiveStatement(path: NodePath<Node>) {
+  // debugger;
+  // console.log(path.parentPath?.toString());
+
+  console.log(path.getStatementParent()?.toString());
+
+  return null;
 }
 
 function openingElementIsCapitalized(path: NodePath<JSXElement>): boolean {
