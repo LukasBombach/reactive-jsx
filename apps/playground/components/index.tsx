@@ -83,4 +83,4 @@ export const Article: TC<{ href: string }> = p => (
 export const Title: TC = ({ children }) => <span className="block font-semibold">{children}</span>;
 export const Description: TC = ({ children }) => <span className="block text-slate-500">{children}</span>;
 
-export const Fin = () => <span className="italic text-slate-400 text-xs">Le Fin.</span>;
+export const Fin = () => <span className="text-slate-400 text-xs">Le Fin.</span>;
