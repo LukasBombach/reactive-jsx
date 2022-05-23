@@ -5,21 +5,40 @@ const dev = `
 const Component = () => {
   let count = 1;
 
+  let tripled;
+  tripled = count * 3;
+
+  return <button onClick={() => count++}>Count: {count} * 3 = {tripled}</button>
+};
+
+document.body.append(<Component />);`;
+
+/* const dev = `
+const Component = () => {
+  let count = 1;
+
   let doubled = count * 2;
   let quadrupled = doubled * 2;
 
+  let tripled;
+
+  tripled = count * 3;
+
   return (<div>
-      <button on:click={() => count++}>
+      <button onClick={() => count++}>
         Count: {count}
       </button>
 
+      
       <p>{count} * 2 = {doubled}</p>
       <p>{doubled} * 2 = {quadrupled}</p>
+
+      <p>{count} * 3 = {tripled}</p>
     </div>
   );
 };
 
-document.body.append(<Component />);`;
+document.body.append(<Component />);`; */
 
 const initialExample = `
 const Component = () => {

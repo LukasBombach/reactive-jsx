@@ -15,11 +15,13 @@ import type {
   Identifier,
   JSXElement,
   UpdateExpression,
+  Statement,
 } from "@babel/types";
 import type { Binding } from "@babel/traverse";
 
 interface State {
   bindings: Binding[];
+  statements: NodePath<Statement>[];
 }
 
 function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
@@ -29,6 +31,7 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
       Program: {
         enter(path, state) {
           state.bindings = [];
+          state.statements = [];
 
           path.traverse({
             JSXAttribute: path => {
@@ -36,13 +39,45 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
             },
           });
 
+          for (const binding of state.bindings) {
+            binding.referencePaths.forEach(path => {
+              const statement = path.getStatementParent();
+              if (!statement) return;
+              if (statement.isReturnStatement()) return;
+
+              if (statement.isExpressionStatement()) {
+                const expression = statement.get("expression");
+                if (expression.isAssignmentExpression()) {
+                  const left = expression.get("left");
+                  if (left.isIdentifier()) {
+                    const name = left.node.name;
+                    const binding = path.scope.getBinding(name);
+                    if (binding) {
+                      state.bindings.push(binding);
+                      // todo new identifier, repeat!
+                    }
+                  }
+                }
+              }
+
+              // todo statements might come in in the wrong oder here
+              // todo maybe add all statements we get and the filter if any one is an decendant
+              // todo of any other
+              // if (state.statements.some(parent => statement.isDescendant(parent))) return;
+              // state.statements.push(statement);
+            });
+          }
+
           path.unshiftContainer("body", importRuntime);
 
+          console.log(state.bindings);
+
           for (const binding of state.bindings) {
+            debugger;
             // x
             if (!binding.path.isVariableDeclarator()) return;
             if (!isIdentifier(binding.path.node.id)) return;
-            if (!binding.path.node.init) return;
+            // if (!binding.path.node.init) return;
 
             // replacements
             const GETTER = binding.path.node.id.name;
@@ -72,20 +107,13 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
 
             // reactive statements
             /**
-             * todo
-             * - collect all statements with path.getStatementParent()
-             * - filter statements which are nested in other statements
-             * - make the remaining statements reactive
-             */
-
-            /**
              * next todo
              * this needs to be done outside of this per-binding-loop and instead
              * for all bindings at the same time. So that if multiple bindings make the same
              * statement reactive, this will only happen once
              */
 
-            const statements: NodePath<Node>[] = [];
+            /* const statements: NodePath<Node>[] = [];
 
             binding.referencePaths.forEach(path => {
               const statement = path.getStatementParent();
@@ -93,53 +121,53 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
               if (statement.isReturnStatement()) return;
               if (statements.some(parent => statement.isDescendant(parent))) return;
               statements.push(statement);
-
-              // const reactiveStatement = findReactiveStatement(path);
-              // console.log("reactiveStatement", reactiveStatement);
             });
-            statements.forEach(statement => console.log(statement.toString()));
+            statements.forEach(statement => console.log(statement.type, statement.toString()));
 
-            statements.forEach(path => {
+            debugger;
+            */
+
+            state.statements.forEach(path => {
               const VALUE = cloneDeepWithoutLoc(path.node);
               path.replaceWith(reaction({ VALUE }));
             });
 
             // declaration
-            const VALUE = cloneDeepWithoutLoc(binding.path.node.init);
+            const VALUE = binding.path.node.init ? cloneDeepWithoutLoc(binding.path.node.init) : "";
             binding.path.parentPath.replaceWith(declaration({ GETTER, SETTER, VALUE }));
-
-            // jsx elements (attributes and children)
-            path.traverse({
-              JSXElement: path => {
-                const attributes = path.get("openingElement").get("attributes");
-                const children = path.get("children");
-                const isComponent = openingElementIsCapitalized(path);
-
-                if (isComponent) return;
-
-                attributes
-                  .filter((path): path is NodePath<JSXAttribute> => path.isJSXAttribute())
-                  .filter(path => !isEventHandler(path))
-                  .map(path => path.get("value"))
-                  .filter((path): path is NodePath<JSXExpressionContainer> => path.isJSXExpressionContainer())
-                  .map(path => path.get("expression"))
-                  .filter((path): path is NodePath<Expression> => path.isExpression())
-                  .forEach(path => {
-                    const VALUE = cloneDeepWithoutLoc(path.node);
-                    path.replaceWith(asFunction({ VALUE }));
-                  });
-
-                children
-                  .filter((path): path is NodePath<JSXExpressionContainer> => path.isJSXExpressionContainer())
-                  .map(path => path.get("expression"))
-                  .filter((path): path is NodePath<Expression> => path.isExpression())
-                  .forEach(path => {
-                    const VALUE = cloneDeepWithoutLoc(path.node);
-                    path.replaceWith(asFunction({ VALUE }));
-                  });
-              },
-            });
           }
+
+          // jsx elements (attributes and children)
+          path.traverse({
+            JSXElement: path => {
+              const attributes = path.get("openingElement").get("attributes");
+              const children = path.get("children");
+              const isComponent = openingElementIsCapitalized(path);
+
+              if (isComponent) return;
+
+              attributes
+                .filter((path): path is NodePath<JSXAttribute> => path.isJSXAttribute())
+                .filter(path => !isEventHandler(path))
+                .map(path => path.get("value"))
+                .filter((path): path is NodePath<JSXExpressionContainer> => path.isJSXExpressionContainer())
+                .map(path => path.get("expression"))
+                .filter((path): path is NodePath<Expression> => path.isExpression())
+                .forEach(path => {
+                  const VALUE = cloneDeepWithoutLoc(path.node);
+                  path.replaceWith(asFunction({ VALUE }));
+                });
+
+              children
+                .filter((path): path is NodePath<JSXExpressionContainer> => path.isJSXExpressionContainer())
+                .map(path => path.get("expression"))
+                .filter((path): path is NodePath<Expression> => path.isExpression())
+                .forEach(path => {
+                  const VALUE = cloneDeepWithoutLoc(path.node);
+                  path.replaceWith(asFunction({ VALUE }));
+                });
+            },
+          });
         },
       },
     },
