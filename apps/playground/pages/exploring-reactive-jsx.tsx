@@ -3,19 +3,20 @@ import { Layout, BlogTitle, P, Code, PostCredit } from "components";
 
 const dev = `
 const Component = () => {
-  let count = 0;
+  let count = 1;
 
-  if (count <= 5) {
-    document.title = \`(nested side effect)  Count is \${count}\`;
+  let doubled = count * 2;
+  let quadrupled = doubled * 2;
 
-    for(let i = 0; i <= count; i++) {
-      console.log("counted", i, "times");
-    }
-  }
+  return (<div>
+      <button on:click={() => count++}>
+        Count: {count}
+      </button>
 
-  document.title = \`(unique side effect) Count is \${count}\`;
-
-  return <button onClick={() => count++}>Click me</button>;
+      <p>{count} * 2 = {doubled}</p>
+      <p>{doubled} * 2 = {quadrupled}</p>
+    </div>
+  );
 };
 
 document.body.append(<Component />);`;
