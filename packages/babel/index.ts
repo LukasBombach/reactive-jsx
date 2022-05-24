@@ -54,8 +54,6 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
                     const binding = path.scope.getBinding(name);
                     if (binding) {
                       state.bindings.push(binding);
-                      // todo new identifier, repeat!
-                      // todo maybe not, the statement iteration is down there, now with all bindings
                     }
                   }
                 }
@@ -77,15 +75,7 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
               state.statements.push(statement);
             });
 
-          // todo statements might come in in the wrong oder here
-          // todo maybe add all statements we get and the filter if any one is an decendant
-          // todo of any other
-          // if (state.statements.some(parent => statement.isDescendant(parent))) return;
-          // state.statements.push(statement);
-
           path.unshiftContainer("body", importRuntime);
-
-          // console.log(state.bindings);
 
           for (const binding of state.bindings) {
             debugger;
@@ -119,30 +109,6 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
                 if (path.node.operator === "++") path.replaceWith(add({ SETTER, GETTER, VALUE: "1" }));
                 if (path.node.operator === "--") path.replaceWith(sub({ SETTER, GETTER, VALUE: "1" }));
               });
-
-            // reactive statements
-            /**
-             * next todo
-             * this needs to be done outside of this per-binding-loop and instead
-             * for all bindings at the same time. So that if multiple bindings make the same
-             * statement reactive, this will only happen once
-             */
-
-            /* const statements: NodePath<Node>[] = [];
-
-            binding.referencePaths.forEach(path => {
-              const statement = path.getStatementParent();
-              if (!statement) return;
-              if (statement.isReturnStatement()) return;
-              if (statements.some(parent => statement.isDescendant(parent))) return;
-              statements.push(statement);
-            });
-            statements.forEach(statement => console.log(statement.type, statement.toString()));
-
-            debugger;
-            */
-
-            // .forEach(statement => console.log(statement.type, ));
 
             // declaration
             const VALUE = binding.path.node.init ? cloneDeepWithoutLoc(binding.path.node.init) : "";
