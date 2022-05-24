@@ -67,18 +67,13 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
               const statement = path.getStatementParent();
               if (!statement) return;
               if (statement.isReturnStatement()) return;
-
               if (state.statements.some(parent => statement.isDescendant(parent))) return;
-
-              console.log("got statement", statement.toString());
-
               state.statements.push(statement);
             });
 
           path.unshiftContainer("body", importRuntime);
 
           for (const binding of state.bindings) {
-            debugger;
             // x
             if (!binding.path.isVariableDeclarator()) return;
             if (!isIdentifier(binding.path.node.id)) return;
@@ -115,9 +110,8 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
             binding.path.parentPath.replaceWith(declaration({ GETTER, SETTER, VALUE }));
           }
 
-          console.log(state.statements.map(statement => statement.toString()));
-
           state.statements.forEach(path => {
+            console.log("transforming statement |", path.type, path.toString());
             const VALUE = cloneDeepWithoutLoc(path.node);
             path.replaceWith(reaction({ VALUE }));
           });

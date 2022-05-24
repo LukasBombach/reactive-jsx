@@ -5,8 +5,7 @@ const dev = `
 const Component = () => {
   let count = 1;
 
-  let tripled;
-  tripled = count * 3;
+  let tripled = count * 3;
 
   return <button onClick={() => count++}>Count: {count} * 3 = {tripled}</button>
 };

@@ -75,12 +75,16 @@ export const ArticleList: TC = ({ children }) => (
 );
 
 export const Article: TC<{ href: string }> = p => (
-  <li className="py-4">
-    <a href={p.href}>{p.children}</a>
+  <li className="py-4 active:text-purple-500 transition duration-500">
+    <a href={p.href} className="">
+      {p.children}
+    </a>
   </li>
 );
 
 export const Title: TC = ({ children }) => <span className="block font-semibold">{children}</span>;
-export const Description: TC = ({ children }) => <span className="block text-slate-500">{children}</span>;
+export const Description: TC = ({ children }) => (
+  <span className="block opacity-60 active:opacity-100 transition duration-500">{children}</span>
+);
 
 export const Fin = () => <span className="text-slate-400 text-xs">Le Fin.</span>;
