@@ -89,20 +89,29 @@ const Result = () => <p>The answer is {count}</p>;
 
 document.body.append(<Button />, <Result />);`;
 
+//
+
 export default function ExploringReactiveJsx() {
+  if (true) {
+    return (
+      <Layout>
+        <PostCredit date={new Date("5/26/2022")} />
+        <Playground source={dev} />
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
       <PostCredit date={new Date("5/26/2022")} />
-      {/* <header>
+      <header>
         <BlogTitle>Exploring compile time reactive JSX</BlogTitle>
         <blockquote className="pl-3 border-l-2 sm:pl-3 sm:border-l-4 border-slate-200 text-slate-500 max-w-screen-sm">
           Writing simpler components by transpiling away the hard parts
         </blockquote>
-      </header> */}
+      </header>
       <main>
-        <Playground source={dev} />
-
-        {/* <P>
+        <P>
           <em className="pb-px border-b-[3px] border-b-sky-300">React is a very good libary</em>. It promotes a clean
           and simple mental model for writing user interfaces. With components we can define reusable chunks of our UI
           and orchestrate everything to a whole that is greater than the sum of its parts.
@@ -205,7 +214,7 @@ export default function ExploringReactiveJsx() {
           <em className="pb-px border-b-[3px] border-b-rose-300">"insert-nail-here-machine"</em>
         </h3>
 
-        <P>By XXX reactive JSX does not have to put enables yyy instead of constrains zzz</P> */}
+        <P>By XXX reactive JSX does not have to put enables yyy instead of constrains zzz</P>
 
         {/* <h2 className="font-bold text-2xl pt-8 pb-3 max-w-screen-sm">How</h2> */}
 
