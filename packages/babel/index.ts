@@ -55,22 +55,37 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
                     if (binding) {
                       state.bindings.push(binding);
                       // todo new identifier, repeat!
+                      // todo maybe not, the statement iteration is down there, now with all bindings
                     }
                   }
                 }
               }
-
-              // todo statements might come in in the wrong oder here
-              // todo maybe add all statements we get and the filter if any one is an decendant
-              // todo of any other
-              // if (state.statements.some(parent => statement.isDescendant(parent))) return;
-              // state.statements.push(statement);
             });
           }
 
+          state.bindings
+            .flatMap(binding => binding.referencePaths)
+            .forEach(path => {
+              const statement = path.getStatementParent();
+              if (!statement) return;
+              if (statement.isReturnStatement()) return;
+
+              if (state.statements.some(parent => statement.isDescendant(parent))) return;
+
+              console.log("got statement", statement.toString());
+
+              state.statements.push(statement);
+            });
+
+          // todo statements might come in in the wrong oder here
+          // todo maybe add all statements we get and the filter if any one is an decendant
+          // todo of any other
+          // if (state.statements.some(parent => statement.isDescendant(parent))) return;
+          // state.statements.push(statement);
+
           path.unshiftContainer("body", importRuntime);
 
-          console.log(state.bindings);
+          // console.log(state.bindings);
 
           for (const binding of state.bindings) {
             debugger;
@@ -127,15 +142,19 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
             debugger;
             */
 
-            state.statements.forEach(path => {
-              const VALUE = cloneDeepWithoutLoc(path.node);
-              path.replaceWith(reaction({ VALUE }));
-            });
+            // .forEach(statement => console.log(statement.type, ));
 
             // declaration
             const VALUE = binding.path.node.init ? cloneDeepWithoutLoc(binding.path.node.init) : "";
             binding.path.parentPath.replaceWith(declaration({ GETTER, SETTER, VALUE }));
           }
+
+          console.log(state.statements.map(statement => statement.toString()));
+
+          state.statements.forEach(path => {
+            const VALUE = cloneDeepWithoutLoc(path.node);
+            path.replaceWith(reaction({ VALUE }));
+          });
 
           // jsx elements (attributes and children)
           path.traverse({
