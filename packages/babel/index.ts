@@ -45,19 +45,25 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
               if (!statement) return;
               if (statement.isReturnStatement()) return;
 
-              if (statement.isExpressionStatement()) {
-                const expression = statement.get("expression");
-                if (expression.isAssignmentExpression()) {
-                  const left = expression.get("left");
-                  if (left.isIdentifier()) {
-                    const name = left.node.name;
-                    const binding = path.scope.getBinding(name);
-                    if (binding) {
-                      state.bindings.push(binding);
-                    }
-                  }
-                }
-              }
+              if (!statement.isVariableDeclaration()) return;
+              console.log(statement.type, statement.toString());
+            });
+          }
+
+          for (const binding of state.bindings) {
+            binding.referencePaths.forEach(path => {
+              const statement = path.getStatementParent();
+              if (!statement) return;
+              if (statement.isReturnStatement()) return;
+              if (!statement.isExpressionStatement()) return;
+              const expression = statement.get("expression");
+              if (!expression.isAssignmentExpression()) return;
+              const left = expression.get("left");
+              if (!left.isIdentifier()) return;
+              const name = left.node.name;
+              const binding = path.scope.getBinding(name);
+              if (!binding) return;
+              state.bindings.push(binding);
             });
           }
 
@@ -111,7 +117,6 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
           }
 
           state.statements.forEach(path => {
-            console.log("transforming statement |", path.type, path.toString());
             const VALUE = cloneDeepWithoutLoc(path.node);
             path.replaceWith(reaction({ VALUE }));
           });
