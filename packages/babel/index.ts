@@ -43,18 +43,51 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
             binding.referencePaths.forEach(path => {
               const statement = path.getStatementParent();
               if (!statement) return;
-              if (statement.isReturnStatement()) return;
-
               if (!statement.isVariableDeclaration()) return;
-              console.log(statement.type, statement.toString());
+
+              statement
+                .get("declarations")
+                .reverse()
+                .forEach(path => {
+                  const id = path.get("id");
+                  const init = path.get("init");
+                  if (!id.isIdentifier()) return;
+                  if (!init.isExpression()) return; // todo not sure if this check should be here
+                  // debugger;
+
+                  // const GETTER = id.node.name;
+                  // const VALUE = cloneDeepWithoutLoc(init.node);
+                  statement.insertAfter(assignVariable({ NAME: id.node.name, VALUE: cloneDeepWithoutLoc(init.node) }));
+                  init.remove();
+
+                  // path.replaceWithMultiple(
+                  //   spreadVariableDeclarator({ NAME: id.node.name, INIT: cloneDeepWithoutLoc(init.node) })
+                  // );
+
+                  // const GETTER = id.node.name;
+                  // const SETTER = `set${GETTER[0].toUpperCase()}${GETTER.substring(1)}`;
+                  // const VALUE = cloneDeepWithoutLoc(init.node);
+                  // const r = path.replaceWithMultiple([
+                  //   declaration({ GETTER, SETTER, VALUE: "" }),
+                  //   setter({ SETTER, VALUE }),
+                  // ]);
+                  // console.log(r.map(x => x.toString()));
+                });
+
+              // let tripled = count * 3;
+
+              // let tripled;
+              // tripled = count * 3;
             });
           }
+
+          console.log(path.toString());
+          // debugger;
 
           for (const binding of state.bindings) {
             binding.referencePaths.forEach(path => {
               const statement = path.getStatementParent();
               if (!statement) return;
-              if (statement.isReturnStatement()) return;
               if (!statement.isExpressionStatement()) return;
               const expression = statement.get("expression");
               if (!expression.isAssignmentExpression()) return;
@@ -241,6 +274,15 @@ const sub = template.statement`
 
 const asFunction = template.statement`
   () => VALUE
+`;
+
+/* const spreadVariableDeclarator = template.statements`
+  let NAME;
+  NAME = INIT;
+`;
+ */
+const assignVariable = template.statement`
+  NAME = VALUE;
 `;
 
 const importRuntime = template.ast(`
