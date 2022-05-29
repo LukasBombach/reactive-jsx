@@ -185,21 +185,10 @@ function getBindings(path: NodePath<Node>): Binding[] {
   const bindings: Binding[] = [];
 
   function x(path: NodePath<Node>) {
-    // console.log(path.toString());
-    // console.log(path.isIdentifier());
-
     if (!path.isIdentifier()) return;
     const name = path.node.name;
     const binding = path.scope.getBinding(name);
-    // console.log(name);
-    // console.log(binding);
-
     if (!binding) return;
-
-    // console.log("!binding.path.isVariableDeclarator()", !binding.path.isVariableDeclarator());
-    // console.log('binding.kind === "const"', binding.kind === "const");
-    // console.log("binding.constantViolations.length === 0", binding.constantViolations.length === 0);
-
     if (!binding.path.isVariableDeclarator()) return;
     if (binding.kind === "const") return;
 
@@ -216,10 +205,7 @@ function getBindings(path: NodePath<Node>): Binding[] {
       const statement = path.getStatementParent();
       if (!statement) return;
       if (!statement.isVariableDeclaration()) return;
-      // console.log(statement.type, statement.toString());
       statement.get("declarations").forEach(path => {
-        // console.log("declaration", path.toString());
-        // console.log("id", path.get("id").toString());
         x(path.get("id"));
       });
     });
@@ -237,56 +223,6 @@ function getBindings(path: NodePath<Node>): Binding[] {
 
   return bindings;
 }
-
-/* function collectbindings(path: NodePath<JSXAttribute>, state: State) {
-  if (!isEventHandler(path)) return;
-
-  // todo this can be simplified by traversing the path directly (I guess?)
-  const expression = path.get("value").get("expression");
-  if (Array.isArray(expression)) return;
-
-  if (isFunctionExpression(expression)) {
-    expression.traverse({
-      AssignmentExpression: path => {
-        const left = path.get("left");
-        if (!left.isIdentifier()) return;
-
-        const name = left.node.name;
-        const binding = path.scope.getBinding(name);
-
-        if (!binding) return;
-        if (!binding.path.isVariableDeclarator()) return;
-        if (binding.kind === "const") return;
-        if (binding.constantViolations.length === 0) return;
-
-        state.bindings.push(binding);
-      },
-      UpdateExpression: path => {
-        const argument = path.get("argument");
-        if (!argument.isIdentifier()) return;
-
-        const name = argument.node.name;
-        const binding = path.scope.getBinding(name);
-
-        if (!binding) return;
-        if (!binding.path.isVariableDeclarator()) return;
-        if (binding.kind === "const") return;
-        if (binding.constantViolations.length === 0) return;
-
-        state.bindings.push(binding);
-      },
-    });
-  }
-} */
-
-/* function getReactiveBinding(name: string, scope: Scope): Binding | null {
-  const binding = scope.getBinding(name);
-  if (!binding) return null;
-  if (!binding.path.isVariableDeclarator()) return null;
-  if (binding.kind === "const") return null;
-  if (binding.constantViolations.length === 0) return null;
-  return binding;
-} */
 
 function isEventHandler(path: NodePath<JSXAttribute>): boolean {
   const identifier = path.get("name").node.name;
