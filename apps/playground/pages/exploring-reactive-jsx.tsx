@@ -1,11 +1,13 @@
 import { Playground } from "@reactive-jsx/playground";
 import { Layout, BlogTitle, P, Code, PostCredit } from "components";
 
+// let tripled = count * 3, twelved = tripled * 4;
+
 const dev = `
 const Component = () => {
   let count = 1;
 
-  let tripled = count * 3, twelved = tripled * 4;
+  let tripled = count * 3;
 
   return <button onClick={() => count++}>Count: {count} * 3 = {tripled}</button>
 };

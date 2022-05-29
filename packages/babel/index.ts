@@ -8,16 +8,16 @@ import {
 } from "@babel/types";
 
 import type { NodePath, Node, Visitor } from "@babel/core";
+import type { Binding, Scope } from "@babel/traverse";
 import type {
-  JSXAttribute,
   ArrowFunctionExpression,
   FunctionExpression,
   Identifier,
+  JSXAttribute,
   JSXElement,
-  UpdateExpression,
   Statement,
+  UpdateExpression,
 } from "@babel/types";
-import type { Binding } from "@babel/traverse";
 
 interface State {
   bindings: Binding[];
@@ -33,7 +33,11 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
           state.bindings = [];
           state.statements = [];
 
-          path.traverse({
+          const bindings = getBindings(path);
+
+          console.log(bindings.map(binding => binding.path.parentPath?.toString()));
+
+          /* path.traverse({
             JSXAttribute: path => {
               collectbindings(path, state);
             },
@@ -53,35 +57,15 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
                   const init = path.get("init");
                   if (!id.isIdentifier()) return;
                   if (!init.isExpression()) return; // todo not sure if this check should be here
-                  // debugger;
-
-                  // const GETTER = id.node.name;
-                  // const VALUE = cloneDeepWithoutLoc(init.node);
                   statement.insertAfter(assignVariable({ NAME: id.node.name, VALUE: cloneDeepWithoutLoc(init.node) }));
                   init.remove();
-
-                  // path.replaceWithMultiple(
-                  //   spreadVariableDeclarator({ NAME: id.node.name, INIT: cloneDeepWithoutLoc(init.node) })
-                  // );
-
-                  // const GETTER = id.node.name;
-                  // const SETTER = `set${GETTER[0].toUpperCase()}${GETTER.substring(1)}`;
-                  // const VALUE = cloneDeepWithoutLoc(init.node);
-                  // const r = path.replaceWithMultiple([
-                  //   declaration({ GETTER, SETTER, VALUE: "" }),
-                  //   setter({ SETTER, VALUE }),
-                  // ]);
-                  // console.log(r.map(x => x.toString()));
                 });
-
-              // let tripled = count * 3;
-
-              // let tripled;
-              // tripled = count * 3;
             });
           }
 
           console.log(path.toString());
+          console.log(state);
+
           // debugger;
 
           for (const binding of state.bindings) {
@@ -184,7 +168,7 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
                   path.replaceWith(asFunction({ VALUE }));
                 });
             },
-          });
+          });*/
         },
       },
     },
@@ -197,7 +181,64 @@ function openingElementIsCapitalized(path: NodePath<JSXElement>): boolean {
   return /[A-Z]/.test(namePath.node.name.charAt(0));
 }
 
-function collectbindings(path: NodePath<JSXAttribute>, state: State) {
+function getBindings(path: NodePath<Node>): Binding[] {
+  const bindings: Binding[] = [];
+
+  function x(path: NodePath<Node>) {
+    // console.log(path.toString());
+    // console.log(path.isIdentifier());
+
+    if (!path.isIdentifier()) return;
+    const name = path.node.name;
+    const binding = path.scope.getBinding(name);
+    // console.log(name);
+    // console.log(binding);
+
+    if (!binding) return;
+
+    // console.log("!binding.path.isVariableDeclarator()", !binding.path.isVariableDeclarator());
+    // console.log('binding.kind === "const"', binding.kind === "const");
+    // console.log("binding.constantViolations.length === 0", binding.constantViolations.length === 0);
+
+    if (!binding.path.isVariableDeclarator()) return;
+    if (binding.kind === "const") return;
+
+    // todo this does not work for declarations that are reactions to other signals
+    // if (binding.constantViolations.length === 0) return;
+
+    if (bindings.includes(binding)) return;
+    bindings.push(binding);
+    y(binding);
+  }
+
+  function y(binding: Binding) {
+    binding.referencePaths.forEach(path => {
+      const statement = path.getStatementParent();
+      if (!statement) return;
+      if (!statement.isVariableDeclaration()) return;
+      // console.log(statement.type, statement.toString());
+      statement.get("declarations").forEach(path => {
+        // console.log("declaration", path.toString());
+        // console.log("id", path.get("id").toString());
+        x(path.get("id"));
+      });
+    });
+  }
+
+  path.traverse({
+    JSXAttribute: path => {
+      if (!isEventHandler(path)) return;
+      path.traverse({
+        AssignmentExpression: path => x(path.get("left")),
+        UpdateExpression: path => x(path.get("argument")),
+      });
+    },
+  });
+
+  return bindings;
+}
+
+/* function collectbindings(path: NodePath<JSXAttribute>, state: State) {
   if (!isEventHandler(path)) return;
 
   // todo this can be simplified by traversing the path directly (I guess?)
@@ -236,7 +277,16 @@ function collectbindings(path: NodePath<JSXAttribute>, state: State) {
       },
     });
   }
-}
+} */
+
+/* function getReactiveBinding(name: string, scope: Scope): Binding | null {
+  const binding = scope.getBinding(name);
+  if (!binding) return null;
+  if (!binding.path.isVariableDeclarator()) return null;
+  if (binding.kind === "const") return null;
+  if (binding.constantViolations.length === 0) return null;
+  return binding;
+} */
 
 function isEventHandler(path: NodePath<JSXAttribute>): boolean {
   const identifier = path.get("name").node.name;
