@@ -31,7 +31,26 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
 
           const bindings = getBindings(path);
 
-          // todo break apart assigments to reactive values in var initializers
+          // break apart assigments to reactive values in var initializers
+          for (const binding of bindings) {
+            binding.referencePaths.forEach(path => {
+              const statement = path.getStatementParent();
+              if (!statement) return;
+              if (!statement.isVariableDeclaration()) return;
+
+              statement
+                .get("declarations")
+                .reverse()
+                .forEach(path => {
+                  const id = path.get("id");
+                  const init = path.get("init");
+                  if (!id.isIdentifier()) return;
+                  if (!init.isExpression()) return; // todo not sure if this check should be here
+                  statement.insertAfter(assignVariable({ NAME: id.node.name, VALUE: cloneDeepWithoutLoc(init.node) }));
+                  init.remove();
+                });
+            });
+          }
 
           // const bindingsWithReaciveValuesInInitializers = bindings.flatMap(binding => binding.referencePaths).map(path => path.findParent(p => ));
 
@@ -40,6 +59,11 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
           // })
 
           const statements: NodePath<Statement>[] = [];
+
+          console.log(
+            "all referencePaths",
+            bindings.flatMap(binding => binding.referencePaths).map(path => path.toString())
+          );
 
           bindings
             .flatMap(binding => binding.referencePaths)
@@ -51,10 +75,18 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
               statements.push(statement);
             });
 
-          console.log(bindings.map(b => b.path.parentPath?.toString()));
-          console.log(statements.map(s => s.toString()));
+          console.log(
+            "bindings",
+            bindings.map(b => b.path.parentPath?.toString())
+          );
+          console.log(
+            "statements",
+            statements.map(s => s.toString())
+          );
 
-          /* path.unshiftContainer("body", importRuntime);
+          console.log(path.toString());
+
+          path.unshiftContainer("body", importRuntime);
 
           for (const binding of bindings) {
             // x
@@ -128,7 +160,7 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
                   path.replaceWith(asFunction({ VALUE }));
                 });
             },
-          }); */
+          });
         },
       },
     },
@@ -165,9 +197,7 @@ function getBindings(path: NodePath<Node>): Binding[] {
       const statement = path.getStatementParent();
       if (!statement) return;
       if (!statement.isVariableDeclaration()) return;
-      statement.get("declarations").forEach(path => {
-        x(path.get("id"));
-      });
+      statement.get("declarations").forEach(path => x(path.get("id")));
     });
   }
 
