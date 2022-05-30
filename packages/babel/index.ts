@@ -32,24 +32,24 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
           const bindings = getBindings(path);
 
           // break apart assigments to reactive values in var initializers
-          // for (const binding of bindings) {
-          //   binding.referencePaths.forEach(path => {
-          //     const statement = path.getStatementParent();
-          //     if (!statement) return;
-          //     if (!statement.isVariableDeclaration()) return;
-          //     statement
-          //       .get("declarations")
-          //       .reverse()
-          //       .forEach(path => {
-          //         const id = path.get("id");
-          //         const init = path.get("init");
-          //         if (!id.isIdentifier()) return;
-          //         if (!init.isExpression()) return; // todo not sure if this check should be here
-          //         statement.insertAfter(assignVariable({ NAME: id.node.name, VALUE: cloneDeepWithoutLoc(init.node) }));
-          //         init.remove();
-          //       });
-          //   });
-          // }
+          for (const binding of bindings) {
+            binding.referencePaths.forEach(path => {
+              const statement = path.getStatementParent();
+              if (!statement) return;
+              if (!statement.isVariableDeclaration()) return;
+              statement
+                .get("declarations")
+                .reverse()
+                .forEach(path => {
+                  const id = path.get("id");
+                  const init = path.get("init");
+                  if (!id.isIdentifier()) return;
+                  if (!init.isExpression()) return; // todo not sure if this check should be here
+                  statement.insertAfter(assignVariable({ NAME: id.node.name, VALUE: cloneDeepWithoutLoc(init.node) }));
+                  init.remove();
+                });
+            });
+          }
 
           const statements: NodePath<Statement>[] = [];
 
@@ -96,7 +96,7 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
                 path.replaceWith(setter({ SETTER, VALUE: cloneDeepWithoutLoc(path.node.right) }));
               });
 
-            // console.log(path.toString());
+            console.log(path.toString());
 
             // reactive update expressions
             binding.constantViolations
@@ -110,14 +110,14 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
             const VALUE = binding.path.node.init ? cloneDeepWithoutLoc(binding.path.node.init) : "";
             binding.path.parentPath.replaceWith(declaration({ GETTER, SETTER, VALUE }));
 
-            // console.log("--");
-            // console.log(path.toString());
+            console.log("--");
+            console.log(path.toString());
           }
 
-          statements.forEach(path => {
-            const VALUE = cloneDeepWithoutLoc(path.node);
-            path.replaceWith(reaction({ VALUE }));
-          });
+          // statements.forEach(path => {
+          //   const VALUE = cloneDeepWithoutLoc(path.node);
+          //   path.replaceWith(reaction({ VALUE }));
+          // });
 
           // jsx elements (attributes and children)
           path.traverse({
