@@ -19,44 +19,84 @@ import type {
   UpdateExpression,
 } from "@babel/types";
 
-let runs = 0;
+interface State {
+  bindings: Binding[];
+  statements: NodePath<Statement>[];
+}
 
-function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
+function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
   return {
     name: "Reactive JSX",
     visitor: {
       Program: {
-        enter(path) {
-          console.log("this is run #", ++runs);
+        enter(path, state) {
+          state.bindings = [];
+          state.statements = [];
 
           const bindings = getBindings(path);
 
-          // todo break apart assigments to reactive values in var initializers
+          console.log(bindings.map(binding => binding.path.parentPath?.toString()));
 
-          // const bindingsWithReaciveValuesInInitializers = bindings.flatMap(binding => binding.referencePaths).map(path => path.findParent(p => ));
+          /* path.traverse({
+            JSXAttribute: path => {
+              collectbindings(path, state);
+            },
+          });
 
-          // bindings.forEach(binding => {
-          //   if (binding.path.isDescendant)
-          // })
+          for (const binding of state.bindings) {
+            binding.referencePaths.forEach(path => {
+              const statement = path.getStatementParent();
+              if (!statement) return;
+              if (!statement.isVariableDeclaration()) return;
 
-          const statements: NodePath<Statement>[] = [];
+              statement
+                .get("declarations")
+                .reverse()
+                .forEach(path => {
+                  const id = path.get("id");
+                  const init = path.get("init");
+                  if (!id.isIdentifier()) return;
+                  if (!init.isExpression()) return; // todo not sure if this check should be here
+                  statement.insertAfter(assignVariable({ NAME: id.node.name, VALUE: cloneDeepWithoutLoc(init.node) }));
+                  init.remove();
+                });
+            });
+          }
 
-          bindings
+          console.log(path.toString());
+          console.log(state);
+
+          // debugger;
+
+          for (const binding of state.bindings) {
+            binding.referencePaths.forEach(path => {
+              const statement = path.getStatementParent();
+              if (!statement) return;
+              if (!statement.isExpressionStatement()) return;
+              const expression = statement.get("expression");
+              if (!expression.isAssignmentExpression()) return;
+              const left = expression.get("left");
+              if (!left.isIdentifier()) return;
+              const name = left.node.name;
+              const binding = path.scope.getBinding(name);
+              if (!binding) return;
+              state.bindings.push(binding);
+            });
+          }
+
+          state.bindings
             .flatMap(binding => binding.referencePaths)
             .forEach(path => {
               const statement = path.getStatementParent();
               if (!statement) return;
               if (statement.isReturnStatement()) return;
-              if (statements.some(parent => statement.isDescendant(parent))) return;
-              statements.push(statement);
+              if (state.statements.some(parent => statement.isDescendant(parent))) return;
+              state.statements.push(statement);
             });
 
-          console.log(bindings.map(b => b.path.parentPath?.toString()));
-          console.log(statements.map(s => s.toString()));
+          path.unshiftContainer("body", importRuntime);
 
-          /* path.unshiftContainer("body", importRuntime);
-
-          for (const binding of bindings) {
+          for (const binding of state.bindings) {
             // x
             if (!binding.path.isVariableDeclarator()) return;
             if (!isIdentifier(binding.path.node.id)) return;
@@ -93,7 +133,7 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
             binding.path.parentPath.replaceWith(declaration({ GETTER, SETTER, VALUE }));
           }
 
-          statements.forEach(path => {
+          state.statements.forEach(path => {
             const VALUE = cloneDeepWithoutLoc(path.node);
             path.replaceWith(reaction({ VALUE }));
           });
@@ -128,7 +168,7 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
                   path.replaceWith(asFunction({ VALUE }));
                 });
             },
-          }); */
+          });*/
         },
       },
     },
