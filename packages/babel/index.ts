@@ -6,9 +6,8 @@ import {
   isIdentifier,
   JSXExpressionContainer,
 } from "@babel/types";
-
-import type { NodePath, Node, Visitor } from "@babel/core";
-import type { Binding, Scope } from "@babel/traverse";
+import type { NodePath, Node, Visitor, PluginPass } from "@babel/core";
+import type { Binding } from "@babel/traverse";
 import type {
   ArrowFunctionExpression,
   FunctionExpression,
