@@ -6,6 +6,7 @@ import {
   isIdentifier,
   JSXExpressionContainer,
 } from "@babel/types";
+// import { inherits } from "@babel/core";
 import type { NodePath, Node, Visitor, PluginPass } from "@babel/core";
 import type { Binding } from "@babel/traverse";
 import type {
@@ -32,7 +33,15 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
           // transform bindings, lol
           getBindings(path);
 
+          console.log(path.toString());
+
           const bindings = getBindings(path);
+
+          console.log(bindings[0].referencePaths[0].parentPath?.toString(), bindings[0].referencePaths[0]);
+          debugger;
+
+          // console.log(bindings.map(b => b.path.toString()));
+          // console.log(bindings.flatMap(binding => binding.referencePaths).map(p => p.parentPath?.toString()));
 
           // break apart assigments to reactive values in var initializers
           // for (const binding of bindings) {
@@ -53,9 +62,6 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
           //       });
           //   });
           // }
-
-          console.log(path.toString());
-          console.log(bindings.map(b => b.path.toString()));
 
           const statements: NodePath<Statement>[] = [];
 
