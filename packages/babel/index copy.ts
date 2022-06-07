@@ -6,9 +6,8 @@ import {
   isIdentifier,
   JSXExpressionContainer,
 } from "@babel/types";
-
-import type { NodePath, Node, Visitor } from "@babel/core";
-import type { Binding, Scope } from "@babel/traverse";
+import type { NodePath, Node, Visitor, PluginPass } from "@babel/core";
+import type { Binding } from "@babel/traverse";
 import type {
   ArrowFunctionExpression,
   FunctionExpression,
@@ -19,36 +18,24 @@ import type {
   UpdateExpression,
 } from "@babel/types";
 
-interface State {
-  bindings: Binding[];
-  statements: NodePath<Statement>[];
-}
+let runs = 0;
 
-function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
+function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
   return {
     name: "Reactive JSX",
     visitor: {
       Program: {
-        enter(path, state) {
-          state.bindings = [];
-          state.statements = [];
+        enter(path) {
+          console.log("this is run #", ++runs);
 
           const bindings = getBindings(path);
 
-          console.log(bindings.map(binding => binding.path.parentPath?.toString()));
-
-          /* path.traverse({
-            JSXAttribute: path => {
-              collectbindings(path, state);
-            },
-          });
-
-          for (const binding of state.bindings) {
+          // break apart assigments to reactive values in var initializers
+          for (const binding of bindings) {
             binding.referencePaths.forEach(path => {
               const statement = path.getStatementParent();
               if (!statement) return;
               if (!statement.isVariableDeclaration()) return;
-
               statement
                 .get("declarations")
                 .reverse()
@@ -63,40 +50,28 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
             });
           }
 
-          console.log(path.toString());
-          console.log(state);
+          const statements: NodePath<Statement>[] = [];
 
-          // debugger;
-
-          for (const binding of state.bindings) {
-            binding.referencePaths.forEach(path => {
-              const statement = path.getStatementParent();
-              if (!statement) return;
-              if (!statement.isExpressionStatement()) return;
-              const expression = statement.get("expression");
-              if (!expression.isAssignmentExpression()) return;
-              const left = expression.get("left");
-              if (!left.isIdentifier()) return;
-              const name = left.node.name;
-              const binding = path.scope.getBinding(name);
-              if (!binding) return;
-              state.bindings.push(binding);
-            });
-          }
-
-          state.bindings
+          bindings
             .flatMap(binding => binding.referencePaths)
             .forEach(path => {
               const statement = path.getStatementParent();
               if (!statement) return;
               if (statement.isReturnStatement()) return;
-              if (state.statements.some(parent => statement.isDescendant(parent))) return;
-              state.statements.push(statement);
+              if (statements.some(parent => statement.isDescendant(parent))) return;
+              statements.push(statement);
             });
+
+          // console.log("referencePaths (parents)");
+          // console.log(bindings.flatMap(binding => binding.referencePaths).map(path => path.parentPath?.toString()));
+          // console.log("statements");
+          // console.log(statements.map(s => s.toString()));
+
+          // debugger;
 
           path.unshiftContainer("body", importRuntime);
 
-          for (const binding of state.bindings) {
+          for (const binding of bindings) {
             // x
             if (!binding.path.isVariableDeclarator()) return;
             if (!isIdentifier(binding.path.node.id)) return;
@@ -120,6 +95,8 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
                 path.replaceWith(setter({ SETTER, VALUE: cloneDeepWithoutLoc(path.node.right) }));
               });
 
+            console.log(path.toString());
+
             // reactive update expressions
             binding.constantViolations
               .filter((path): path is NodePath<UpdateExpression> => path.isUpdateExpression())
@@ -131,12 +108,15 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
             // declaration
             const VALUE = binding.path.node.init ? cloneDeepWithoutLoc(binding.path.node.init) : "";
             binding.path.parentPath.replaceWith(declaration({ GETTER, SETTER, VALUE }));
+
+            console.log("--");
+            console.log(path.toString());
           }
 
-          state.statements.forEach(path => {
-            const VALUE = cloneDeepWithoutLoc(path.node);
-            path.replaceWith(reaction({ VALUE }));
-          });
+          // statements.forEach(path => {
+          //   const VALUE = cloneDeepWithoutLoc(path.node);
+          //   path.replaceWith(reaction({ VALUE }));
+          // });
 
           // jsx elements (attributes and children)
           path.traverse({
@@ -168,7 +148,7 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor<State> } {
                   path.replaceWith(asFunction({ VALUE }));
                 });
             },
-          });*/
+          });
         },
       },
     },
@@ -205,9 +185,7 @@ function getBindings(path: NodePath<Node>): Binding[] {
       const statement = path.getStatementParent();
       if (!statement) return;
       if (!statement.isVariableDeclaration()) return;
-      statement.get("declarations").forEach(path => {
-        x(path.get("id"));
-      });
+      statement.get("declarations").forEach(path => x(path.get("id")));
     });
   }
 
