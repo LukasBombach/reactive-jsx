@@ -60,21 +60,27 @@ function getAssignmentsUsingReferences(bindings: Binding[]): NodePath<Identifier
     .flatMap(binding => binding.referencePaths)
     .map(path => path.getStatementParent())
     .filter(defined)
-    .flatMap(path => {
-      if (path.isVariableDeclaration()) {
-        return path
-          .get("declarations")
-          .map(path => path.get("id"))
-          .filter(identifier);
-      }
-      if (path.isExpressionStatement()) {
-        return [path.get("expression")]
-          .filter((path): path is NodePath<AssignmentExpression> => path.isAssignmentExpression())
-          .map(path => path.get("left"))
-          .filter(identifier);
-      }
-    })
-    .filter(defined);
+    .flatMap(path => [...getIdentifiersFromVariableDeclaration(path), ...getIdentifiersFromExpressionStatement(path)]);
+}
+
+function getIdentifiersFromVariableDeclaration(path: NodePath<Node>): NodePath<Identifier>[] {
+  if (path.isVariableDeclaration()) {
+    return path
+      .get("declarations")
+      .map(path => path.get("id"))
+      .filter(identifier);
+  }
+  return [];
+}
+
+function getIdentifiersFromExpressionStatement(path: NodePath<Node>): NodePath<Identifier>[] {
+  if (path.isExpressionStatement()) {
+    return [path.get("expression")]
+      .filter((path): path is NodePath<AssignmentExpression> => path.isAssignmentExpression())
+      .map(path => path.get("left"))
+      .filter(identifier);
+  }
+  return [];
 }
 
 function getMutatedIdentifiersInEventHandlers(path: NodePath<Program>): NodePath<Identifier>[] {
