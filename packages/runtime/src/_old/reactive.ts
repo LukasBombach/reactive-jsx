@@ -20,8 +20,10 @@ function cleanup(running: Running) {
   running.dependencies.clear();
 }
 
-export function value<T>(value: T): [read: Read<T>, write: Write<T>] {
+export function value<T>(initialValue: () => T): [read: Read<T>, write: Write<T>] {
   const subscriptions = new Set<Running>();
+
+  let value: T; // = initialValue()
 
   const read = () => {
     const running = context[context.length - 1];
@@ -36,6 +38,9 @@ export function value<T>(value: T): [read: Read<T>, write: Write<T>] {
       sub.execute();
     }
   };
+
+  reaction(() => write(initialValue()));
+
   return [read, write];
 }
 
