@@ -25,6 +25,8 @@ export const Playground: VFC<{ source: string; resolveFile?: ResolveFile; classN
   resolveFile,
   className,
 }) => {
+  console.log("rendering playground");
+
   const [compiledSource, setSource] = useCompiler(source, resolveFile);
   const [rightPane, setRightPane] = useState<"result" | "js">("result");
 

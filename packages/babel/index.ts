@@ -1,4 +1,4 @@
-import template from "@babel/template";
+import template, { statement } from "@babel/template";
 import {
   AssignmentExpression,
   cloneDeepWithoutLoc,
@@ -19,6 +19,7 @@ import type {
   UpdateExpression,
   VariableDeclarator,
   Program,
+  VariableDeclaration,
 } from "@babel/types";
 
 let runs = 0;
@@ -31,11 +32,21 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
         enter(path) {
           console.log("this is run #", ++runs);
 
-          const bindings = getMutatedBindingsInEventHandlers(path);
+          const mutations = getMutatedIdentifiersInEventHandlers(path);
+          const bindings = mutations.map(getBinding).filter(unique).filter(defined);
 
-          console.log(bindings.map(b => b.path.parentPath?.toString()));
+          const indirectMutations = getAssignmentsUsingReferences(bindings);
+          const indirectBindings = indirectMutations.map(getBinding).filter(unique).filter(defined);
 
-          getAffectedBindings(bindings);
+          console.log(
+            "bindings",
+            bindings.map(binding => binding.path.toString())
+          );
+
+          console.log(
+            "indirectBindings",
+            indirectBindings.map(binding => binding.path.toString())
+          );
 
           console.log("\n", "Final Sourcecode", "\n", "\n", path.toString(), "\n", "\n");
         },
@@ -44,57 +55,65 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
   };
 }
 
-/**
- * Bindings of variables that are being mutated though user interaction
- */
-function getMutatedBindingsInEventHandlers(path: NodePath<Program>): Binding[] {
-  const bindings: Binding[] = [];
+function getAssignmentsUsingReferences(bindings: Binding[]): NodePath<Identifier>[] {
+  return bindings
+    .flatMap(binding => binding.referencePaths)
+    .map(path => path.getStatementParent())
+    .filter(defined)
+    .flatMap(path => {
+      if (path.isVariableDeclaration()) {
+        return path
+          .get("declarations")
+          .map(path => path.get("id"))
+          .filter(identifier);
+      }
+      if (path.isExpressionStatement()) {
+        return [path.get("expression")]
+          .filter((path): path is NodePath<AssignmentExpression> => path.isAssignmentExpression())
+          .map(path => path.get("left"))
+          .filter(identifier);
+      }
+    })
+    .filter(defined);
+}
 
-  const addBinding = (path: NodePath<Node>) => {
-    const binding = getBinding(path);
-    if (!binding || !binding.path.isVariableDeclarator()) return;
-    if (bindings.includes(binding)) return;
-    bindings.push(binding);
-  };
-
-  const getBinding = (path: NodePath<Node>) => {
-    if (!path.isIdentifier()) return;
-    const name = path.node.name;
-    return path.scope.getBinding(name);
-  };
+function getMutatedIdentifiersInEventHandlers(path: NodePath<Program>): NodePath<Identifier>[] {
+  const paths: NodePath<Node>[] = [];
 
   path.traverse({
     JSXAttribute: path => {
       if (isEventHandler(path)) {
         path.traverse({
-          AssignmentExpression: path => addBinding(path.get("left")),
-          UpdateExpression: path => addBinding(path.get("argument")),
+          AssignmentExpression: path => {
+            paths.push(path.get("left"));
+          },
+          UpdateExpression: path => {
+            paths.push(path.get("argument"));
+          },
         });
       }
     },
   });
 
-  return bindings;
+  return paths.filter(identifier);
 }
 
-/**
- * Returns the bingings of variables that are mutated though the the input bindings
- */
-function getAffectedBindings(bindings: Binding[]): Binding[] {
-  const affectedBindings: Binding[] = [];
+function getBinding(path: NodePath<Node>): Binding | undefined {
+  if (!path.isIdentifier()) return;
+  const name = path.node.name;
+  return path.scope.getBinding(name);
+}
 
-  bindings
-    .flatMap(binding => binding.referencePaths)
-    .map(path => {
-      const statement = path.getStatementParent();
-      if (!statement) return;
+function defined<T>(value: T): value is NonNullable<T> {
+  return value !== null && value !== undefined;
+}
 
-      console.log("# statement", statement.type, statement.toString());
+function unique<T>(value: T, index: number, array: T[]): boolean {
+  return array.indexOf(value) === index;
+}
 
-      // if (!statement.isVariableDeclaration()) return;
-    });
-
-  return affectedBindings;
+function identifier(path: NodePath<Node>): path is NodePath<Identifier> {
+  return path.isIdentifier();
 }
 
 function isEventHandler(path: NodePath<JSXAttribute>): boolean {
