@@ -9,6 +9,9 @@ const Component = () => {
 
   let tripled = count * 3;
 
+  let qudroupled;
+  qudroupled = count * 4;
+
   return <button onClick={() => count++}>Count: {count} * 3 = {tripled}</button>
 };
 
