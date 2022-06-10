@@ -12,7 +12,7 @@ const Component = () => {
   let quadrupled;
   quadrupled = count * 4;
 
-  return <button onClick={() => count++}>Count: {count} * 3 = {tripled}</button>
+  return <button onClick={() => count++}>{count} * 3 = {tripled}, {count} * 4 = {quadrupled}</button>
 };
 
 document.body.append(<Component />);`;

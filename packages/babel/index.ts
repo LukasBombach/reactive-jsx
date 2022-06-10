@@ -32,21 +32,49 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
         enter(path) {
           console.log("this is run #", ++runs);
 
-          const mutations = getMutatedIdentifiersInEventHandlers(path);
-          const bindings = mutations.map(getBinding).filter(unique).filter(defined);
+          const directBindings = getMutatedIdentifiersInEventHandlers(path)
+            .map(getBinding)
+            .filter(unique)
+            .filter(defined);
 
-          const indirectMutations = getAssignmentsUsingReferences(bindings);
-          const indirectBindings = indirectMutations.map(getBinding).filter(unique).filter(defined);
+          const indirectBindings = getAssignmentsUsingReferences(directBindings)
+            .map(getBinding)
+            .filter(unique)
+            .filter(defined);
 
-          console.log(
-            "bindings",
-            bindings.map(binding => binding.path.toString())
-          );
+          const bindings = [...directBindings, ...indirectBindings];
 
-          console.log(
-            "indirectBindings",
-            indirectBindings.map(binding => binding.path.toString())
-          );
+          // Convert usages of values to getters (`count` becomes `count()`)
+          bindings.forEach(binding => {
+            if (!binding.path.isVariableDeclarator()) return;
+            if (!isIdentifier(binding.path.node.id)) return;
+
+            const GETTER = binding.path.node.id.name;
+
+            binding.referencePaths.filter(identifier).forEach(path => {
+              path.replaceWith(getter({ GETTER }));
+            });
+          });
+
+          // Convert mutations of values to setters (`count = X` becomes `setCount()`)
+          bindings.forEach(binding => {
+            if (!binding.path.isVariableDeclarator()) return;
+            if (!isIdentifier(binding.path.node.id)) return;
+
+            const GETTER = binding.path.node.id.name;
+            const SETTER = `set${GETTER[0].toUpperCase()}${GETTER.substring(1)}`;
+
+            // AssignmentExpressions (`count = X` becomes `setCount(X)`)
+            binding.constantViolations.filter(assignmentExpression).forEach(path => {
+              path.replaceWith(setter({ SETTER, VALUE: cloneDeepWithoutLoc(path.node.right) }));
+            });
+
+            // UpdateExpressions (`count++` becomes `setCount(count() + 1)`)
+            binding.constantViolations.filter(updateExpression).forEach(path => {
+              if (path.node.operator === "++") path.replaceWith(add({ SETTER, GETTER, VALUE: "1" }));
+              if (path.node.operator === "--") path.replaceWith(sub({ SETTER, GETTER, VALUE: "1" }));
+            });
+          });
 
           console.log("\n", "Final Sourcecode", "\n", "\n", path.toString(), "\n", "\n");
         },
@@ -54,6 +82,26 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
     },
   };
 }
+
+const declaration = template.statement`
+  const [GETTER, SETTER] = rjsx.val(VALUE);
+`;
+
+const getter = template.statement`
+  GETTER()
+`;
+
+const setter = template.statement`
+  SETTER(VALUE)
+`;
+
+const add = template.statement`
+  SETTER(GETTER() + VALUE)
+`;
+
+const sub = template.statement`
+  SETTER(GETTER() - VALUE)
+`;
 
 function getAssignmentsUsingReferences(bindings: Binding[]): NodePath<Identifier>[] {
   return bindings
@@ -76,7 +124,7 @@ function getIdentifiersFromVariableDeclaration(path: NodePath<Node>): NodePath<I
 function getIdentifiersFromExpressionStatement(path: NodePath<Node>): NodePath<Identifier>[] {
   if (path.isExpressionStatement()) {
     return [path.get("expression")]
-      .filter((path): path is NodePath<AssignmentExpression> => path.isAssignmentExpression())
+      .filter(assignmentExpression)
       .map(path => path.get("left"))
       .filter(identifier);
   }
@@ -120,6 +168,14 @@ function unique<T>(value: T, index: number, array: T[]): boolean {
 
 function identifier(path: NodePath<Node>): path is NodePath<Identifier> {
   return path.isIdentifier();
+}
+
+function assignmentExpression(path: NodePath<Node>): path is NodePath<AssignmentExpression> {
+  return path.isAssignmentExpression();
+}
+
+function updateExpression(path: NodePath<Node>): path is NodePath<UpdateExpression> {
+  return path.isUpdateExpression();
 }
 
 function isEventHandler(path: NodePath<JSXAttribute>): boolean {
