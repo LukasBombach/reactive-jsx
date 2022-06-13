@@ -91,8 +91,9 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
             const GETTER = binding.path.node.id.name;
             const SETTER = `set${GETTER[0].toUpperCase()}${GETTER.substring(1)}`;
             const VALUE = binding.path.node.init ? cloneDeepWithoutLoc(binding.path.node.init) : "undefined";
+            const NAME = binding.path.node.id.name;
 
-            binding.path.parentPath.replaceWith(declaration({ GETTER, SETTER, VALUE }));
+            binding.path.parentPath.replaceWith(declaration({ GETTER, SETTER, VALUE, NAME }));
           });
 
           // Inject runtime
@@ -152,7 +153,7 @@ const runtimeImports = template.ast(`
 `);
 
 const declaration = template.statement`
-  const [GETTER, SETTER] = rjsx.val(() => VALUE);
+  const [GETTER, SETTER] = rjsx.val(() => VALUE, "NAME");
 `;
 
 const getter = template.statement`
@@ -160,15 +161,15 @@ const getter = template.statement`
 `;
 
 const setter = template.statement`
-  SETTER(VALUE)
+  SETTER( () => VALUE)
 `;
 
 const add = template.statement`
-  SETTER(GETTER() + VALUE)
+  SETTER( () => GETTER() + VALUE)
 `;
 
 const sub = template.statement`
-  SETTER(GETTER() - VALUE)
+  SETTER( () => GETTER() - VALUE)
 `;
 
 function getAssignmentsUsingReferences(bindings: Binding[]): NodePath<Identifier>[] {

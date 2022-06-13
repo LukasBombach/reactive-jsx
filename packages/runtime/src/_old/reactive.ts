@@ -1,7 +1,8 @@
 export type Read<T> = () => T;
-export type Write<T> = (value: T) => void;
+export type Write<T> = (value: () => T) => void;
 
 interface Running {
+  name?: string;
   execute: () => void;
   dependencies: Set<Set<Running>>;
 }
@@ -20,33 +21,40 @@ function cleanup(running: Running) {
   running.dependencies.clear();
 }
 
-export function value<T>(initialValue: () => T): [read: Read<T>, write: Write<T>] {
+export function value<T>(initialValue: () => T, name?: string): [read: Read<T>, write: Write<T>] {
   const subscriptions = new Set<Running>();
 
   let value: T; // = initialValue()
 
   const read = () => {
+    console.log("reading", name);
     const running = context[context.length - 1];
     if (running) subscribe(running, subscriptions);
     return value;
   };
 
-  const write = (nextValue: T) => {
-    value = nextValue;
+  const write = (nextValue: () => T) =>
+    reaction(() => {
+      debugger;
+      console.log("writing", name);
+      value = nextValue();
 
-    for (const sub of [...subscriptions]) {
-      sub.execute();
-    }
-  };
+      for (const sub of [...subscriptions]) {
+        sub.execute();
+      }
+    }, name);
 
-  reaction(() => write(initialValue()));
+  console.log("declaring", name);
+  write(initialValue);
+  //reaction(() => write(initialValue));
 
   return [read, write];
 }
 
-export function reaction<T>(fn: (current: T | undefined) => T) {
+export function reaction<T>(fn: (current: T | undefined) => T, name?: string) {
   let val: T;
   const execute = () => {
+    console.log("reacting", running.name);
     cleanup(running);
     context.push(running);
     try {
@@ -58,6 +66,7 @@ export function reaction<T>(fn: (current: T | undefined) => T) {
   };
 
   const running: Running = {
+    name,
     execute,
     dependencies: new Set(),
   };

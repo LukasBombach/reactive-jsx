@@ -26,7 +26,7 @@ function setAttribute(element: HTMLElement, name: string, value: string | Getter
     const eventName = name.substring(2).toLowerCase();
     element.addEventListener(eventName, value);
   } else if (typeof value === "function") {
-    reaction(() => element.setAttribute(name, value()));
+    reaction(() => element.setAttribute(name, value()), `attr ${name}`);
   } else {
     element.setAttribute(name, value);
   }
@@ -53,5 +53,5 @@ function reconcile(element: HTMLElement, child: () => ChildPrimive) {
     }
 
     throw new Error(`Cannot handle type ${typeof value}`);
-  });
+  }, `reconcile`);
 }

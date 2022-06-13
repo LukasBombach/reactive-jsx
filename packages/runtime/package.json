@@ -7,7 +7,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "nodemon -w src -e ts -x \"yarn dev:bundle && yarn build:as-string\"",
-    "dev:bundle": "microbundle -i src/index.ts -o dist/bundle.js --no-pkg-main --sourcemap false -f modern",
+    "dev:bundle": "microbundle -i src/index.ts -o dist/bundle.js --no-pkg-main --sourcemap false -f modern --compress false",
     "build": "yarn build:bundle && yarn build:as-string",
     "build:bundle": "microbundle -i src/index.ts -o dist/bundle.js --no-pkg-main -f modern",
     "build:as-string": "node scripts/exportAsString"
