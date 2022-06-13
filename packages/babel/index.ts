@@ -160,15 +160,15 @@ const getter = template.statement`
 `;
 
 const setter = template.statement`
-  SETTER(VALUE)
+  SETTER(() => VALUE)
 `;
 
 const add = template.statement`
-  SETTER(GETTER() + VALUE)
+  SETTER(() => GETTER() + VALUE)
 `;
 
 const sub = template.statement`
-  SETTER(GETTER() - VALUE)
+  SETTER(() => GETTER() - VALUE)
 `;
 
 function getAssignmentsUsingReferences(bindings: Binding[]): NodePath<Identifier>[] {

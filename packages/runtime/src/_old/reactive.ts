@@ -1,5 +1,5 @@
 export type Read<T> = () => T;
-export type Write<T> = (value: T) => void;
+export type Write<T> = (value: () => T) => void;
 
 interface Running {
   execute: () => void;
@@ -23,7 +23,7 @@ function cleanup(running: Running) {
 export function value<T>(initialValue: () => T): [read: Read<T>, write: Write<T>] {
   const subscriptions = new Set<Running>();
 
-  let value: T; // = initialValue()
+  let value: T = initialValue();
 
   const read = () => {
     const running = context[context.length - 1];
@@ -31,15 +31,18 @@ export function value<T>(initialValue: () => T): [read: Read<T>, write: Write<T>
     return value;
   };
 
-  const write = (nextValue: T) => {
-    value = nextValue;
+  const write = (nextValue: () => T) => {
+    value = nextValue();
 
-    for (const sub of [...subscriptions]) {
-      sub.execute();
-    }
+    reaction(() => {
+      for (const sub of [...subscriptions]) {
+        sub.execute();
+      }
+    });
   };
 
-  reaction(() => write(initialValue()));
+  write(initialValue);
+  // reaction(() => write(initialValue));
 
   return [read, write];
 }
