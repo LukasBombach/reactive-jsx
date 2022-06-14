@@ -24,7 +24,7 @@ function cleanup(running: Running) {
 export function value<T>(initialValue: () => T, name?: string): [read: Read<T>, write: Write<T>] {
   const subscriptions = new Set<Running>();
 
-  let value: T; // = initialValue()
+  let value: T = initialValue();
 
   const read = () => {
     console.log("reading", name);
