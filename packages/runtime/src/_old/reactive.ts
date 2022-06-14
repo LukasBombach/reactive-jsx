@@ -33,9 +33,8 @@ export function value<T>(initialValue: () => T, name?: string): [read: Read<T>, 
     return value;
   };
 
-  const write = (nextValue: () => T) =>
+  const write = (nextValue: () => T) => {
     reaction(() => {
-      debugger;
       console.log("writing", name);
       value = nextValue();
 
@@ -43,6 +42,7 @@ export function value<T>(initialValue: () => T, name?: string): [read: Read<T>, 
         sub.execute();
       }
     }, name);
+  };
 
   console.log("declaring", name);
   write(initialValue);
