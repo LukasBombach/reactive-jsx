@@ -22,20 +22,24 @@ function cleanup(running: Running) {
 }
 
 export function value<T>(initialValue: () => T, name?: string): [read: Read<T>, write: Write<T>] {
-  const subscriptions = new Set<Running>();
+  console.log("\ndeclaring", name);
 
   let value: T = initialValue();
+  const subscriptions = new Set<Running>();
 
   const read = () => {
-    console.log("reading", name);
+    console.log("%c  reading", "color: green", name);
     const running = context[context.length - 1];
-    if (running) subscribe(running, subscriptions);
+    if (running) {
+      console.log("%c      sub", "color: lightgrey", name, "<-", running.name);
+      subscribe(running, subscriptions);
+    }
     return value;
   };
 
   const write = (nextValue: () => T) => {
+    console.log("%c\n  writing", "color: red", name);
     reaction(() => {
-      console.log("writing", name);
       value = nextValue();
 
       for (const sub of [...subscriptions]) {
@@ -44,17 +48,14 @@ export function value<T>(initialValue: () => T, name?: string): [read: Read<T>, 
     }, name);
   };
 
-  console.log("declaring", name);
-  write(initialValue);
-  //reaction(() => write(initialValue));
-
   return [read, write];
 }
 
 export function reaction<T>(fn: (current: T | undefined) => T, name?: string) {
   let val: T;
+
   const execute = () => {
-    console.log("reacting", running.name);
+    console.log("%c reacting", "color: blue", running.name);
     cleanup(running);
     context.push(running);
     try {

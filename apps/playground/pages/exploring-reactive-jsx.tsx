@@ -7,6 +7,19 @@ const dev = `
 const Component = () => {
   let count = 1;
 
+  let double;
+  double = count * 2;
+
+  return <button onClick={() => count++}>{count} * 2 = {double}</button>
+};
+
+
+document.body.append(<Component />);`;
+
+/* const dev = `
+const Component = () => {
+  let count = 1;
+
   let tripled = count * 3;
 
   let quadrupled;
@@ -15,7 +28,7 @@ const Component = () => {
   return <button onClick={() => count++}>{count} * 3 = {tripled}, {count} * 4 = {quadrupled}</button>
 };
 
-document.body.append(<Component />);`;
+document.body.append(<Component />);`; */
 
 /* const dev = `
 const Component = () => {
