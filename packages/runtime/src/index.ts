@@ -1,21 +1,15 @@
 import { createRuntime } from "./runtime";
 
-const { value, react, log } = createRuntime();
+const { value, react } = createRuntime();
 
 console.clear();
 
 const num = value(1, "num");
+// const double = value(() => num.get() * 2, "double");
 const double = value(0, "double");
+double.set(() => num.get() * 2);
 
-react(() => double.set(2 * num.get()), "multiDbl");
+react(() => console.log(`\n> ${num.get()} * 2 = ${double.get()}\n`), "print");
 
-react(() => {
-  const str = `> 2 * ${num.get()} = ${double.get()}`;
-  log(str);
-  // document.body.insertAdjacentHTML("beforeend", `<pre>${str}</pre>`);
-}, "print");
-
-num.set(2);
-num.set(3);
-num.set(5);
-num.set(1);
+// num.set(() => num.get() + 1);
+num.set(() => 2);

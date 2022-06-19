@@ -1,40 +1,36 @@
-import type { Signal } from './value';
-import type { Runtime } from './runtime';
+import { getCurrentReaction } from "./runtime";
+
+import type { Signal } from "./value";
+import type { Runtime } from "./runtime";
 
 export type Reaction = {
   name?: string;
-  reactingTo: Set<Signal<any>>;
+  effects: Set<Reaction>;
   run: (from?: string) => void;
 };
 
-export function createReactions({
-  stack,
-  log,
-}: Pick<Runtime, 'stack' | 'log'>) {
+export function createReactions({ stack, log }: Pick<Runtime, "stack" | "log">) {
   return function react<T>(fn: () => void, name?: string): void {
     let run = 0;
     const reaction: Reaction = {
       name,
-      reactingTo: new Set(),
+      effects: new Set(),
       run: (from?: string) => {
-        // reaction.reactingTo.forEach((signal) =>
-        //   signal.reactions.delete(reaction)
-        // );
-        // reaction.reactingTo.clear();
-        log(`${from ? `${from}.` : ''}${name}()`, ++run);
+        log(`${from ? `${from}.` : ""}${name}()`, ++run);
 
-        const currentRun = stack[stack.length - 1];
+        const current = getCurrentReaction(stack);
 
-        if (currentRun) {
-          currentRun.stack.push(reaction);
+        if (!current) {
+          log("stack++");
+          stack.push(reaction);
           fn();
+          log("stack--");
+          stack.pop();
+          reaction.effects.forEach(effect => effect.run(name));
+          reaction.effects.clear();
         } else {
-          stack.push({ stack: [], effects: new Set() });
-          const currentRun2 = stack[stack.length - 1];
-          currentRun2.stack.push(reaction);
-          fn();
-          const { effects } = stack.pop();
-          effects.forEach((effect) => effect.run());
+          log("stack 0");
+          current.effects.add(reaction);
         }
       },
     };
@@ -42,3 +38,22 @@ export function createReactions({
     reaction.run();
   };
 }
+
+// reaction.reactingTo.forEach((signal) =>
+//   signal.reactions.delete(reaction)
+// );
+// reaction.reactingTo.clear();
+
+/* const currentRun = stack[stack.length - 1];
+
+if (currentRun) {
+  currentRun.stack.push(reaction);
+  fn();
+} else {
+  stack.push({ stack: [], effects: new Set() });
+  const currentRun2 = stack[stack.length - 1];
+  currentRun2.stack.push(reaction);
+  fn();
+  const { effects } = stack.pop();
+  effects.forEach((effect) => effect.run());
+} */
