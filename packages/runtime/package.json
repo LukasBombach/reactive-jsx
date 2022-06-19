@@ -6,6 +6,7 @@
   "main": "./dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "xdev": "node scripts/dev.js",
     "dev": "nodemon -w src -e ts -x \"yarn dev:bundle && yarn build:as-string\"",
     "dev:bundle": "microbundle -i src/index.ts -o dist/bundle.js --no-pkg-main --sourcemap false -f modern --compress false",
     "build": "yarn build:bundle && yarn build:as-string",
@@ -25,5 +26,8 @@
     "microbundle": "0.14.2",
     "nodemon": "2.0.15",
     "typescript": "4.5.3"
+  },
+  "dependencies": {
+    "esbuild": "0.14.46"
   }
 }
