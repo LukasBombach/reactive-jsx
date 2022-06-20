@@ -17,9 +17,9 @@ export function createReactions({ stack, log }: Pick<Runtime, "stack" | "log">) 
       effects: new Set(),
       run: (from?: string) => {
         log(`${from ? `${from}.` : ""}${name}()`, ++run);
+        fn();
 
-        const current = getCurrentReaction(stack);
-
+        /* const current = getCurrentReaction(stack);
         if (!current) {
           log("stack++");
           stack.push(reaction);
@@ -31,7 +31,7 @@ export function createReactions({ stack, log }: Pick<Runtime, "stack" | "log">) 
         } else {
           log("stack 0");
           current.effects.add(reaction);
-        }
+        } */
       },
     };
 

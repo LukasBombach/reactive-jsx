@@ -30,9 +30,12 @@ export function createValues({ stack, react, log }: Pick<Runtime, "stack" | "log
         react(() => {
           log(`${name}.set(${value})`, ...[...signal.reactions].map(r => `${r.name}()`));
           signal.value = value();
-          const current = getCurrentReaction(stack);
+          while (stack.length) {
+            stack.shift()?.run(name);
+          }
+          /* const current = getCurrentReaction(stack);
           if (current) signal.reactions.forEach(r => current.effects.add(r));
-          else signal.reactions.forEach(r => r.run(name));
+          else signal.reactions.forEach(r => r.run(name)); */
         }, `react.set.${name}`),
     };
 
