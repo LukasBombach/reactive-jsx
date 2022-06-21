@@ -1,5 +1,9 @@
 import type { Reaction } from "./reaction";
 
 export interface Transaction {
-  effects: Reaction[];
+  reactions: Reaction[];
+}
+
+export function createTransaction(): Transaction {
+  return { reactions: [] };
 }

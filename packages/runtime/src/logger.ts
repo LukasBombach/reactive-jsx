@@ -1,7 +1,7 @@
-import type { Runtime } from './runtime';
+import type { Runtime } from "./runtime";
 
-export function createLog({ stack }: Pick<Runtime, 'stack'>) {
+export function createLog({ transaction }: Pick<Runtime, "transaction">) {
   return function log(...data: any): void {
-    console.log(...stack.map(() => '┃'), ...data);
+    console.log(...transaction.reactions.map(() => "┃"), ...data);
   };
 }

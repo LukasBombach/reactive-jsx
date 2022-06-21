@@ -1,5 +1,3 @@
-import { getCurrentReaction } from "./runtime";
-
 import type { Reaction } from "./reaction";
 import type { Runtime } from "./runtime";
 import type { Run } from "./run";
@@ -15,7 +13,7 @@ export interface Signal<T> {
   reactions: Set<Reaction>;
 }
 
-export function createValues({ stack, react, log }: Pick<Runtime, "stack" | "log" | "react">) {
+export function createValues({ transaction, react, log }: Pick<Runtime, "transaction" | "log" | "react">) {
   return function value<T>(value: T, name?: string): Signal<T> {
     const signal: Signal<T> = {
       value,
@@ -28,9 +26,6 @@ export function createValues({ stack, react, log }: Pick<Runtime, "stack" | "log
         react(() => {
           log(`${name}.set(${value})`, ...[...signal.reactions].map(r => `${r.name}()`));
           signal.value = value;
-          while (stack.length) {
-            stack.shift()?.run(name);
-          }
         }, `react.set.${name}`),
     };
 
