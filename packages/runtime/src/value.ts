@@ -20,13 +20,15 @@ export function createValues({ transaction, react, log }: Pick<Runtime, "transac
       reactions: new Set(),
       get: () => {
         log(`${name}.get()`);
+        if (transaction.current) signal.reactions.add(transaction.current);
         return signal.value;
       },
-      set: value =>
-        react(() => {
-          log(`${name}.set(${value})`, ...[...signal.reactions].map(r => `${r.name}()`));
-          signal.value = value;
-        }, `react.set.${name}`),
+      set: value => {
+        log(`${name}.set(${value})`, ...[...signal.reactions].map(r => `${r.name}()`));
+        signal.value = value;
+        signal.reactions.forEach(r => transaction.reactions.add(r));
+        while (signal.reactions.size > 0) {}
+      },
     };
 
     return signal;

@@ -13,6 +13,7 @@ export function createReactions({ transaction, log }: Pick<Runtime, "transaction
       name,
       run: (from?: string) => {
         log(`${from ? `${from}.` : ""}${name}()`, ++run);
+        transaction.current = reaction;
         fn();
       },
     };

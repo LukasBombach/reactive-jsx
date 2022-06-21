@@ -1,9 +1,10 @@
 import type { Reaction } from "./reaction";
 
 export interface Transaction {
-  reactions: Reaction[];
+  reactions: Set<Reaction>;
+  current: Reaction | null;
 }
 
 export function createTransaction(): Transaction {
-  return { reactions: [] };
+  return { reactions: new Set(), current: null };
 }
