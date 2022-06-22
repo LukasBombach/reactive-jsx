@@ -11,4 +11,4 @@ react(() => double.set(num.get() * 2), "setDouble");
 
 react(() => console.log(`\n> ${num.get()} * 2 = ${double.get()}`), "print");
 
-num.set(2);
+num.set(num.get() * 10);
