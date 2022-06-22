@@ -11,9 +11,9 @@ export interface Signal<T> {
 }
 
 export function createValues({ transaction, react, log }: Pick<Runtime, "transaction" | "log" | "react">) {
-  return function value<T>(value: T, name?: string): Signal<T> {
+  return function value<T>(value: (() => T) | T, name?: string): Signal<T> {
     const signal: Signal<T> = {
-      value,
+      value: undefined as any, //because of the very dirty setter below // isFunction(value) ? value() : value,
       reactions: new Set(),
       get: () => {
         log(`${name}.get()`);
@@ -39,8 +39,11 @@ export function createValues({ transaction, react, log }: Pick<Runtime, "transac
             item.value.run();
             item = queue.next();
           }
-        }, `set_${name}`),
+        }, `${name}.set`),
     };
+
+    // dirty and very bad hack
+    signal.set(value);
 
     return signal;
   };
