@@ -24,7 +24,7 @@ export function createValues({ transaction, react, log }: Pick<Runtime, "transac
         return signal.value;
       },
       set: value => {
-        log(`${name}.set(${value})`, ...[...signal.reactions].map(r => `${r.name}()`));
+        log(`${name}.set(${value})` /* , ...[...signal.reactions].map(r => `${r.name}()`) */);
         signal.value = value;
         signal.reactions.forEach(r => transaction.reactions.add(r));
 

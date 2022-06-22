@@ -12,9 +12,11 @@ export function createReactions({ transaction, log }: Pick<Runtime, "transaction
     const reaction: Reaction = {
       name,
       run: (from?: string) => {
-        log(`${from ? `${from}.` : ""}${name}()`, ++run);
+        log(`react(${from ? `${from}.` : ""}${name})`);
         transaction.current = reaction;
         fn();
+        transaction.current = null;
+        console.log("");
       },
     };
 
