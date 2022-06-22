@@ -17,6 +17,7 @@ export function createValues({ transaction, react, log }: Pick<Runtime, "transac
       reactions: new Set(),
       get: () => {
         log(`${name}.get()`);
+        // todo prevent recursion when this getter is inside its setter here
         if (transaction.current) signal.reactions.add(transaction.current);
         return signal.value;
       },
