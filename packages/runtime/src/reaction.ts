@@ -1,4 +1,3 @@
-import type { Signal } from "./value";
 import type { Runtime } from "./runtime";
 
 export type Reaction = {
@@ -8,7 +7,6 @@ export type Reaction = {
 
 export function createReactions({ transaction, log }: Pick<Runtime, "transaction" | "log">) {
   return function react<T>(fn: () => void, name?: string): void {
-    let run = 0;
     const reaction: Reaction = {
       name,
       run: (from?: string) => {
