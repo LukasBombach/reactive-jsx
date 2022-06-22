@@ -1,6 +1,5 @@
 import type { Reaction } from "./reaction";
 import type { Runtime } from "./runtime";
-import type { Run } from "./run";
 
 export interface Signal<T> {
   name?: string;
