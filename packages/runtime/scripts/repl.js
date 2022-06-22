@@ -14,7 +14,7 @@ process.stdin.on("keypress", (_str, key) => {
 
 build({
   entryPoints: ["src/index.ts"],
-  outfile: "dist/index.js",
+  outfile: "dist/bundle.js",
   bundle: true,
   watch: {
     onRebuild(error) {
@@ -30,6 +30,6 @@ build({
 });
 
 function executeOutput() {
-  const process = spawn("node", ["dist/index.js"], { stdio: "inherit" });
+  const process = spawn("node", ["dist/bundle.js"], { stdio: "inherit" });
   process.on("close", () => console.log(chalk.dim("Press"), "q", chalk.dim("to quit")));
 }
