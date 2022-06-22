@@ -2,14 +2,11 @@ import type { Reaction } from "./reaction";
 import type { Runtime } from "./runtime";
 import type { Run } from "./run";
 
-export type Getter<T> = () => T;
-export type Setter<T> = (value: T) => void;
-
 export interface Signal<T> {
   name?: string;
   value: T;
-  get: Getter<T>;
-  set: Setter<T>;
+  get: () => T;
+  set: (value: (() => T) | T) => void;
   reactions: Set<Reaction>;
 }
 
@@ -23,26 +20,32 @@ export function createValues({ transaction, react, log }: Pick<Runtime, "transac
         if (transaction.current) signal.reactions.add(transaction.current);
         return signal.value;
       },
-      set: value => {
-        log(`${name}.set(${value})` /* , ...[...signal.reactions].map(r => `${r.name}()`) */);
-        signal.value = value;
-        signal.reactions.forEach(r => transaction.reactions.add(r));
+      set: value =>
+        react(() => {
+          log(`${name}.set(${value})`);
 
-        // reactions.values() returns an iterator over the reactions of the set
-        const queue = transaction.reactions.values();
-        let item = queue.next();
+          signal.value = isFunction(value) ? value() : value;
+          signal.reactions.forEach(r => transaction.reactions.add(r));
 
-        // we iterate over the reactions until none is left and run each one
-        // running a reaction can add more reactions to the set, thereby extending the set
-        // while we are iterating over it
-        while (!item.done) {
-          transaction.reactions.delete(item.value);
-          item.value.run();
-          item = queue.next();
-        }
-      },
+          // reactions.values() returns an iterator over the reactions of the set
+          const queue = transaction.reactions.values();
+          let item = queue.next();
+
+          // we iterate over the reactions until none is left and run each one
+          // running a reaction can add more reactions to the set, thereby extending the set
+          // while we are iterating over it
+          while (!item.done) {
+            transaction.reactions.delete(item.value);
+            item.value.run();
+            item = queue.next();
+          }
+        }, `set_${name}`),
     };
 
     return signal;
   };
+}
+
+function isFunction<T>(value: (() => T) | T): value is () => T {
+  return typeof value === "function";
 }
