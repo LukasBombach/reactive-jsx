@@ -17,8 +17,6 @@ process.stdin.on("keypress", (_str, key) => {
 const pluginPath = "src/index.ts";
 const replPath = "src/repl.tsx";
 
-let reactiveJsxPlugin = undefined;
-
 chokidar.watch(pluginPath).on("add", buildBabelPlugin).on("change", buildBabelPlugin);
 chokidar.watch(replPath).on("add", transpileAndLog).on("change", transpileAndLog);
 
@@ -28,12 +26,13 @@ async function buildBabelPlugin() {
     outfile: "dist/bundle.js",
     format: "esm",
   });
-  reactiveJsxPlugin = await import("../dist/bundle.js");
   transpileAndLog();
 }
 
 async function transpileAndLog() {
   try {
+    const reactiveJsxPlugin = await import("../dist/bundle.js");
+
     const original = await fs.readFile(replPath, "utf-8");
 
     const transformed = transform(original, {
@@ -58,13 +57,11 @@ async function transpileAndLog() {
       plugins: reactiveJsxPlugin ? [reactiveJsxPlugin.default] : [],
     }).code;
 
-    console.clear();
     console.log("\n");
     console.log(original);
     console.log("\n--\n\n");
     console.log(transformed);
   } catch (error) {
-    console.clear();
     console.error(error);
   }
   console.log("\n");

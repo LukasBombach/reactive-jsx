@@ -51,10 +51,10 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
             if (!binding.path.isVariableDeclarator()) return;
             if (!isIdentifier(binding.path.node.id)) return;
 
-            const GETTER = binding.path.node.id.name;
+            const NAME = binding.path.node.id.name;
 
             binding.referencePaths.filter(identifier).forEach(path => {
-              path.replaceWith(getter({ GETTER }));
+              path.replaceWith(getter({ NAME }));
             });
           });
 
@@ -63,18 +63,17 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
             if (!binding.path.isVariableDeclarator()) return;
             if (!isIdentifier(binding.path.node.id)) return;
 
-            const GETTER = binding.path.node.id.name;
-            const SETTER = `set${GETTER[0].toUpperCase()}${GETTER.substring(1)}`;
+            const NAME = binding.path.node.id.name;
 
             // AssignmentExpressions (`count = X` becomes `setCount(X)`)
             binding.constantViolations.filter(assignmentExpression).forEach(path => {
-              path.replaceWith(setter({ SETTER, VALUE: cloneDeepWithoutLoc(path.node.right) }));
+              path.replaceWith(setter({ NAME, VALUE: cloneDeepWithoutLoc(path.node.right) }));
             });
 
             // UpdateExpressions (`count++` becomes `setCount(count() + 1)`)
             binding.constantViolations.filter(updateExpression).forEach(path => {
-              if (path.node.operator === "++") path.replaceWith(add({ SETTER, GETTER, VALUE: "1" }));
-              if (path.node.operator === "--") path.replaceWith(sub({ SETTER, GETTER, VALUE: "1" }));
+              if (path.node.operator === "++") path.replaceWith(add({ NAME, VALUE: "1" }));
+              if (path.node.operator === "--") path.replaceWith(sub({ NAME, VALUE: "1" }));
             });
           });
 
@@ -88,12 +87,10 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
             if (!binding.path.isVariableDeclarator()) return;
             if (!isIdentifier(binding.path.node.id)) return;
 
-            const GETTER = binding.path.node.id.name;
-            const SETTER = `set${GETTER[0].toUpperCase()}${GETTER.substring(1)}`;
-            const VALUE = binding.path.node.init ? cloneDeepWithoutLoc(binding.path.node.init) : "undefined";
             const NAME = binding.path.node.id.name;
+            const VALUE = binding.path.node.init ? cloneDeepWithoutLoc(binding.path.node.init) : "undefined";
 
-            binding.path.parentPath.replaceWith(declaration({ GETTER, SETTER, VALUE, NAME }));
+            binding.path.parentPath.replaceWith(declaration({ NAME, VALUE }));
           });
 
           // Inject runtime
@@ -149,27 +146,28 @@ const asFunction = template.statement`
 `;
 
 const runtimeImports = template.smart(`
-  import rjsx from "@reactive-jsx/runtime";
+  import { createRuntime } from "@reactive-jsx/runtime";
+  const rjsx = createRuntime();
 `);
 
 const declaration = template.statement`
-  const [GETTER, SETTER] = rjsx.val(() => VALUE, "NAME");
+  const NAME = rjsx.value(() => VALUE, "NAME");
 `;
 
 const getter = template.statement`
-  GETTER()
+  NAME.get()
 `;
 
 const setter = template.statement`
-  SETTER( () => VALUE)
+  NAME.set(() => VALUE)
 `;
 
 const add = template.statement`
-  SETTER( () => GETTER() + VALUE)
+  NAME.set(() => NAME.get() + VALUE)
 `;
 
 const sub = template.statement`
-  SETTER( () => GETTER() - VALUE)
+  NAME.set(() => NAME.get() - VALUE)
 `;
 
 function getAssignmentsUsingReferences(bindings: Binding[]): NodePath<Identifier>[] {
