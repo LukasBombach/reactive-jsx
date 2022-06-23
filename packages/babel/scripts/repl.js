@@ -17,20 +17,18 @@ process.stdin.on("keypress", (_str, key) => {
 const pluginPath = "src/index.ts";
 const replPath = "src/repl.tsx";
 
-chokidar.watch(pluginPath).on("add", buildBabelPlugin).on("change", buildBabelPlugin);
+chokidar.watch(pluginPath).on("add", transpileAndLog).on("change", transpileAndLog);
 chokidar.watch(replPath).on("add", transpileAndLog).on("change", transpileAndLog);
 
-async function buildBabelPlugin() {
-  await build({
-    entryPoints: ["src/index.ts"],
-    outfile: "dist/bundle.js",
-    format: "esm",
-  });
-  transpileAndLog();
-}
-
 async function transpileAndLog() {
+  console.clear();
   try {
+    await build({
+      entryPoints: ["src/index.ts"],
+      outfile: "dist/bundle.js",
+      format: "esm",
+    });
+
     const reactiveJsxPlugin = await import("../dist/bundle.js");
 
     const original = await fs.readFile(replPath, "utf-8");

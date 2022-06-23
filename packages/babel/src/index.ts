@@ -127,8 +127,6 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
                 });
             },
           });
-
-          console.log("\n", "Final Sourcecode", "\n", "\n", path.toString(), "\n", "\n");
         },
       },
     },
