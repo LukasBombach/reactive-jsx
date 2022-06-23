@@ -1,4 +1,4 @@
-import template, { statement } from "@babel/template";
+import template from "@babel/template";
 import {
   AssignmentExpression,
   cloneDeepWithoutLoc,
@@ -97,7 +97,7 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
           });
 
           // Inject runtime
-          // path.unshiftContainer("body", runtimeImports);
+          path.unshiftContainer("body", runtimeImports());
 
           // JSX Elements
           path.traverse({
@@ -148,9 +148,9 @@ const asFunction = template.statement`
   () => VALUE
 `;
 
-/* const runtimeImports = template.ast(`
+const runtimeImports = template.smart(`
   import rjsx from "@reactive-jsx/runtime";
-`); */
+`);
 
 const declaration = template.statement`
   const [GETTER, SETTER] = rjsx.val(() => VALUE, "NAME");

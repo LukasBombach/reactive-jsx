@@ -33,35 +33,40 @@ async function buildBabelPlugin() {
 }
 
 async function transpileAndLog() {
-  const original = await fs.readFile(replPath, "utf-8");
+  try {
+    const original = await fs.readFile(replPath, "utf-8");
 
-  const transformed = transform(original, {
-    presets: [
-      [
-        "@babel/preset-env",
-        {
-          modules: false,
-          targets: {
-            firefox: "97",
+    const transformed = transform(original, {
+      presets: [
+        [
+          "@babel/preset-env",
+          {
+            modules: false,
+            targets: {
+              firefox: "97",
+            },
           },
-        },
+        ],
+        [
+          "@babel/preset-react",
+          {
+            pragma: "rjsx.el",
+            pragmaFrag: "rjsx.frag",
+          },
+        ],
       ],
-      [
-        "@babel/preset-react",
-        {
-          pragma: "rjsx.el",
-          pragmaFrag: "rjsx.frag",
-        },
-      ],
-    ],
-    plugins: reactiveJsxPlugin ? [reactiveJsxPlugin.default] : [],
-  }).code;
+      plugins: reactiveJsxPlugin ? [reactiveJsxPlugin.default] : [],
+    }).code;
 
-  console.clear();
-  console.log("\n");
-  console.log(original);
-  console.log("\n--\n\n");
-  console.log(transformed);
+    console.clear();
+    console.log("\n");
+    console.log(original);
+    console.log("\n--\n\n");
+    console.log(transformed);
+  } catch (error) {
+    console.clear();
+    console.error(error);
+  }
   console.log("\n");
   console.log(chalk.dim("Press"), "q", chalk.dim("to quit", "\n"));
 }
