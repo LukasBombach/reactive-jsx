@@ -7,10 +7,11 @@ const dev = `
 const Component = () => {
   let count = 1;
 
-  let double;
-  double = count * 2;
+  let double = count * 2;
+  let quad;
+  quad = count * 4;
 
-  return <button onClick={() => count++}>{count} * 2 = {double}</button>
+  return <button onClick={() => count++}>{count} * 2 = {double} * 2 = {quad}</button>
 };
 
 

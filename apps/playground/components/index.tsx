@@ -1,4 +1,4 @@
-import Image from "next/image";
+//import Image from "next/image";
 
 import type { FC, ReactNode } from "react";
 
@@ -15,8 +15,8 @@ const linkBrands = {
 
 export const DevTo = () => (
   <picture>
-    <Image
-      src="dev-black.png"
+    <img
+      src="/dev-black.png"
       alt="Logo of the website dev.to"
       width={1998 / 20}
       height={1998 / 20}
@@ -28,8 +28,8 @@ export const DevTo = () => (
 export const Medium = () => (
   <picture>
     <source srcSet="Medium-Logo-White-RGB@1x.png" media="(prefers-color-scheme: dark)"></source>
-    <Image
-      src="Medium-Logo-Black-RGB@1x.png"
+    <img
+      src="/Medium-Logo-Black-RGB@1x.png"
       alt="Logo of the website Medium.com"
       width={4488 / 44}
       height={1114 / 44}
