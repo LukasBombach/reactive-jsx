@@ -66,15 +66,21 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
             const NAME = binding.path.node.id.name;
 
             // AssignmentExpressions (`count = X` becomes `setCount(X)`)
-            binding.constantViolations.filter(assignmentExpression).forEach(path => {
-              path.replaceWith(setter({ NAME, VALUE: cloneDeepWithoutLoc(path.node.right) }));
-            });
+            binding.constantViolations
+              .filter(assignmentExpression)
+              // .filter(path => !path.findParent(p => p.isJSXAttribute()))
+              .forEach(path => {
+                path.replaceWith(setter({ NAME, VALUE: cloneDeepWithoutLoc(path.node.right) }));
+              });
 
             // UpdateExpressions (`count++` becomes `setCount(count() + 1)`)
-            binding.constantViolations.filter(updateExpression).forEach(path => {
-              if (path.node.operator === "++") path.replaceWith(add({ NAME, VALUE: "1" }));
-              if (path.node.operator === "--") path.replaceWith(sub({ NAME, VALUE: "1" }));
-            });
+            binding.constantViolations
+              .filter(updateExpression)
+              // .filter(path => !path.findParent(p => p.isJSXAttribute()))
+              .forEach(path => {
+                if (path.node.operator === "++") path.replaceWith(add({ NAME, VALUE: "1" }));
+                if (path.node.operator === "--") path.replaceWith(sub({ NAME, VALUE: "1" }));
+              });
           });
 
           // statements.forEach(path => {
