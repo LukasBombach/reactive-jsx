@@ -66,21 +66,41 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
             const NAME = binding.path.node.id.name;
 
             // AssignmentExpressions (`count = X` becomes `setCount(X)`)
-            binding.constantViolations
-              .filter(assignmentExpression)
-              // .filter(path => !path.findParent(p => p.isJSXAttribute()))
-              .forEach(path => {
+            binding.constantViolations.filter(assignmentExpression).forEach(path => {
+              // todo the worst code possible here
+              // todo validate begins with onX
+              const isInEventHandler = !!path.findParent(p => p.isJSXAttribute());
+
+              if (isInEventHandler) {
+                path.replaceWith(nonReactiveSetter({ NAME, VALUE: cloneDeepWithoutLoc(path.node.right) }));
+              } else {
                 path.replaceWith(setter({ NAME, VALUE: cloneDeepWithoutLoc(path.node.right) }));
-              });
+              }
+            });
 
             // UpdateExpressions (`count++` becomes `setCount(count() + 1)`)
-            binding.constantViolations
-              .filter(updateExpression)
-              // .filter(path => !path.findParent(p => p.isJSXAttribute()))
-              .forEach(path => {
-                if (path.node.operator === "++") path.replaceWith(add({ NAME, VALUE: "1" }));
-                if (path.node.operator === "--") path.replaceWith(sub({ NAME, VALUE: "1" }));
-              });
+            binding.constantViolations.filter(updateExpression).forEach(path => {
+              // todo the worst code possible here
+              // todo validate begins with onX
+              const isInEventHandler = !!path.findParent(p => p.isJSXAttribute());
+
+              const VALUE =
+                path.node.operator === "++"
+                  ? add({ NAME, VALUE: "1" })
+                  : path.node.operator === "--"
+                  ? sub({ NAME, VALUE: "1" })
+                  : null;
+
+              if (VALUE === null) {
+                throw new Error(`Unexpected operator ${path.node.operator}`);
+              }
+
+              if (isInEventHandler) {
+                path.replaceWith(nonReactiveSetter({ NAME, VALUE }));
+              } else {
+                path.replaceWith(setter({ NAME, VALUE }));
+              }
+            });
           });
 
           // statements.forEach(path => {
@@ -166,12 +186,16 @@ const setter = template.statement`
   NAME.set(() => VALUE)
 `;
 
-const add = template.statement`
-  NAME.set(() => NAME.get() + VALUE)
+const nonReactiveSetter = template.statement`
+  NAME.set(VALUE)
 `;
 
-const sub = template.statement`
-  NAME.set(() => NAME.get() - VALUE)
+const add = template.expression`
+  NAME.get() + VALUE
+`;
+
+const sub = template.expression`
+  NAME.get() - VALUE
 `;
 
 function getAssignmentsUsingReferences(bindings: Binding[]): NodePath<Identifier>[] {
