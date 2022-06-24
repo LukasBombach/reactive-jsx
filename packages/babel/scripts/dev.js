@@ -1,5 +1,4 @@
 import { build } from "esbuild";
-import { exportAsString } from "./exportAsString.js";
 
 build({
   entryPoints: ["src/plugin.ts"],
