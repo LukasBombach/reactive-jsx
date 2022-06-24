@@ -1,5 +1,3 @@
-// import Image from "next/image";
-
 import type { VFC } from "react";
 
 export interface PostCreditProps {
