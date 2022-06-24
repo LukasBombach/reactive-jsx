@@ -111,7 +111,7 @@ document.body.append(<Button />, <Result />);`;
 //
 
 export default function ExploringReactiveJsx() {
-  if (true) {
+  if (false) {
     return (
       <Layout>
         <PostCredit date={new Date("5/26/2022")} />
@@ -252,6 +252,11 @@ export default function ExploringReactiveJsx() {
         </P>
 
         <P>Reactive JSX works event without Componets, it just returns DOM elements (example withuot compoenents)</P> */}
+
+        <h4>notes</h4>
+
+        <p>check out the dev tools, the only things that get updated are text fragments, not event the enire text</p>
+        <p>also, here is the callstack for the updates, no more work is done than the almost-vanilla js itself!</p>
       </main>
     </Layout>
   );
