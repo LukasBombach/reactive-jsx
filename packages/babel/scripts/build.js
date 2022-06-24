@@ -1,8 +1,8 @@
 import { build } from "esbuild";
 
 build({
-  entryPoints: ["src/index.ts"],
-  outfile: "dist/bundle.js",
+  entryPoints: ["src/plugin.ts"],
+  outfile: "dist/plugin.js",
   format: "esm",
 }).then(() => {
   console.log("build succeeded");

@@ -2,8 +2,8 @@ import { build } from "esbuild";
 import { exportAsString } from "./exportAsString.js";
 
 build({
-  entryPoints: ["src/index.ts"],
-  outfile: "dist/bundle.js",
+  entryPoints: ["src/plugin.ts"],
+  outfile: "dist/plugin.js",
   format: "esm",
   watch: {
     onRebuild(error) {
