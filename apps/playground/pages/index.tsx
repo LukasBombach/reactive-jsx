@@ -56,7 +56,7 @@ export default function HomePage() {
               How to write a tree-shakable component library <DevTo />
             </Title>
             <Description>
-              You don't need all components on all pages. A walkthrough on making tree-shaking happen
+              You don&apost need all components on all pages. A walkthrough on making tree-shaking happen
             </Description>
           </Article>
           <Article href="https://medium.com/@luke_schmuke/how-we-achieved-the-best-web-performance-with-partial-hydration-20fab9c808d5">

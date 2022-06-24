@@ -149,7 +149,8 @@ export default function ExploringReactiveJsx() {
 
         <P>
           No need for <Code>useState</Code> or <Code>setCode</Code>, all you need to do is declare a variable and change
-          it. The DOM will update accordingly. That's good, right? It's easy. It's what you <em>want</em> it to do.
+          it. The DOM will update accordingly. That&apos;s good, right? It&apos;s easy. It&apos;s what you <em>want</em>{" "}
+          it to do.
         </P>
 
         <P>
@@ -201,8 +202,9 @@ export default function ExploringReactiveJsx() {
         <Playground className="my-10 max-w-screen-sm" source={insteadOfReactContext} />
 
         <P>
-          You can even go further and put the functionality to increase the counter <em>where you like</em>. You don't
-          have to follow the requirements of the framework, but are free to decide the structure of your code.
+          You can even go further and put the functionality to increase the counter <em>where you like</em>. You
+          don&apos;t have to follow the requirements of the framework, but are free to decide the structure of your
+          code.
         </P>
 
         <Playground className="my-10 max-w-screen-sm" source={insteadOfReactContextExtreme} />
@@ -222,14 +224,15 @@ export default function ExploringReactiveJsx() {
         <P>
           I have yet to see someone express this notion as eloquently as the author of Svelte, Rich Harris, in his talk{" "}
           <a href="https://www.youtube.com/watch?v=BzX4aTRPzno" className="text-sky-700 hover:text-sky-500">
-            "Write Less, Do More" at the JSCAMP 2019
+            &quot;Write Less, Do More&quot; at the JSCAMP 2019
           </a>
-          . And of course a big chunk of the infamous Book "Clean Code" by Uncle Bob explores this idea in detail.
+          . And of course a big chunk of the infamous Book &quot;Clean Code&quot; by Uncle Bob explores this idea in
+          detail.
         </P>
 
         <h3 className="font-bold text-md pt-8 pb-3 max-w-screen-sm">
           <em className="pb-px border-b-[3px] border-b-sky-300">A hammer</em>, not an{" "}
-          <em className="pb-px border-b-[3px] border-b-rose-300">"insert-nail-here-machine"</em>
+          <em className="pb-px border-b-[3px] border-b-rose-300">&quot;insert-nail-here-machine&quot;</em>
         </h3>
 
         <P>By XXX reactive JSX does not have to put enables yyy instead of constrains zzz</P>

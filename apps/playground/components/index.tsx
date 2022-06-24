@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import type { FC, ReactNode } from "react";
 
 export { PostCredit } from "./PostCredit";
@@ -13,7 +15,7 @@ const linkBrands = {
 
 export const DevTo = () => (
   <picture>
-    <img
+    <Image
       src="dev-black.png"
       alt="Logo of the website dev.to"
       width={1998 / 20}
@@ -26,7 +28,7 @@ export const DevTo = () => (
 export const Medium = () => (
   <picture>
     <source srcSet="Medium-Logo-White-RGB@1x.png" media="(prefers-color-scheme: dark)"></source>
-    <img
+    <Image
       src="Medium-Logo-Black-RGB@1x.png"
       alt="Logo of the website Medium.com"
       width={4488 / 44}
