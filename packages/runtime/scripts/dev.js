@@ -6,7 +6,7 @@ build({
   outfile: "dist/bundle.js",
   format: "esm",
   bundle: true,
-  minify: true,
+  // minify: true,
   watch: {
     onRebuild(error) {
       if (error) {

@@ -109,6 +109,9 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
           // });
 
           // Convert declarations (`let count = X` becomes `const [count, setCount] = rjsx.val(X)`)
+
+          // console.log(bindings.map(b => b.path.toString()));
+
           bindings.forEach(binding => {
             if (!binding.path.isVariableDeclarator()) return;
             if (!isIdentifier(binding.path.node.id)) return;
@@ -206,10 +209,30 @@ function getAssignmentsUsingReferences(bindings: Binding[]): NodePath<Identifier
     .flatMap(path => [...getIdentifiersFromVariableDeclaration(path), ...getIdentifiersFromExpressionStatement(path)]);
 }
 
+function isComponent(path: NodePath<VariableDeclarator>): boolean {
+  const init = path.get("init");
+  return init.isArrowFunctionExpression() && init.get("body").isJSXElement();
+
+  /* if (!init) {
+    console.warn("cannot find init");
+    return true;
+  }
+
+  console.log("---");
+  console.log("");
+  console.log(init.type, init.isArrowFunctionExpression() && init.get("body").isJSXElement(), init.toString());
+  console.log("");
+  console.log("---");
+  console.log("");
+
+  return true; */
+}
+
 function getIdentifiersFromVariableDeclaration(path: NodePath<Node>): NodePath<Identifier>[] {
   if (path.isVariableDeclaration()) {
     return path
       .get("declarations")
+      .filter(p => !isComponent(p))
       .map(path => path.get("id"))
       .filter(identifier);
   }

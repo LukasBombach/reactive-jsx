@@ -1,12 +1,3 @@
-export const Component = () => {
-  let count = 1;
-  let double = count * 2;
-  let triple;
-  triple = count * 3;
+let count = 42;
 
-  return (
-    <button onClick={() => count++}>
-      {count} * 2 = {double}
-    </button>
-  );
-};
+const Button = () => <button onClick={() => count++}>Click me</button>;
