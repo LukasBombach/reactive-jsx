@@ -249,7 +249,7 @@ function getIdentifiersFromExpressionStatement(path: NodePath<Node>): NodePath<I
   return [];
 }
 
-function getMutatedIdentifiersInEventHandlers(path: NodePath<Program>): NodePath<Identifier>[] {
+function i(path: NodePath<Program>): NodePath<Identifier>[] {
   const paths: NodePath<Node>[] = [];
 
   path.traverse({
@@ -270,7 +270,7 @@ function getMutatedIdentifiersInEventHandlers(path: NodePath<Program>): NodePath
   return paths.filter(identifier);
 }
 
-function getBinding(path: NodePath<Node>): Binding | undefined {
+function getBinding(path: NodePath<Identifier>): Binding | undefined {
   if (!path.isIdentifier()) return;
   const name = path.node.name;
   return path.scope.getBinding(name);

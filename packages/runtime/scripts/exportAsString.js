@@ -1,7 +1,7 @@
-import { promises as fs } from "fs";
-import { resolve } from "path";
+const { promises: fs } = require("fs");
+const { resolve } = require("path");
 
-export async function exportAsString(input, output, types) {
+module.exports = async function exportAsString(input, output, types) {
   const pathToSource = resolve(input);
   const pathToGeneratedFile = resolve(output);
   const pathToGeneratedDefs = resolve(types);
@@ -9,4 +9,4 @@ export async function exportAsString(input, output, types) {
   const generatedCode = `export default ${JSON.stringify(sourceCode)};`;
   await fs.writeFile(pathToGeneratedFile, generatedCode, "utf-8");
   await fs.writeFile(pathToGeneratedDefs, "declare const runtime: string; export default runtime;", "utf-8");
-}
+};
