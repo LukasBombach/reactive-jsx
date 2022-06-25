@@ -7,7 +7,7 @@ import { createRuntime } from "..";
 
 // todo this is a shit setup, I have to import this
 // with this name (and not use it)
-const rjsx = createRuntime();
+// const rjsx = createRuntime();
 
 describe("components", () => {
   test("renders html element", () => {
