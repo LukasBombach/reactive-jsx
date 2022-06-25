@@ -1,5 +1,5 @@
 import { build } from "esbuild";
-import { exportAsString } from "./exportAsString.js";
+const exportAsString = require("./exportAsString.js");
 
 build({
   entryPoints: ["src/index.ts"],

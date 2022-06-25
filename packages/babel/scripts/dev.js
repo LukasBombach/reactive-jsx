@@ -1,9 +1,9 @@
-import { build } from "esbuild";
+const { build } = require("esbuild");
 
 build({
   entryPoints: ["src/plugin.ts"],
   outfile: "dist/plugin.js",
-  format: "esm",
+  format: "cjs",
   watch: {
     onRebuild(error) {
       if (error) {
