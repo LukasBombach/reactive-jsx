@@ -9,14 +9,12 @@ type Child = ChildPrimive | (() => ChildPrimive);
 type Props = Record<string, string | Signal<any>>;
 
 export function createDomApi({ react }: Pick<Runtime, "react">) {
-  return function el(type: TagName | Component, props: Props = {}, ...children: Child[]): HTMLElement {
+  return function el(type: TagName | Component, props: Props = {}, children: Child | Child[]): HTMLElement {
     if (typeof type === "string") return createElement(type, props, children);
-    console.log("type is", typeof type, type);
-
-    return type(props);
+    return type({ ...props, children });
   };
 
-  function createElement(type: TagName, props: Props, children: Child[]): HTMLElement {
+  function createElement(type: TagName, props: Props, children: Child | Child[]): HTMLElement {
     const element = document.createElement(type);
     for (const name in props) setAttribute(element, name, props[name]);
     for (const child of children) appendChild(element, child);
@@ -54,7 +52,7 @@ export function createDomApi({ react }: Pick<Runtime, "react">) {
         }
       }
 
-      throw new Error(`Cannot handle type ${typeof value}`);
+      throw new Error(`Cannot handle type "${typeof value}"`);
     }, `reconcile`);
   }
 }

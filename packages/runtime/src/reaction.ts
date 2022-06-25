@@ -15,7 +15,6 @@ export function createReactions({ transaction, log }: Pick<Runtime, "transaction
         transaction.current = reaction;
         current = fn(current);
         transaction.current = null;
-        console.log("");
       },
     };
 
