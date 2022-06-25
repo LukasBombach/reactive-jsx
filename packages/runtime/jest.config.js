@@ -1,5 +1,6 @@
-/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
-export default {
-  preset: "ts-jest",
-  testEnvironment: "node",
+/** @type {import('@jest/types').Config.InitialOptions} */
+const config = {
+  setupFilesAfterEnv: ["<rootDir>/jest-setup.js"],
 };
+
+module.exports = config;

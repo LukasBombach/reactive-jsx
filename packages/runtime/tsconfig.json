@@ -3,6 +3,6 @@
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"]
   },
-  "include": ["modules.d.ts", "."],
+  "include": ["modules.d.ts", ".", "./jest-setup.ts"],
   "exclude": ["dist", "build", "node_modules"]
 }

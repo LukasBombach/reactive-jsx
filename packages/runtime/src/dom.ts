@@ -4,13 +4,15 @@ import type { Signal } from "./value";
 type TagName = keyof JSX.IntrinsicElements;
 type ChildPrimive = string | number | boolean | null | undefined;
 
-type Component = (props: Props) => HTMLElement;
+type Component = (props?: Props) => HTMLElement;
 type Child = ChildPrimive | (() => ChildPrimive);
 type Props = Record<string, string | Signal<any>>;
 
 export function createDomApi({ react }: Pick<Runtime, "react">) {
   return function el(type: TagName | Component, props: Props = {}, ...children: Child[]): HTMLElement {
     if (typeof type === "string") return createElement(type, props, children);
+    console.log("type is", typeof type, type);
+
     return type(props);
   };
 

@@ -1,11 +1,17 @@
+/**
+ * @jest-environment jsdom
+ */
+
+import "@testing-library/jest-dom";
 import { createRuntime } from "..";
 
 const rjsx = createRuntime();
 
 describe("element: components", () => {
-  test("x", () => {
-    // const Comp = () => <div />;
-    // const el = rjsx.el(<Comp />);
-    // expect(el).toBeInstanceOf(HTMLDivElement);
+  test("html element", () => {
+    const Button = () => <a href="/path">text</a>;
+    const el = <Button />;
+    expect(el).toBeInstanceOf(HTMLAnchorElement);
+    expect(el).toHaveAttribute("href", "/path");
   });
 });
