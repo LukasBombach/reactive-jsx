@@ -17,18 +17,18 @@ export function createDomApi({ react }: Pick<Runtime, "react">) {
   function createElement(type: TagName, props: Props, children: Child | Child[]): HTMLElement {
     const element = document.createElement(type);
     for (const name in props) setAttribute(element, name, props[name]);
-    for (const child of children) appendChild(element, child);
+    for (const child of asArray(children)) appendChild(element, child);
     return element;
   }
 
-  function setAttribute(element: HTMLElement, name: string, value: string | Signal<any>) {
+  function setAttribute(element: HTMLElement, name: string, value: string | (() => string)) {
     if (/^on[A-Z]/.test(name) && typeof value === "function") {
       const eventName = name.substring(2).toLowerCase();
       element.addEventListener(eventName, value);
-    } else if (typeof value === "string") {
-      element.setAttribute(name, value);
+    } else if (typeof value === "function") {
+      react(() => element.setAttribute(name, value()), `attr ${name}`);
     } else {
-      react(() => element.setAttribute(name, value.get()), `attr ${name}`);
+      element.setAttribute(name, value);
     }
   }
 
@@ -52,7 +52,15 @@ export function createDomApi({ react }: Pick<Runtime, "react">) {
         }
       }
 
+      if (typeof value === "undefined") {
+        return; //noop
+      }
+
       throw new Error(`Cannot handle type "${typeof value}"`);
     }, `reconcile`);
+  }
+
+  function asArray<T>(value: T | T[]): T[] {
+    return Array.isArray(value) ? value : [value];
   }
 }
