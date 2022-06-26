@@ -201,6 +201,25 @@ const sub = template.expression`
   NAME.get() - VALUE
 `;
 
+function getMutatedIdentifiersInEventHandlers(path: NodePath<Program>): NodePath<Identifier>[] {
+  const paths: NodePath<Node>[] = [];
+
+  path.traverse({
+    JSXAttribute: path => {
+      if (isEventHandler(path)) {
+        path.traverse({
+          AssignmentExpression: path => {
+            paths.push(path.get("left"));
+          },
+          UpdateExpression: path => {
+            paths.push(path.get("argument"));
+          },
+        });
+      }
+    },
+  });
+}
+
 function getAssignmentsUsingReferences(bindings: Binding[]): NodePath<Identifier>[] {
   return bindings
     .flatMap(binding => binding.referencePaths)

@@ -5,22 +5,22 @@
   "types": "./index.tsx",
   "license": "MIT",
   "dependencies": {
-    "@babel/standalone": "7.17.9",
-    "@codemirror/lang-javascript": "0.19.7",
-    "@uiw/react-codemirror": "4.6.0",
-    "rollup": "2.70.1"
+    "@babel/standalone": "7.18.5",
+    "@codemirror/lang-javascript": "6.0.0",
+    "@uiw/react-codemirror": "4.9.4",
+    "rollup": "2.75.7"
   },
   "devDependencies": {
     "@reactive-jsx/config": "*",
     "@reactive-jsx/tsconfig": "*",
     "@types/babel__standalone": "7.1.4",
-    "@types/react": "18.0.3",
-    "@types/react-dom": "18.0.0",
+    "@types/react": "18.0.14",
+    "@types/react-dom": "18.0.5",
     "@types/rollup": "0.54.0",
-    "typescript": "4.6.3",
+    "typescript": "4.7.4",
     "typescript-plugin-css-modules": "3.4.0"
   },
   "peerDependencies": {
-    "react": ">= 18.0.0"
+    "react": "18.2.0"
   }
 }
