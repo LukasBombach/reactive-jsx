@@ -2,7 +2,7 @@
   "name": "@reactive-jsx/runtime",
   "version": "0.0.0",
   "license": "MIT",
-  "main": "./dist/index.js",
+  "main": "./dist/bundle.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "node scripts/build.js",

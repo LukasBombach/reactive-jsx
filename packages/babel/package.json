@@ -10,6 +10,7 @@
     "repl": "node scripts/repl.js"
   },
   "devDependencies": {
+    "@babel/preset-typescript": "7.17.12",
     "@reactive-jsx/config": "*",
     "@reactive-jsx/tsconfig": "*",
     "@types/chokidar": "2.1.3",

@@ -32,6 +32,7 @@ chokidar.watch([pluginDist, replSrc]).on("all", async (event, path) => {
     const source = await fs.readFile(replSrc, "utf-8");
 
     const transformed = await transformAsync(source, {
+      filename: "repl.tsx",
       presets: [
         [
           "@babel/preset-env",
@@ -49,6 +50,7 @@ chokidar.watch([pluginDist, replSrc]).on("all", async (event, path) => {
             pragmaFrag: "rjsx.frag",
           },
         ],
+        "@babel/preset-typescript",
       ],
       plugins: [reactiveJsxPlugin],
     });

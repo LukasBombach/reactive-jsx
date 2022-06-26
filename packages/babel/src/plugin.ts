@@ -30,7 +30,7 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
     visitor: {
       Program: {
         enter(path) {
-          console.log("this is run #", ++runs);
+          // console.log("this is run #", ++runs);
 
           // todo getBindingIdentifier || getOwnBindingIdentifier
 
@@ -122,9 +122,6 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
             binding.path.parentPath.replaceWith(declaration({ NAME, VALUE }));
           });
 
-          // Inject runtime
-          path.unshiftContainer("body", runtimeImports());
-
           // JSX Elements
           path.traverse({
             JSXElement: path => {
@@ -156,6 +153,9 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
                 });
             },
           });
+
+          // Inject runtime
+          path.unshiftContainer("body", runtimeImports());
         },
       },
     },

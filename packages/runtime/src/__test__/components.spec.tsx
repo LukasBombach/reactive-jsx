@@ -1,9 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
-import "@testing-library/jest-dom";
-
 describe("components", () => {
   test("renders html element", () => {
     const Link = () => <a href="/path">text</a>;
