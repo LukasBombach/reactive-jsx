@@ -3,11 +3,6 @@
  */
 
 import "@testing-library/jest-dom";
-import { createRuntime } from "..";
-
-// todo this is a shit setup, I have to import this
-// with this name (and not use it)
-// const rjsx = createRuntime();
 
 describe("components", () => {
   test("renders html element", () => {
@@ -26,20 +21,20 @@ describe("components", () => {
   });
 
   test("reactive jsx element attributes", () => {
-    const href = rjsx.value("/path");
-    const Link = () => <a href={() => href.get()} />;
+    let href = "/path";
+    const Link = () => <a href={href} />;
     const el = <Link />;
     expect(el).toHaveAttribute("href", "/path");
-    href.set("/another/path");
+    href = "/another/path";
     expect(el).toHaveAttribute("href", "/another/path");
   });
 
   test("reactive jsx element children", () => {
-    const text = rjsx.value("text");
-    const Link = () => <a>{() => text.get()}</a>;
+    let text = "text";
+    const Link = () => <a>{text}</a>;
     const el = <Link />;
     expect(el).toHaveTextContent("text");
-    text.set("a different text");
+    text = "a different text";
     expect(el).toHaveTextContent("a different text");
   });
 });
