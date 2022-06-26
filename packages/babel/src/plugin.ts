@@ -218,6 +218,8 @@ function getMutatedIdentifiersInEventHandlers(path: NodePath<Program>): NodePath
       }
     },
   });
+
+  return paths.filter(identifier);
 }
 
 function getAssignmentsUsingReferences(bindings: Binding[]): NodePath<Identifier>[] {

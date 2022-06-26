@@ -1,10 +1,9 @@
-import { emitKeypressEvents } from "readline";
-import { promises as fs } from "fs";
-import { resolve } from "path";
-import chokidar from "chokidar";
-import { transformAsync } from "@babel/core";
-import { build, buildSync } from "esbuild";
-import chalk from "chalk";
+const { emitKeypressEvents } = require("readline");
+const { promises: fs } = require("fs");
+const chokidar = require("chokidar");
+const { transformAsync } = require("@babel/core");
+const { build } = require("esbuild");
+const chalk = require("chalk");
 
 emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
@@ -21,7 +20,7 @@ chokidar.watch([pluginSrc]).on("all", async () => {
   await build({
     entryPoints: [pluginSrc],
     outfile: pluginDist,
-    format: "esm",
+    format: "cjs",
   });
 });
 
@@ -29,9 +28,6 @@ chokidar.watch([pluginDist, replSrc]).on("all", async (event, path) => {
   console.clear();
   console.log("trigger", event, path);
   try {
-    // delete require.cache[require.resolve(`../${pluginDist}`)];
-    // const reactiveJsxPlugin = require(`../${pluginDist}`);
-    // const reactiveJsxPlugin = resolve(pluginDist);
     const reactiveJsxPlugin = await import(`../${pluginDist}?cachebust=${Date.now()}`).then(m => m.default);
     const source = await fs.readFile(replSrc, "utf-8");
 
