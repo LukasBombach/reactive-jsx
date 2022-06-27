@@ -252,6 +252,12 @@ export default function ExploringReactiveJsx() {
         </P>
 
         <P>Reactive JSX works event without Componets, it just returns DOM elements (example withuot compoenents)</P> */}
+        <h4>Further explorations</h4>
+
+        <ul>
+          <li>ssr tree shaking</li>
+          <li>million js</li>
+        </ul>
 
         <h4>notes</h4>
 
