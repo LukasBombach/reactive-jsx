@@ -1,3 +1,6 @@
+import userEvent from "@testing-library/user-event";
+import "@testing-library/jest-dom";
+
 describe("components", () => {
   test("renders html element", () => {
     const Link = () => <a href="/path">text</a>;
@@ -14,12 +17,13 @@ describe("components", () => {
     expect(el).toHaveTextContent("text");
   });
 
-  test("reactive jsx element attributes", () => {
+  test.only("reactive jsx element attributes", async () => {
+    const user = userEvent.setup();
     let href = "/path";
     const Link = () => <a href={href} onClick={() => (href = "/another/path")} />;
     const el = <Link />;
     expect(el).toHaveAttribute("href", "/path");
-
+    await user.click(el);
     expect(el).toHaveAttribute("href", "/another/path");
   });
 
