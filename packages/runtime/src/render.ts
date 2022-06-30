@@ -5,8 +5,6 @@ export type Component<P = {}> = (props?: P) => Element /*  | null */;
 export type ElementType = Tag | Component<any>;
 
 export type Props<T extends ElementType = ElementType> =
-  // | (T extends Tag ? JSX.IntrinsicElements[T] : T extends Component<infer P> ? P : never)
-  //(T extends Tag ? JSX.IntrinsicElements[T] : T extends (props?: infer P) => Element ? P : never)
   | (T extends Tag ? JSX.IntrinsicElements[T] : T extends Component<any> ? Omit<Parameters<T>[0], "children"> : never)
   | null
   | undefined;
@@ -17,19 +15,18 @@ export type Child = Element | string | number | boolean | null | undefined;
 
 export interface Element<T extends ElementType = ElementType> {
   type: T;
-  props: Props<T>;
+  props: Omit<Props<T> & { children: Child[] }, "key">;
   key: string | number | null;
 }
 
-type X = Props<(props: { foo: string; bar: number }) => Element>;
-
+// todo typecast
 export function createElement<T extends Tag | Component<any>>(
   type: T,
   props?: Props<T>,
   ...children: Child[]
 ): Element<T> {
   const { key = null, ...propsWithChildren } = { ...props, children };
-  return { type, props: propsWithChildren, key };
+  return { type, props: propsWithChildren as Omit<Props<T> & { children: Child[] }, "key">, key };
 }
 
 export function render({ type, props }: Element): HTMLElement {
