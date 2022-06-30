@@ -32,7 +32,7 @@ export function render({ type, props }: Element): HTMLElement {
   const { children = [], ...attrs } = props || {};
   if (isTag(type)) return renderTag(type, attrs, children);
   if (isComponent(type)) return renderComp(type, attrs, children);
-  throw new Error(`unexpected typeof type parameter "${typeof type}"`);
+  throw new Error(`unexpected type parameter type "${typeof type}"`);
 }
 
 function renderTag<T extends Tag, P extends Props>(type: T, attrs: Attrs<P>, children: Child[]): HTMLElement {
