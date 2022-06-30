@@ -8,7 +8,7 @@ interface LinkProps {
   children: Child[];
 }
 
-const a = createElement("button", { href: "true" });
+const a = createElement("a", { href: "true" });
 
 const anchor = createElement("a", { href: "#/path" }, "text");
 const Link = ({ href, children }: LinkProps) => createElement("a", { href }, ...children);

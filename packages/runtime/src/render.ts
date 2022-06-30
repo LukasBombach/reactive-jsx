@@ -4,14 +4,12 @@ export type Component<P = {}> = (props?: P) => Element /*  | null */;
 
 export type ElementType = Tag | Component<any>;
 
-type A = JSX.IntrinsicElements["a"];
-type X = A["href"];
-
-export type Props<T extends ElementType = ElementType> = T extends Tag
-  ? JSX.IntrinsicElements[T]
-  : T extends Component<infer P>
-  ? P
-  : null | undefined;
+export type Props<T extends ElementType = ElementType> =
+  // | (T extends Tag ? JSX.IntrinsicElements[T] : T extends Component<infer P> ? P : never)
+  //(T extends Tag ? JSX.IntrinsicElements[T] : T extends (props?: infer P) => Element ? P : never)
+  | (T extends Tag ? JSX.IntrinsicElements[T] : T extends Component<any> ? Omit<Parameters<T>[0], "children"> : never)
+  | null
+  | undefined;
 
 export type Attrs<P extends Props> = Omit<NonNullable<P>, "children">;
 
@@ -23,7 +21,9 @@ export interface Element<T extends ElementType = ElementType> {
   key: string | number | null;
 }
 
-export function createElement<T extends Tag | Component<Props>>(
+type X = Props<(props: { foo: string; bar: number }) => Element>;
+
+export function createElement<T extends Tag | Component<any>>(
   type: T,
   props?: Props<T>,
   ...children: Child[]
