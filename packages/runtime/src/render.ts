@@ -1,29 +1,33 @@
 export type Tag = keyof JSX.IntrinsicElements;
 
-export type Component<P extends Props = any> = (props?: P) => Element /*  | null */;
+export type Component<P = {}> = (props?: P) => Element /*  | null */;
 
-export interface Element<P extends Props = Props, T extends Tag | Component<P> = Tag | Component<P>> {
-  type: T;
-  props: P;
-  key: string | number | null;
-}
+export type ElementType = Tag | Component<any>;
 
-export type Props =
-  | {
-      children?: Child[];
-    }
-  | null
-  | undefined;
+type A = JSX.IntrinsicElements["a"];
+type X = A["href"];
+
+export type Props<T extends ElementType = ElementType> = T extends Tag
+  ? JSX.IntrinsicElements[T]
+  : T extends Component<infer P>
+  ? P
+  : null | undefined;
 
 export type Attrs<P extends Props> = Omit<NonNullable<P>, "children">;
 
 export type Child = Element | string | number | boolean | null | undefined;
 
-export function createElement<T extends Tag | Component<Props>, P extends Props = Props>(
+export interface Element<T extends ElementType = ElementType> {
+  type: T;
+  props: Props<T>;
+  key: string | number | null;
+}
+
+export function createElement<T extends Tag | Component<Props>>(
   type: T,
-  props: P,
+  props?: Props<T>,
   ...children: Child[]
-): Element {
+): Element<T> {
   const { key = null, ...propsWithChildren } = { ...props, children };
   return { type, props: propsWithChildren, key };
 }
