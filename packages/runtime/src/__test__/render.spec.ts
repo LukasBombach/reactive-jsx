@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { createElement, render } from "../render";
 
-import type { Tag, Component, Element, Props, Attrs, Child } from "../render";
+import type { Child } from "../render";
 
 interface LinkProps {
   href: string;
