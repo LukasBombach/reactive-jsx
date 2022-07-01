@@ -106,4 +106,15 @@ describe("render with children", () => {
       </div>
     `);
   });
+
+  test("deeply nested tags and components", () => {
+    const Container = (props?: { children: Child[] }) => createElement("div", null, ...(props?.children || []));
+    const text = createElement("p", null, "text");
+
+    const DeeplyNestedComponent = Container({
+      children: [text, Container({ children: [text, Container(), text] }), text],
+    });
+
+    expect(render(div)).toMatchInlineSnapshot();
+  });
 });
