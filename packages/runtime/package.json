@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "license": "MIT",
   "main": "./dist/bundle.js",
-  "types": "dist/index.d.ts",
+  "types": "index.d.ts",
+  "files": [
+    "as-string"
+  ],
   "scripts": {
     "build": "node scripts/build.js",
     "dev": "node scripts/dev.js",

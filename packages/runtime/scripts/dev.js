@@ -1,4 +1,4 @@
-import { build } from "esbuild";
+const { build } = require("esbuild");
 const exportAsString = require("./exportAsString.js");
 
 build({
