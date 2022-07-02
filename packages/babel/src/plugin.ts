@@ -173,8 +173,7 @@ const asFunction = template.statement`
 `;
 
 const runtimeImports = template.smart(`
-  import { createRuntime } from "@reactive-jsx/runtime";
-  const rjsx = createRuntime();
+  import rjsx from "@reactive-jsx/runtime";
 `);
 
 const declaration = template.statement`

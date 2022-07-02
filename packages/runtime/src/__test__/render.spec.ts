@@ -1,7 +1,8 @@
 import "@testing-library/jest-dom";
-import { createElement, render } from "../render";
+import { createElement } from "../createElement";
+import { render } from "../render";
 
-import type { Child } from "../render";
+import type { Child } from "../createElement";
 
 interface LinkProps {
   href: string;
@@ -111,10 +112,11 @@ describe("render with children", () => {
     const Container = (props?: { children: Child[] }) => createElement("div", null, ...(props?.children || []));
     const text = createElement("p", null, "text");
 
-    const DeeplyNestedComponent = Container({
-      children: [text, Container({ children: [text, Container(), text] }), text],
-    });
+    const DeeplyNestedComponent = () =>
+      Container({
+        children: [text, Container({ children: [text, Container(), text] }), text],
+      });
 
-    expect(render(div)).toMatchInlineSnapshot();
+    expect(render(DeeplyNestedComponent())).toMatchInlineSnapshot();
   });
 });

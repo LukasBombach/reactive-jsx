@@ -1,8 +1,9 @@
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
-import { createElement, render } from "../render";
+import { createElement } from "../createElement";
+import { render } from "../render";
 
-import type { Child } from "../render";
+import type { Child } from "../createElement";
 
 interface LinkProps {
   href: string;
