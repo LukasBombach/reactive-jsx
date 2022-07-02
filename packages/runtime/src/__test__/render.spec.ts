@@ -10,7 +10,8 @@ interface LinkProps {
 }
 
 const anchor = createElement("a", { href: "#/path" }, "text");
-const Link = ({ href, children }: LinkProps) => createElement("a", { href }, ...children);
+const Link = ({ href, children }: LinkProps) =>
+  createElement("a", { href }, ...children);
 
 describe("createElement", () => {
   test("tag with attributes", () => {
@@ -109,14 +110,37 @@ describe("render with children", () => {
   });
 
   test("deeply nested tags and components", () => {
-    const Container = (props?: { children: Child[] }) => createElement("div", null, ...(props?.children || []));
+    const Container = (props?: { children: Child[] }) =>
+      createElement("div", null, ...(props?.children || []));
     const text = createElement("p", null, "text");
 
     const DeeplyNestedComponent = () =>
       Container({
-        children: [text, Container({ children: [text, Container(), text] }), text],
+        children: [
+          text,
+          Container({ children: [text, Container(), text] }),
+          text,
+        ],
       });
 
-    expect(render(DeeplyNestedComponent())).toMatchInlineSnapshot();
+    expect(render(DeeplyNestedComponent())).toMatchInlineSnapshot(`
+      <div>
+        <p>
+          text
+        </p>
+        <div>
+          <p>
+            text
+          </p>
+          <div />
+          <p>
+            text
+          </p>
+        </div>
+        <p>
+          text
+        </p>
+      </div>
+    `);
   });
 });
