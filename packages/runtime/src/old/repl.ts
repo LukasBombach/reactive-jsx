@@ -1,4 +1,6 @@
-import { value, react } from ".";
+import { createRuntime } from "./runtime";
+
+const { value, react } = createRuntime();
 
 console.clear();
 

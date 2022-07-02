@@ -1,4 +1,3 @@
-import { react } from "./reaction";
 import { isFunction, isString, isNumber, isBoolean } from "./typeGuards";
 import { isTag, isComponent, isElement, isEventHandler } from "./typeGuards";
 import { isNull, isUndefined } from "./typeGuards";

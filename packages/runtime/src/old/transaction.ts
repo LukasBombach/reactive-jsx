@@ -5,4 +5,6 @@ export interface Transaction {
   current: Reaction | null;
 }
 
-export const transaction: Transaction = { reactions: new Set(), current: null };
+export function createTransaction(): Transaction {
+  return { reactions: new Set(), current: null };
+}
