@@ -118,7 +118,9 @@ describe("render with children", () => {
       Container({
         children: [
           text,
-          Container({ children: [text, Container(), text] }),
+          Container({
+            children: [text, Container({ children: [text] }), text],
+          }),
           text,
         ],
       });
@@ -132,7 +134,11 @@ describe("render with children", () => {
           <p>
             text
           </p>
-          <div />
+          <div>
+            <p>
+              text
+            </p>
+          </div>
           <p>
             text
           </p>
