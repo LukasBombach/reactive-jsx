@@ -9,3 +9,5 @@ export const isNumber = (value: unknown): value is number => typeof value === "n
 export const isBoolean = (value: unknown): value is boolean => typeof value === "boolean";
 export const isNull = (value: unknown): value is null => value === null;
 export const isUndefined = (value: unknown): value is undefined => typeof value === "undefined";
+export const isFunction = (value: unknown): value is Function => typeof value === "function";
+export const isEventHandler = (value: string): value is `on${Capitalize<string>}` => /^on[A-Z]/.test(value);

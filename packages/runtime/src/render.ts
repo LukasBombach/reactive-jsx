@@ -1,4 +1,6 @@
-import { isTag, isComponent, isElement, isString, isNumber, isBoolean, isNull, isUndefined } from "./typeGuards";
+import { isFunction, isString, isNumber, isBoolean } from "./typeGuards";
+import { isTag, isComponent, isElement } from "./typeGuards";
+import { isNull, isUndefined } from "./typeGuards";
 
 import type { Tag, Component, Props, Child, Element } from "./createElement";
 
@@ -29,6 +31,7 @@ function renderTag<T extends Tag, P extends Props>(type: T, attrs: Attrs<P>, chi
 
   Object.entries(attrs).forEach(([name, value]) => {
     if (isString(value)) el.setAttribute(name, value);
+    else if (isFunction(value)) react(() => el.setAttribute(name, value()));
     else throw new Error(`unknown attr value type ${typeof value}`);
   });
 
