@@ -13,7 +13,7 @@ process.stdin.on("keypress", (_str, key) => {
 });
 
 build({
-  entryPoints: ["src/index.ts"],
+  entryPoints: ["src/repl.ts"],
   outfile: "dist/repl.js",
   bundle: true,
   format: "cjs",
