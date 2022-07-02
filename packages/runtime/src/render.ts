@@ -1,6 +1,6 @@
 import { react } from "./reaction";
 import { isFunction, isString, isNumber, isBoolean } from "./typeGuards";
-import { isTag, isComponent, isElement, isEventHandler } from "./typeGuards";
+import { isTag, isComponent, isElement, isReactiveChild, isEventHandler } from "./typeGuards";
 import { isNull, isUndefined } from "./typeGuards";
 
 import type { Tag, Component, Props, Child, Element } from "./createElement";
@@ -63,6 +63,10 @@ function renderChild(child: Child): HTMLElement | Text | Comment {
 
   if (isElement(child)) {
     return render(child);
+  }
+
+  if (isReactiveChild(child)) {
+    return react(() => child());
   }
 
   if (isUndefined(child) || isNull(child) || isBoolean(child)) {

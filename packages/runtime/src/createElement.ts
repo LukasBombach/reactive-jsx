@@ -14,7 +14,8 @@ export type Props<T extends ElementType = ElementType> =
   | null
   | undefined;
 
-export type Child = Element | string | number | boolean | null | undefined;
+export type ChildValue = Element | string | number | boolean | null | undefined;
+export type Child = ChildValue | (() => ChildValue);
 
 export interface Element<T extends ElementType = ElementType> {
   type: T;
