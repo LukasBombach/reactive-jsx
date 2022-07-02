@@ -1,5 +1,6 @@
 export type Tag = keyof JSX.IntrinsicElements;
 
+// todo null return
 export type Component<P = {}> = (props?: P) => Element /*  | null */;
 
 export type ElementType = Tag | Component<any>;
@@ -17,7 +18,9 @@ export interface Element<T extends ElementType = ElementType> {
   key: string | number | null;
 }
 
-// todo typecast
+/**
+ * todo typecast
+ */
 export function createElement<T extends Tag | Component<any>>(
   type: T,
   props?: Props<T>,
