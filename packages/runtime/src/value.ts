@@ -24,17 +24,17 @@ export function value<T>(value: (() => T) | T, name?: string): Signal<T> {
     set: value =>
       react(() => {
         signal.value = isFunction(value) ? value() : value;
-        signal.reactions.forEach(r => transaction.reactions.add(r));
+        signal.reactions.forEach(r => transaction.queue.add(r));
 
-        // reactions.values() returns an iterator over the reactions of the set
-        const queue = transaction.reactions.values();
+        // queue.values() returns an iterator over the reactions of the set
+        const queue = transaction.queue.values();
         let item = queue.next();
 
         // we iterate over the reactions until none is left and run each one
         // running a reaction can add more reactions to the set, thereby extending the set
         // while we are iterating over it
         while (!item.done) {
-          transaction.reactions.delete(item.value);
+          transaction.queue.delete(item.value);
           item.value.run();
           item = queue.next();
         }
