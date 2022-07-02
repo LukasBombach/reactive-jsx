@@ -33,6 +33,7 @@ export function value<T>(value: (() => T) | T, name?: string): Signal<T> {
         // we iterate over the reactions until none is left and run each one
         // running a reaction can add more reactions to the set, thereby extending the set
         // while we are iterating over it
+        // 📌 This ends up working through the reaction tree depth-first
         while (!item.done) {
           transaction.queue.delete(item.value);
           item.value.run();
