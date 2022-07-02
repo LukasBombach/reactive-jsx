@@ -6,7 +6,11 @@ export type Component<P = {}> = (props?: P) => Element /*  | null */;
 export type ElementType = Tag | Component<any>;
 
 export type Props<T extends ElementType = ElementType> =
-  | (T extends Tag ? JSX.IntrinsicElements[T] : T extends Component<any> ? Omit<Parameters<T>[0], "children"> : never)
+  | (T extends Tag
+      ? Reactive<JSX.IntrinsicElements[T]>
+      : T extends Component<any>
+      ? Omit<Parameters<T>[0], "children">
+      : never)
   | null
   | undefined;
 
@@ -17,6 +21,10 @@ export interface Element<T extends ElementType = ElementType> {
   props: Omit<Props<T> & { children: Child[] }, "key">;
   key: string | number | null;
 }
+
+type Reactive<T> = {
+  [K in keyof T]: T[K] | (() => T[K]);
+} & { key?: string | number | null };
 
 /**
  * todo typecast

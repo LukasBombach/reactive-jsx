@@ -2,6 +2,7 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { createElement } from "../createElement";
 import { render } from "../render";
+import { value } from "../value";
 
 import type { Child } from "../createElement";
 
@@ -29,8 +30,9 @@ describe("components", () => {
   });
 
   test("reactive jsx element attributes", async () => {
-    let href = "#/path";
-    const Link = () => createElement("a", { href, onClick: () => (href = "#/another/path") }, "text");
+    const href = value("#/path");
+    const Link = () =>
+      createElement("a", { href: () => href.get(), onClick: () => href.set("#/another/path") }, "text");
     const el = render(Link());
     expect(el).toHaveAttribute("href", "#/path");
     await user.click(el);
@@ -38,8 +40,8 @@ describe("components", () => {
   });
 
   test("reactive jsx element children", async () => {
-    let text = "text";
-    const Link = () => createElement("a", { onClick: () => (text = "a different text") }, "text");
+    const text = value("text");
+    const Link = () => createElement("a", { onClick: () => text.set("a different text") }, () => text.get());
     const el = render(Link());
     expect(el).toHaveTextContent("text");
     await user.click(el);
