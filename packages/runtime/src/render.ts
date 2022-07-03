@@ -48,7 +48,10 @@ function renderTag<T extends Tag, P extends Props>(type: T, attrs: Attrs<P>, chi
     }
   });
 
-  children.map(child => renderChild(child)).forEach(childEl => el.append(childEl));
+  children
+    .map(child => renderChild(child))
+    .flat()
+    .forEach(childEl => el.append(childEl));
 
   return el;
 }

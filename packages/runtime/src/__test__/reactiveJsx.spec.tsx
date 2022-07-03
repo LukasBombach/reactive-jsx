@@ -13,7 +13,7 @@ describe("components", () => {
     expect(el).toHaveTextContent("text");
   });
 
-  test("accepts props", () => {
+  test.only("accepts props", () => {
     const Link = (props: { href: string; children: string }) => <a href={props.href}>{props.children}</a>;
     const el = render(<Link href="#/path">text</Link>);
     expect(el).toHaveAttribute("href", "#/path");

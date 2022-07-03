@@ -4,8 +4,8 @@ module.exports = {
     [
       "@babel/preset-react",
       {
-        pragma: "rjsx.el",
-        pragmaFrag: "rjsx.frag",
+        pragma: "rjsx.createElement",
+        pragmaFrag: "rjsx.Fragment",
       },
     ],
     "@babel/preset-typescript",

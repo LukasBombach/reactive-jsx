@@ -12,8 +12,12 @@ type ChildElement = HTMLElement | Text | Comment;
 /**
  *
  */
-export function renderChild(child: Child): HTMLElement | Text | Comment {
-  if (isFunction(child)) {
+export function renderChild(child: Child /*  | Child[] */): ChildElement /* | ChildElement[] */ {
+  /* if (Array.isArray(child)) {
+    console.log("its an array", child);
+
+    return child.flatMap(c => renderChild(c));
+  } else  */ if (isFunction(child)) {
     return reconcile(child);
   } else {
     return renderElement(child);
@@ -26,6 +30,9 @@ export function renderChild(child: Child): HTMLElement | Text | Comment {
 function reconcile(nextChild: () => ChildValue): ChildElement {
   return react(current => {
     const next = nextChild();
+
+    console.log("current", current);
+    console.log("next", next);
 
     if (current === undefined) {
       return renderElement(next);
@@ -83,5 +90,5 @@ function renderElement(child: ChildValue): ChildElement {
     return document.createComment(typeof child);
   }
 
-  throw new Error(`unknown child type ${typeof child}`);
+  throw new Error(`unknown element type ${typeof child}`);
 }

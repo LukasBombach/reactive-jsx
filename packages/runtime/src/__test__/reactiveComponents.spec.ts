@@ -23,7 +23,7 @@ describe("components", () => {
   });
 
   test("accepts props", () => {
-    const Link = ({ href, children }: LinkProps) => createElement("a", { href }, ...children);
+    const Link = ({ href, children }: LinkProps) => createElement("a", { href }, children);
     const el = render(Link({ href: "#/path", children: ["text"] }));
     expect(el).toHaveAttribute("href", "#/path");
     expect(el).toHaveTextContent("text");
