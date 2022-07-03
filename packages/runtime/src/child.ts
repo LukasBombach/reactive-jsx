@@ -9,17 +9,22 @@ import type { Child, ChildValue } from "./createElement";
 
 type ChildElement = HTMLElement | Text | Comment;
 
+/**
+ *
+ */
 export function renderChild(child: Child): HTMLElement | Text | Comment {
   if (isFunction(child)) {
-    return reconcile(undefined, child);
+    return reconcile(child);
   } else {
     return renderElement(child);
   }
 }
 
-// todo lots of perf and clean code improvements possible
-export function reconcile(current: ChildElement | undefined, nextChild: () => ChildValue): ChildElement {
-  return react(() => {
+/**
+ * todo lots of perf and clean code improvements possible
+ */
+function reconcile(nextChild: () => ChildValue): ChildElement {
+  return react(current => {
     const next = nextChild();
 
     if (current === undefined) {
@@ -62,7 +67,10 @@ export function reconcile(current: ChildElement | undefined, nextChild: () => Ch
   });
 }
 
-export function renderElement(child: ChildValue): ChildElement {
+/**
+ *
+ */
+function renderElement(child: ChildValue): ChildElement {
   if (isString(child) || isNumber(child)) {
     return new Text(child.toString());
   }

@@ -1,8 +1,7 @@
 import { react } from "./reaction";
-import { reconcile, renderChild } from "./child";
-import { isFunction, isString, isNumber, isBoolean } from "./typeGuards";
-import { isTag, isComponent, isElement, isReactiveChild, isEventHandler } from "./typeGuards";
-import { isNull, isUndefined } from "./typeGuards";
+import { renderChild } from "./child";
+import { isFunction } from "./typeGuards";
+import { isTag, isComponent, isEventHandler } from "./typeGuards";
 
 import type { Tag, Component, Props, Child, Element } from "./createElement";
 
