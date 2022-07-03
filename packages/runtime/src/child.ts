@@ -12,12 +12,10 @@ type ChildElement = HTMLElement | Text | Comment;
 /**
  *
  */
-export function renderChild(child: Child /*  | Child[] */): ChildElement /* | ChildElement[] */ {
-  /* if (Array.isArray(child)) {
-    console.log("its an array", child);
-
+export function renderChild(child: Child | Child[]): ChildElement | ChildElement[] {
+  if (Array.isArray(child)) {
     return child.flatMap(c => renderChild(c));
-  } else  */ if (isFunction(child)) {
+  } else if (isFunction(child)) {
     return reconcile(child);
   } else {
     return renderElement(child);
@@ -27,12 +25,16 @@ export function renderChild(child: Child /*  | Child[] */): ChildElement /* | Ch
 /**
  * todo lots of perf and clean code improvements possible
  */
-function reconcile(nextChild: () => ChildValue): ChildElement {
+function reconcile(nextChild: () => ChildValue | ChildValue[]): ChildElement | ChildElement[] {
   return react(current => {
     const next = nextChild();
 
     console.log("current", current);
     console.log("next", next);
+
+    if (Array.isArray(next)) {
+      return next.flatMap(c => renderChild(c));
+    }
 
     if (current === undefined) {
       return renderElement(next);
