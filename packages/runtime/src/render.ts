@@ -49,41 +49,7 @@ function renderTag<T extends Tag, P extends Props>(type: T, attrs: Attrs<P>, chi
     }
   });
 
-  children.map(child => renderChildX(child)).forEach(childEl => el.append(childEl));
+  children.map(child => renderChild(child)).forEach(childEl => el.append(childEl));
 
   return el;
 }
-
-/**
- *
- */
-function renderChildX(child: Child): HTMLElement | Text | Comment {
-  if (isFunction(child)) {
-    return reconcile(undefined, child);
-  } else {
-    return renderChild(child);
-  }
-}
-
-/**
- *
- */
-// function renderChild(child: Child): HTMLElement | Text | Comment {
-//   if (isString(child) || isNumber(child)) {
-//     return new Text(child.toString());
-//   }
-//
-//   if (isElement(child)) {
-//     return render(child);
-//   }
-//
-//   if (isReactiveChild(child)) {
-//     return react(() => child());
-//   }
-//
-//   if (isUndefined(child) || isNull(child) || isBoolean(child)) {
-//     return document.createComment(typeof child);
-//   }
-//
-//   throw new Error(`unknown child type ${typeof child}`);
-// }

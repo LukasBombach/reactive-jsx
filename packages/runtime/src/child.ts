@@ -1,22 +1,29 @@
 import { render } from "./render";
 import { react } from "./reaction";
 import { isFunction, isString, isNumber, isBoolean } from "./typeGuards";
-import { isTag, isComponent, isElement, isReactiveChild, isEventHandler } from "./typeGuards";
+import { isElement } from "./typeGuards";
 import { isTextNode, isCommentNode } from "./typeGuards";
 import { isNull, isUndefined } from "./typeGuards";
 
-import type { ChildValue } from "./createElement";
+import type { Child, ChildValue } from "./createElement";
 
 type ChildElement = HTMLElement | Text | Comment;
 
-// type ChildValue = Element | string | number | boolean | null | undefined;
+export function renderChild(child: Child): HTMLElement | Text | Comment {
+  if (isFunction(child)) {
+    return reconcile(undefined, child);
+  } else {
+    return renderElement(child);
+  }
+}
 
+// todo lots of perf and clean code improvements possible
 export function reconcile(current: ChildElement | undefined, nextChild: () => ChildValue): ChildElement {
-  react(() => {
+  return react(() => {
     const next = nextChild();
 
     if (current === undefined) {
-      return renderChild(next);
+      return renderElement(next);
     }
 
     if (isString(next) || isNumber(next)) {
@@ -33,16 +40,9 @@ export function reconcile(current: ChildElement | undefined, nextChild: () => Ch
       }
     }
 
-    /*  if (isElement(child)) {
-      if (child !== current) {
-        if (isUndefined(current)) {
-          element.append(child);
-        } else {
-          element.replaceChild(child, current);
-        }
-      }
-      return child;
-    } */
+    if (isElement(next)) {
+      current.parentElement?.replaceChild(renderElement(next), current);
+    }
 
     if (isBoolean(next) || isNull(next) || isUndefined(next)) {
       const str = typeof next;
@@ -62,7 +62,7 @@ export function reconcile(current: ChildElement | undefined, nextChild: () => Ch
   });
 }
 
-export function renderChild(child: ChildValue): ChildElement {
+export function renderElement(child: ChildValue): ChildElement {
   if (isString(child) || isNumber(child)) {
     return new Text(child.toString());
   }
