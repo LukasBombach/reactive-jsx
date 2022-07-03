@@ -1,4 +1,5 @@
 import { react } from "./reaction";
+import { reconcile, renderChild } from "./child";
 import { isFunction, isString, isNumber, isBoolean } from "./typeGuards";
 import { isTag, isComponent, isElement, isReactiveChild, isEventHandler } from "./typeGuards";
 import { isNull, isUndefined } from "./typeGuards";
@@ -48,7 +49,7 @@ function renderTag<T extends Tag, P extends Props>(type: T, attrs: Attrs<P>, chi
     }
   });
 
-  children.map(child => renderChild(child)).forEach(childEl => el.append(childEl));
+  children.map(child => renderChildX(child)).forEach(childEl => el.append(childEl));
 
   return el;
 }
@@ -56,22 +57,33 @@ function renderTag<T extends Tag, P extends Props>(type: T, attrs: Attrs<P>, chi
 /**
  *
  */
-function renderChild(child: Child): HTMLElement | Text | Comment {
-  if (isString(child) || isNumber(child)) {
-    return new Text(child.toString());
+function renderChildX(child: Child): HTMLElement | Text | Comment {
+  if (isFunction(child)) {
+    return reconcile(undefined, child);
+  } else {
+    return renderChild(child);
   }
-
-  if (isElement(child)) {
-    return render(child);
-  }
-
-  if (isReactiveChild(child)) {
-    return react(() => child());
-  }
-
-  if (isUndefined(child) || isNull(child) || isBoolean(child)) {
-    return document.createComment(typeof child);
-  }
-
-  throw new Error(`unknown child type ${typeof child}`);
 }
+
+/**
+ *
+ */
+// function renderChild(child: Child): HTMLElement | Text | Comment {
+//   if (isString(child) || isNumber(child)) {
+//     return new Text(child.toString());
+//   }
+//
+//   if (isElement(child)) {
+//     return render(child);
+//   }
+//
+//   if (isReactiveChild(child)) {
+//     return react(() => child());
+//   }
+//
+//   if (isUndefined(child) || isNull(child) || isBoolean(child)) {
+//     return document.createComment(typeof child);
+//   }
+//
+//   throw new Error(`unknown child type ${typeof child}`);
+// }

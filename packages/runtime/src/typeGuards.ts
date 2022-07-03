@@ -15,3 +15,6 @@ export const isUndefined = (value: unknown): value is undefined => typeof value 
 export const isFunction = (value: unknown): value is Function => typeof value === "function";
 
 export const isEventHandler = (value: string): value is `on${Capitalize<string>}` => /^on[A-Z]/.test(value);
+
+export const isTextNode = (node: Node): node is Text => node.nodeType === 3;
+export const isCommentNode = (node: Node): node is Comment => node.nodeType === 8;
