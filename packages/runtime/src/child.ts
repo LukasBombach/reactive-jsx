@@ -1,6 +1,6 @@
 import { render } from "./render";
 import { react } from "./reaction";
-import { isFunction, isString, isNumber, isBoolean } from "./typeGuards";
+import { isFunction, isString, isNumber, isBoolean, isArray } from "./typeGuards";
 import { isElement, isText } from "./typeGuards";
 import { isTextNode, isCommentNode } from "./typeGuards";
 import { isNull, isUndefined } from "./typeGuards";
@@ -12,16 +12,34 @@ type ChildElement = HTMLElement | Text | Comment;
 /**
  *
  */
-export function renderChild(child: Child | Child[]): ChildElement | ChildElement[] {
-  if (Array.isArray(child)) {
+export function renderChildren(children: ChildValue[] | (() => ChildValue[])): ChildElement[] {
+  /* if (Array.isArray(child)) {
     return child.flatMap(c => renderChild(c));
   } else if (isFunction(child)) {
     return reconcile(child);
   } else {
     return renderElement(child);
+  } */
+
+  if (isArray(children)) {
+    return children.map(renderElement);
+  } else {
+    return reconcileChildren(children);
   }
 }
 
+function reconcileChildren(children: () => ChildValue[]): ChildElement[] {
+  return react(current => {
+    // This will be the initial render
+    if (current === undefined) {
+      return children().map(renderElement);
+    }
+
+    // return reconcile();
+  });
+}
+
+/* 
 type A<T> = T | T[];
 type FA<T> = () => A<T>;
 type Current = [el: A<ChildElement>, val: A<ChildValue>];
@@ -50,7 +68,7 @@ function reconcile2(getNext: GetNext): A<ChildElement> {
   });
 
   return el;
-}
+} */
 
 /**
  * todo lots of perf and clean code improvements possible
@@ -109,11 +127,11 @@ function reconcile(nextChild: () => ChildValue | ChildValue[]): ChildElement | C
 /**
  * todo [1] why flatMap?
  */
-function renderElement(child: ChildValue | ChildValue[]): ChildElement | ChildElement[] {
+/* function renderElement(child: ChildValue | ChildValue[]): ChildElement | ChildElement[] {
   if (Array.isArray(child)) {
     return child.flatMap(c => renderElement(c)); // [1]
-  }
-
+  } */
+function renderElement(child: ChildValue): ChildElement {
   if (isString(child) || isNumber(child)) {
     return new Text(child.toString());
   }

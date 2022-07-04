@@ -21,3 +21,5 @@ export const isEventHandler = (value: string): value is `on${Capitalize<string>}
 
 export const isTextNode = (node: Node): node is Text => node.nodeType === 3;
 export const isCommentNode = (node: Node): node is Comment => node.nodeType === 8;
+
+export const isArray = Array.isArray;
