@@ -1,7 +1,7 @@
 import { render } from "./render";
 import { react } from "./reaction";
 import { isFunction, isString, isNumber, isBoolean } from "./typeGuards";
-import { isElement } from "./typeGuards";
+import { isElement, isText } from "./typeGuards";
 import { isTextNode, isCommentNode } from "./typeGuards";
 import { isNull, isUndefined } from "./typeGuards";
 
@@ -20,6 +20,36 @@ export function renderChild(child: Child | Child[]): ChildElement | ChildElement
   } else {
     return renderElement(child);
   }
+}
+
+type A<T> = T | T[];
+type FA<T> = () => A<T>;
+type Current = [el: A<ChildElement>, val: A<ChildValue>];
+type GetNext = FA<ChildValue>;
+
+function reconcile2(getNext: GetNext): A<ChildElement> {
+  const [elems] = react<Current>(currentOrUndefined => {
+    const next = getNext();
+
+    // This will be the initial render
+    if (currentOrUndefined === undefined) {
+      return [renderElement(next), next];
+    }
+
+    const [el, current] = currentOrUndefined;
+
+    if (Array.isArray(current) && Array.isArray(next)) {
+      throw new Error("todo");
+    }
+
+    if (isText(current) && isText(next)) {
+      if (next !== current) {
+        el.
+      }
+    }
+  });
+
+  return el;
 }
 
 /**
@@ -77,9 +107,13 @@ function reconcile(nextChild: () => ChildValue | ChildValue[]): ChildElement | C
 }
 
 /**
- *
+ * todo [1] why flatMap?
  */
-function renderElement(child: ChildValue): ChildElement {
+function renderElement(child: ChildValue | ChildValue[]): ChildElement | ChildElement[] {
+  if (Array.isArray(child)) {
+    return child.flatMap(c => renderElement(c)); // [1]
+  }
+
   if (isString(child) || isNumber(child)) {
     return new Text(child.toString());
   }
