@@ -5,9 +5,11 @@ import { isElement } from "./typeGuards";
 import { isTextNode, isCommentNode } from "./typeGuards";
 import { isNull, isUndefined } from "./typeGuards";
 
-import type { Child, ChildValue } from "./createElement";
+import type { Child, ChildValue, Element } from "./createElement";
 
-type ChildElement = HTMLElement | Text | Comment;
+interface ChildElement extends Element {
+  ref: HTMLElement | Text | Comment;
+}
 
 /**
  *
