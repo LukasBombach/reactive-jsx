@@ -14,12 +14,13 @@ export type Props<T extends ElementType = ElementType> =
   | null
   | undefined;
 
-export type ChildValue = Element | string | number | boolean | null | undefined;
-export type Child = ChildValue | (() => ChildValue);
+export type Child = A<Element | string | number | boolean | null | undefined>;
+export type A<T> = T | T[];
+export type R<T> = T | (() => T);
 
 export interface Element<T extends ElementType = ElementType> {
   type: T;
-  props: Omit<Props<T> & { children: Child[] }, "key">;
+  props: Omit<Props<T> & { children: R<Child>[] }, "key">;
   key: string | number | null;
 }
 
@@ -33,8 +34,8 @@ type Reactive<T> = {
 export function createElement<T extends Tag | Component<any>>(
   type: T,
   props?: Props<T>,
-  ...children: Child[]
+  ...children: R<Child>[]
 ): Element<T> {
   const { key = null, ...propsWithChildren } = { ...props, children };
-  return { type, props: propsWithChildren as Omit<Props<T> & { children: Child[] }, "key">, key };
+  return { type, props: propsWithChildren as Omit<Props<T> & { children: R<Child>[] }, "key">, key };
 }

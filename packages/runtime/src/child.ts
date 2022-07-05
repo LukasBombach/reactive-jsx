@@ -1,20 +1,22 @@
 import { render } from "./render";
 import { react } from "./reaction";
-import { isFunction, isString, isNumber, isBoolean } from "./typeGuards";
+import { isFunction, isString, isNumber, isBoolean, isArray } from "./typeGuards";
+import { isTextChild, isVoidChild } from "./typeGuards";
 import { isElement } from "./typeGuards";
 import { isTextNode, isCommentNode } from "./typeGuards";
 import { isNull, isUndefined } from "./typeGuards";
 
-import type { Child, ChildValue, Element } from "./createElement";
+import type { Child, R } from "./createElement";
 
-interface ChildElement extends Element {
+interface Result {
+  value: Child;
   ref: HTMLElement | Text | Comment;
 }
 
 /**
  *
  */
-export function renderChild(child: Child): ChildElement {
+export function renderChild(child: R<Child>): Result {
   if (isFunction(child)) {
     return reconcile(child);
   } else {
@@ -25,15 +27,34 @@ export function renderChild(child: Child): ChildElement {
 /**
  * todo lots of perf and clean code improvements possible
  */
-function reconcile(nextChild: () => ChildValue): ChildElement {
-  return react(current => {
+function reconcile(nextChild: () => Child): Result {
+  return react(currentOrInitial => {
     const next = nextChild();
 
-    if (current === undefined) {
-      return renderElement(next);
+    if (currentOrInitial === undefined) {
+      return { value: next, ref: renderElement(next) };
     }
 
-    if (isString(next) || isNumber(next)) {
+    const { value: current, ref } = currentOrInitial;
+
+    if (isArray(current) && isArray(next)) {
+      if (next.length !== current.length) {
+        throw new Error("todo: implement this case");
+      }
+      throw new Error("todo: implement this case");
+    }
+
+    if (isTextChild(current) && isTextChild(next)) {
+      if (current.toString() !== next.toString()) {
+        ref.nodeValue = next.toString();
+      }
+      return { ref, value: next };
+    }
+
+    if (isVoidChild(current) && isVoidChild(next)) {
+    }
+
+    /* if (isString(next) || isNumber(next)) {
       const str = next.toString();
       if (isTextNode(current)) {
         if (str !== current.nodeValue) {
@@ -65,14 +86,14 @@ function reconcile(nextChild: () => ChildValue): ChildElement {
       }
     }
 
-    throw new Error(`unknown child type ${typeof next}`);
+    throw new Error(`unknown child type ${typeof next}`); */
   });
 }
 
 /**
  *
  */
-function renderElement(child: ChildValue): ChildElement {
+function renderElement(child: Child): Result {
   if (isString(child) || isNumber(child)) {
     return new Text(child.toString());
   }
