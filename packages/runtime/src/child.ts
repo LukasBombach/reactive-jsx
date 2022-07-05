@@ -20,7 +20,7 @@ export function renderChild(child: R<Child>): Result {
   if (isFunction(child)) {
     return reconcile(child);
   } else {
-    return renderElement(child);
+    return { value: child, ref: renderElement(child) };
   }
 }
 
@@ -52,7 +52,17 @@ function reconcile(nextChild: () => Child): Result {
     }
 
     if (isVoidChild(current) && isVoidChild(next)) {
+      if (current !== next) {
+        ref.nodeValue = JSON.stringify(next);
+      }
+      return { ref, value: next };
     }
+
+    if (isElement(current) && isElement(next)) {
+      throw new Error(`unknown child type ${typeof next}`);
+    }
+
+    throw new Error(`unknown child type ${typeof next}`);
 
     /* if (isString(next) || isNumber(next)) {
       const str = next.toString();
@@ -93,7 +103,7 @@ function reconcile(nextChild: () => Child): Result {
 /**
  *
  */
-function renderElement(child: Child): Result {
+function renderElement(child: Child): HTMLElement | Text | Comment {
   if (isString(child) || isNumber(child)) {
     return new Text(child.toString());
   }
