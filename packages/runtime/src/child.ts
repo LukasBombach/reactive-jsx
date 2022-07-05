@@ -1,7 +1,7 @@
 import { render } from "./render";
 import { react } from "./reaction";
-import { isFunction, isString, isNumber, isBoolean, isArray } from "./typeGuards";
-import { isElement, isText } from "./typeGuards";
+import { isFunction, isString, isNumber, isBoolean } from "./typeGuards";
+import { isElement } from "./typeGuards";
 import { isTextNode, isCommentNode } from "./typeGuards";
 import { isNull, isUndefined } from "./typeGuards";
 
@@ -12,77 +12,20 @@ type ChildElement = HTMLElement | Text | Comment;
 /**
  *
  */
-export function renderChildren(children: ChildValue[] | (() => ChildValue[])): ChildElement[] {
-  /* if (Array.isArray(child)) {
-    return child.flatMap(c => renderChild(c));
-  } else if (isFunction(child)) {
+export function renderChild(child: Child): ChildElement {
+  if (isFunction(child)) {
     return reconcile(child);
   } else {
     return renderElement(child);
-  } */
-
-  if (isArray(children)) {
-    return children.map(renderElement);
-  } else {
-    return reconcileChildren(children);
   }
 }
-
-function reconcileChildren(children: () => ChildValue[]): ChildElement[] {
-  return react(current => {
-    // This will be the initial render
-    if (current === undefined) {
-      return children().map(renderElement);
-    }
-
-    // return reconcile();
-  });
-}
-
-/* 
-type A<T> = T | T[];
-type FA<T> = () => A<T>;
-type Current = [el: A<ChildElement>, val: A<ChildValue>];
-type GetNext = FA<ChildValue>;
-
-function reconcile2(getNext: GetNext): A<ChildElement> {
-  const [elems] = react<Current>(currentOrUndefined => {
-    const next = getNext();
-
-    // This will be the initial render
-    if (currentOrUndefined === undefined) {
-      return [renderElement(next), next];
-    }
-
-    const [el, current] = currentOrUndefined;
-
-    if (Array.isArray(current) && Array.isArray(next)) {
-      throw new Error("todo");
-    }
-
-    if (isText(current) && isText(next)) {
-      if (next !== current) {
-        el.
-      }
-    }
-  });
-
-  return el;
-} */
 
 /**
  * todo lots of perf and clean code improvements possible
  */
-function reconcile(nextChild: () => ChildValue | ChildValue[]): ChildElement | ChildElement[] {
+function reconcile(nextChild: () => ChildValue): ChildElement {
   return react(current => {
     const next = nextChild();
-
-    console.log("current", current);
-    console.log("next", next);
-
-    if (Array.isArray(next)) {
-      return next.flatMap(c => renderChild(c));
-    }
 
     if (current === undefined) {
       return renderElement(next);
@@ -125,12 +68,8 @@ function reconcile(nextChild: () => ChildValue | ChildValue[]): ChildElement | C
 }
 
 /**
- * todo [1] why flatMap?
+ *
  */
-/* function renderElement(child: ChildValue | ChildValue[]): ChildElement | ChildElement[] {
-  if (Array.isArray(child)) {
-    return child.flatMap(c => renderElement(c)); // [1]
-  } */
 function renderElement(child: ChildValue): ChildElement {
   if (isString(child) || isNumber(child)) {
     return new Text(child.toString());
