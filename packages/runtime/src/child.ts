@@ -39,9 +39,9 @@ function reconcile(nextChild: () => Child): Result {
 
     if (isArray(current) && isArray(next)) {
       if (next.length !== current.length) {
-        throw new Error("todo: implement this case");
+        throw new Error("todo: implement isArray different length");
       }
-      throw new Error("todo: implement this case");
+      throw new Error("todo: implement isArray same length");
     }
 
     if (isTextChild(current) && isTextChild(next)) {
@@ -59,7 +59,7 @@ function reconcile(nextChild: () => Child): Result {
     }
 
     if (isElement(current) && isElement(next)) {
-      throw new Error(`unknown child type ${typeof next}`);
+      throw new Error("todo: implement isElement");
     }
 
     throw new Error(`unknown child type ${typeof next}`);
