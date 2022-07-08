@@ -64,14 +64,12 @@ describe("components", () => {
   });
 
   test("reactive JSX Array", () => {
+    const parent = document.createElement("div");
     const val = value(["a", "b"]);
     const { ref } = renderChild(val.get);
-    expect(ref).toHaveLength(2);
-    expect(ref[0]).toHaveTextContent("a");
-    expect(ref[1]).toHaveTextContent("b");
+    parent.append(...ref);
+    expect(parent).toHaveTextContent("ab");
     val.set(["c", "d"]);
-    expect(ref).toHaveLength(2);
-    expect(ref[0]).toHaveTextContent("c");
-    expect(ref[1]).toHaveTextContent("d");
+    expect(parent).toHaveTextContent("cd");
   });
 });

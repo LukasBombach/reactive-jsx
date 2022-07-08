@@ -58,53 +58,29 @@ function reconcile(nextChild: () => Child): Result {
     }
 
     if (isArray(current) && isArray(next)) {
-      const parent = ref.parentElement;
+      // const parent = ref.parentNode;
+      const nextRef = next.map(c => renderChild(c).ref);
+      ref.slice(1).forEach(el => el.remove());
+      ref[0].replaceWith(...nextRef);
+      // console.log("update", { ref: nextRef.map(t => t.nodeValue), value: next });
+      // console.log("parent", parent, parent?.innerHTML);
+      return { ref: nextRef, value: next };
     }
 
     throw new Error(`unknown child type ${typeof next} ${JSON.stringify(next)}`);
-
-    /* if (isString(next) || isNumber(next)) {
-      const str = next.toString();
-      if (isTextNode(current)) {
-        if (str !== current.nodeValue) {
-          current.nodeValue = str;
-        }
-        return current;
-      } else {
-        const text = document.createTextNode(str);
-        current.parentElement?.replaceChild(text, current);
-        return text;
-      }
-    }
-
-    if (isElement(next)) {
-      current.parentElement?.replaceChild(renderElement(next), current);
-    }
-
-    if (isBoolean(next) || isNull(next) || isUndefined(next)) {
-      const str = typeof next;
-      if (isCommentNode(current)) {
-        if (str !== current.nodeValue) {
-          current.nodeValue = str;
-        }
-        return current;
-      } else {
-        const comment = document.createComment(str);
-        current.parentElement?.replaceChild(comment, current);
-        return comment;
-      }
-    }
-
-    throw new Error(`unknown child type ${typeof next}`); */
   });
 }
 
 /**
  *
  */
-function renderElement(child: Child): HTMLElement | Text | Comment {
+function renderElement(child: Child | Child[]): (HTMLElement | Text | Comment) | (HTMLElement | Text | Comment)[] {
   if (isString(child) || isNumber(child)) {
     return new Text(child.toString());
+  }
+
+  if (isArray(child)) {
+    return child.flatMap(c => renderElement(c));
   }
 
   if (isElement(child)) {
