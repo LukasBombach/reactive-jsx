@@ -71,5 +71,7 @@ describe("components", () => {
     expect(parent).toHaveTextContent("ab");
     val.set(["c", "d"]);
     expect(parent).toHaveTextContent("cd");
+    val.set(["e", "f", "g", "h"]);
+    expect(parent).toHaveTextContent("efgh");
   });
 });

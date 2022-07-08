@@ -58,12 +58,9 @@ function reconcile(nextChild: () => Child): Result {
     }
 
     if (isArray(current) && isArray(next)) {
-      // const parent = ref.parentNode;
       const nextRef = next.map(c => renderChild(c).ref);
       ref.slice(1).forEach(el => el.remove());
       ref[0].replaceWith(...nextRef);
-      // console.log("update", { ref: nextRef.map(t => t.nodeValue), value: next });
-      // console.log("parent", parent, parent?.innerHTML);
       return { ref: nextRef, value: next };
     }
 
