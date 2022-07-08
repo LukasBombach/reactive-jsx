@@ -29,8 +29,6 @@ export function renderChild(child: R<Child>): Result {
  */
 function reconcile(nextChild: () => Child): Result {
   return react(currentOrInitial => {
-    console.log(currentOrInitial);
-
     const next = nextChild();
 
     if (currentOrInitial === undefined) {
