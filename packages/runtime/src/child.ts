@@ -3,7 +3,6 @@ import { react } from "./reaction";
 import { isFunction, isString, isNumber, isBoolean, isArray } from "./typeGuards";
 import { isTextChild, isVoidChild } from "./typeGuards";
 import { isElement } from "./typeGuards";
-import { isTextNode, isCommentNode } from "./typeGuards";
 import { isNull, isUndefined } from "./typeGuards";
 
 import type { Child, R } from "./createElement";
