@@ -3,7 +3,7 @@ import type { Tag, Component, Element, Child, R } from "./createElement";
 export const isTag = (value: Tag | Component): value is Tag => typeof value === "string";
 export const isComponent = (value: Tag | Component): value is Component => typeof value === "function";
 export const isElement = (value: Child): value is Element =>
-  typeof value === "object" && value !== null && "type" in value && "props" in value && "type" in value;
+  typeof value === "object" && value !== null && "type" in value && "props" in value && "key" in value;
 
 export const isTextChild = (value: unknown): value is string | number =>
   typeof value === "string" || typeof value === "number";

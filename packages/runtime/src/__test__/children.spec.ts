@@ -54,11 +54,13 @@ describe("components", () => {
   });
 
   test("reactive JSX Element", () => {
+    const parent = document.createDocumentFragment();
     const val = value<Element<"div" | "span">>(createElement("div"));
     const { ref } = renderChild(val.get);
-    expect(ref).toBeInstanceOf(HTMLDivElement);
+    parent.append(ref);
+    expect(parent.firstElementChild).toBeInstanceOf(HTMLDivElement);
     val.set(createElement("span"));
-    expect(ref).toBeInstanceOf(HTMLSpanElement);
+    expect(parent.firstElementChild).toBeInstanceOf(HTMLSpanElement);
   });
 
   test("reactive JSX Array", () => {

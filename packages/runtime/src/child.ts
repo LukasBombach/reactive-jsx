@@ -37,13 +37,6 @@ function reconcile(nextChild: () => Child): Result {
 
     const { value: current, ref } = currentOrInitial;
 
-    if (isArray(current) && isArray(next)) {
-      if (next.length !== current.length) {
-        throw new Error("todo: implement isArray different length");
-      }
-      throw new Error("todo: implement isArray same length");
-    }
-
     if (isTextChild(current) && isTextChild(next)) {
       if (current.toString() !== next.toString()) {
         ref.nodeValue = next.toString();
@@ -59,10 +52,16 @@ function reconcile(nextChild: () => Child): Result {
     }
 
     if (isElement(current) && isElement(next)) {
-      throw new Error("todo: implement isElement");
+      const nextRef = render(next);
+      ref.replaceWith(nextRef);
+      return { ref: nextRef, value: next };
     }
 
-    throw new Error(`unknown child type ${typeof next}`);
+    if (isArray(current) && isArray(next)) {
+      const parent = ref.parentElement;
+    }
+
+    throw new Error(`unknown child type ${typeof next} ${JSON.stringify(next)}`);
 
     /* if (isString(next) || isNumber(next)) {
       const str = next.toString();
