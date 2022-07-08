@@ -29,6 +29,8 @@ export function renderChild(child: R<Child>): Result {
  */
 function reconcile(nextChild: () => Child): Result {
   return react(currentOrInitial => {
+    console.log(currentOrInitial);
+
     const next = nextChild();
 
     if (currentOrInitial === undefined) {
@@ -113,7 +115,7 @@ function renderElement(child: Child): HTMLElement | Text | Comment {
   }
 
   if (isBoolean(child) || isNull(child) || isUndefined(child)) {
-    return document.createComment(typeof child);
+    return document.createComment(JSON.stringify(child));
   }
 
   throw new Error(`unknown element type ${typeof child}`);

@@ -3,7 +3,7 @@ import { renderChild } from "./child";
 import { isFunction } from "./typeGuards";
 import { isTag, isComponent, isEventHandler } from "./typeGuards";
 
-import type { Tag, Component, Props, Child, Element } from "./createElement";
+import type { Tag, Component, Props, Child, Element, R } from "./createElement";
 
 type Attrs<P extends Props> = Omit<NonNullable<P>, "children">;
 
@@ -27,7 +27,7 @@ export function render({ type, props }: Element): HTMLElement {
 /**
  *
  */
-function renderComp<T extends Component, P extends Props>(type: T, attrs: Attrs<P>, children: Child[]): HTMLElement {
+function renderComp<T extends Component, P extends Props>(type: T, attrs: Attrs<P>, children: R<Child>[]): HTMLElement {
   const el = type({ ...attrs, children });
   return render(el);
 }
@@ -35,7 +35,7 @@ function renderComp<T extends Component, P extends Props>(type: T, attrs: Attrs<
 /**
  *
  */
-function renderTag<T extends Tag, P extends Props>(type: T, attrs: Attrs<P>, children: Child[]): HTMLElement {
+function renderTag<T extends Tag, P extends Props>(type: T, attrs: Attrs<P>, children: R<Child>[]): HTMLElement {
   const el = document.createElement(type);
 
   Object.entries(attrs).forEach(([name, value]) => {
@@ -51,7 +51,7 @@ function renderTag<T extends Tag, P extends Props>(type: T, attrs: Attrs<P>, chi
   children
     .map(child => renderChild(child))
     .flat()
-    .forEach(childEl => el.append(childEl));
+    .forEach(childEl => el.append(childEl.ref));
 
   return el;
 }
