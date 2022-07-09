@@ -11,7 +11,8 @@
     "build": "node scripts/build.js",
     "dev": "node scripts/dev.js",
     "repl": "node scripts/repl.js",
-    "test": "yarn jest"
+    "test": "jest",
+    "testd": "jest --watch jsxChildren.spec.tsx"
   },
   "devDependencies": {
     "@babel/core": "7.18.6",

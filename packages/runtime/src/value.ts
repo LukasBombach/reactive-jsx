@@ -39,7 +39,7 @@ export function value<T>(value: (() => T) | T, name?: string): Signal<T> {
           item.value.run();
           item = queue.next();
         }
-      }, `${name}.set`),
+      }),
   };
 
   // dirty and very bad hack
