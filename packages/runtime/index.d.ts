@@ -1,2 +1,1 @@
-declare const runtime: string;
-export default runtime;
+export { render } from "./src/render";

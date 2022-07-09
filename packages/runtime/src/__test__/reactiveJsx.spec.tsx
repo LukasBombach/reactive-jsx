@@ -1,6 +1,6 @@
 import userEvent from "@testing-library/user-event";
+import { render } from "@reactive-jsx/runtime";
 import "@testing-library/jest-dom";
-import { render } from "../render";
 
 describe("components", () => {
   const user = userEvent.setup();
