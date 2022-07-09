@@ -6,6 +6,4 @@ export interface Transaction {
   id: number;
 }
 
-global.transactionHack = { queue: new Set(), current: null, id: Math.random() };
-
-export const transaction: Transaction = global.transactionHack;
+export const transaction: Transaction = { queue: new Set(), current: null, id: Math.random() };

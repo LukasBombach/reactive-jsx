@@ -8,18 +8,18 @@ export type Reaction<T> = {
   run: (from?: string) => T;
 };
 
-export function react<T>(fn: (value: T | undefined, transaction: Transaction) => T, name?: string): T {
+export function react<T>(fn: (value: T | undefined) => T, name?: string): T {
   let value: T | undefined = undefined;
   const reaction: Reaction<T> = {
     name,
     run: from => {
       if (from) debug("run", from, ">", name);
       else debug("run", name);
-      const previous = global.transactionHack.current;
-      global.transactionHack.current = reaction;
-      debug("global.transactionHack", global.transactionHack);
+      const previous = transaction.current;
+      transaction.current = reaction;
+      debug("transaction", transaction);
       value = fn(value);
-      global.transactionHack.current = previous;
+      transaction.current = previous;
       return value;
     },
   };
