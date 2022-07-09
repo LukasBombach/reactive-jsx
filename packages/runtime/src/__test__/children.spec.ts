@@ -2,6 +2,7 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { value } from "../value";
 import { createElement } from "../createElement";
+import { render } from "../render";
 import { renderChild } from "../child";
 
 import type { Element } from "../createElement";
@@ -73,5 +74,13 @@ describe("components", () => {
     expect(parent).toHaveTextContent("cd");
     val.set(["e", "f", "g", "h"]);
     expect(parent).toHaveTextContent("efgh");
+  });
+
+  test("x", () => {
+    const text = value(() => "text");
+    const button = render(createElement("button", {}, () => text.get()));
+    expect(button).toHaveTextContent("text");
+    text.set("a different text");
+    expect(button).toHaveTextContent("a different text");
   });
 });
