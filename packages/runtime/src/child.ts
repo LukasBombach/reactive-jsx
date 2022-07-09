@@ -30,10 +30,10 @@ function reconcile(nextChild: () => Child): Result {
   return react(currentOrInitial => {
     const next = nextChild();
 
-    console.log(currentOrInitial, { next });
+    // console.log(currentOrInitial, { next });
 
     if (currentOrInitial === undefined) {
-      console.log("returning", { value: next, ref: renderElement(next) });
+      // console.log("returning", { value: next, ref: renderElement(next) });
 
       return { value: next, ref: renderElement(next) };
     }
@@ -68,7 +68,7 @@ function reconcile(nextChild: () => Child): Result {
     }
 
     throw new Error(`unknown child type ${typeof next} ${JSON.stringify(next)}`);
-  });
+  }, "reconcile");
 }
 
 /**

@@ -177,7 +177,7 @@ const runtimeImports = template.smart(`
 `);
 
 const declaration = template.statement`
-  const NAME = rjsx.value(() => VALUE);
+  const NAME = rjsx.value(() => VALUE, "NAME");
 `;
 
 const getter = template.statement`

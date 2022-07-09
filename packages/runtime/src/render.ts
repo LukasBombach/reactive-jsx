@@ -41,12 +41,12 @@ function renderTag<T extends Tag, P extends Props>(type: T, attrs: Attrs<P>, chi
   Object.entries(attrs).forEach(([name, value]) => {
     if (isEventHandler(name)) {
       el.addEventListener(name.substring(2).toLowerCase(), () => {
-        console.log("ev handler", name.substring(2).toLowerCase(), "called");
+        //console.log("ev handler", name.substring(2).toLowerCase(), "called");
         debugger;
         value();
       });
     } else if (isFunction(value)) {
-      react(() => el.setAttribute(name, value()));
+      react(() => el.setAttribute(name, value()), "attr");
     } else {
       el.setAttribute(name, value);
     }

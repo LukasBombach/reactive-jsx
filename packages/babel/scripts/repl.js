@@ -56,8 +56,8 @@ chokidar.watch([pluginDist, replSrc]).on("all", async (event, path) => {
     });
 
     console.log("\n");
-    console.log(source);
-    console.log("\n--\n\n");
+    // console.log(source);
+    // console.log("\n--\n\n");
     console.log(transformed.code);
   } catch (error) {
     console.error(error);

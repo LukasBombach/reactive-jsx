@@ -1,5 +1,6 @@
 import { transaction } from "./transaction";
 import { react } from "./reaction";
+import { debug } from "./debug";
 import { isFunction } from "./typeGuards";
 
 import type { Reaction } from "./reaction";
@@ -9,22 +10,26 @@ export interface Signal<T> {
   value: T;
   get: () => T;
   set: (value: (() => T) | T) => void;
-  reactions: Set<Reaction>;
+  reactions: Set<Reaction<any>>;
 }
 
 export function value<T>(value: (() => T) | T, name?: string): Signal<T> {
+  debug("init", name, isFunction(value) ? value() : value);
   const signal: Signal<T> = {
     value: undefined as any, //because of the very dirty setter below // isFunction(value) ? value() : value,
     reactions: new Set(),
     get: () => {
       // todo prevent recursion when this getter is inside its setter here
       if (transaction.current) signal.reactions.add(transaction.current);
+      debug("get", name, "<", transaction, transaction.current?.name);
       return signal.value;
     },
     set: value =>
       react(() => {
         signal.value = isFunction(value) ? value() : value;
         signal.reactions.forEach(r => transaction.queue.add(r));
+
+        debug("set", name, signal.value);
 
         // queue.values() returns an iterator over the reactions of the set
         const queue = transaction.queue.values();
@@ -36,10 +41,10 @@ export function value<T>(value: (() => T) | T, name?: string): Signal<T> {
         // 📌 This ends up working through the reaction tree depth-first
         while (!item.done) {
           transaction.queue.delete(item.value);
-          item.value.run();
+          item.value.run(name);
           item = queue.next();
         }
-      }),
+      }, `${name}.set`),
   };
 
   // dirty and very bad hack

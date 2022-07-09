@@ -1,6 +1,7 @@
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { render } from "../render";
+import { stack } from "../debug";
 
 describe("components", () => {
   const user = userEvent.setup();
@@ -11,7 +12,7 @@ describe("components", () => {
     const el = render(<Button />);
     expect(el).toHaveTextContent("text");
     await user.click(el);
-    text = "a different text";
+    console.log("\n", stack.map(line => line.join(" ")).join("\n"));
     expect(el).toHaveTextContent("a different text");
   });
 });

@@ -1,16 +1,17 @@
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { render } from "../render";
+import { stack, clear } from "../debug";
 
-describe("components", () => {
+describe("reactive jsx element children", () => {
   const user = userEvent.setup();
 
-  test("reactive jsx element children", async () => {
-    let text = "text";
-    const Button = () => <button onClick={() => (text = "a different text")}>{text}</button>;
+  test("x", async () => {
+    let text = "lorem";
+    const Button = () => <button onClick={() => (text = "ipsum")}>{text}</button>;
     const el = render(<Button />);
-    expect(el).toHaveTextContent("text");
+    expect(el).toHaveTextContent("lorem");
     await user.click(el);
-    expect(el).toHaveTextContent("a different text");
+    expect(el).toHaveTextContent("ipsum");
   });
 });
