@@ -13,7 +13,7 @@ describe("components", () => {
     expect(el).toHaveTextContent("text");
   });
 
-  test.only("accepts props", () => {
+  test("accepts props", () => {
     const Link = (props: { href: string; children: string }) => <a href={props.href}>{props.children}</a>;
     const el = render(<Link href="#/path">text</Link>);
     expect(el).toHaveAttribute("href", "#/path");
@@ -30,11 +30,11 @@ describe("components", () => {
   });
 
   test("reactive jsx element children", async () => {
-    let text = "text";
-    const Link = () => <a onClick={() => (text = "a different text")}>{text}</a>;
+    let text = "lorem";
+    const Link = () => <a onClick={() => (text = "ipsum")}>{text}</a>;
     const el = render(<Link />);
-    expect(el).toHaveTextContent("text");
+    expect(el).toHaveTextContent("lorem");
     await user.click(el);
-    expect(el).toHaveTextContent("a different text");
+    expect(el).toHaveTextContent("ipsum");
   });
 });

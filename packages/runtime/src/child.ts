@@ -9,7 +9,7 @@ import type { Child, R } from "./createElement";
 
 interface Result {
   value: Child;
-  ref: HTMLElement | Text | Comment;
+  ref: (HTMLElement | Text | Comment) | (HTMLElement | Text | Comment)[];
 }
 
 /**
@@ -29,8 +29,6 @@ export function renderChild(child: R<Child>): Result {
 function reconcile(nextChild: () => Child): Result {
   return react(currentOrInitial => {
     const next = nextChild();
-
-    // console.log(currentOrInitial, { next });
 
     if (currentOrInitial === undefined) {
       // console.log("returning", { value: next, ref: renderElement(next) });
