@@ -3,6 +3,7 @@ import { react } from "./reaction";
 import { debug } from "./debug";
 import { isFunction } from "./typeGuards";
 
+import type { Transaction } from "./transaction";
 import type { Reaction } from "./reaction";
 
 export interface Signal<T> {
@@ -20,19 +21,19 @@ export function value<T>(value: (() => T) | T, name?: string): Signal<T> {
     reactions: new Set(),
     get: () => {
       // todo prevent recursion when this getter is inside its setter here
-      if (transaction.current) signal.reactions.add(transaction.current);
-      debug("get", name, "<", transaction, transaction.current?.name);
+      if (global.transactionHack.current) signal.reactions.add(global.transactionHack.current);
+      debug("get", name, "<", global.transactionHack, global.transactionHack.current?.name);
       return signal.value;
     },
     set: value =>
       react(() => {
         signal.value = isFunction(value) ? value() : value;
-        signal.reactions.forEach(r => transaction.queue.add(r));
+        signal.reactions.forEach(r => global.transactionHack.queue.add(r));
 
         debug("set", name, signal.value);
 
         // queue.values() returns an iterator over the reactions of the set
-        const queue = transaction.queue.values();
+        const queue = global.transactionHack.queue.values();
         let item = queue.next();
 
         // we iterate over the reactions until none is left and run each one
@@ -40,7 +41,7 @@ export function value<T>(value: (() => T) | T, name?: string): Signal<T> {
         // while we are iterating over it
         // 📌 This ends up working through the reaction tree depth-first
         while (!item.done) {
-          transaction.queue.delete(item.value);
+          global.transactionHack.queue.delete(item.value);
           item.value.run(name);
           item = queue.next();
         }
