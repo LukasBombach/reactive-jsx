@@ -106,7 +106,7 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
           bindings
             .flatMap(binding => binding.referencePaths)
             .map(path => path.getStatementParent())
-            .filter(path => path !== null)
+            .filter((path): path is NodePath<Statement> => path !== null)
             .filter(path => !path.isReturnStatement()) // dunno why
             //  if (state.statements.some(parent => statement.isDescendant(parent))) return;
             .forEach(path => {

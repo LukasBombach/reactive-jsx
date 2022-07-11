@@ -25,8 +25,6 @@ chokidar.watch([pluginSrc]).on("all", async () => {
 });
 
 chokidar.watch([pluginDist, replSrc]).on("all", async (event, path) => {
-  console.clear();
-  console.log("trigger", event, path);
   try {
     const reactiveJsxPlugin = await import(`../${pluginDist}?cachebust=${Date.now()}`).then(m => m.default);
     const source = await fs.readFile(replSrc, "utf-8");
@@ -54,10 +52,9 @@ chokidar.watch([pluginDist, replSrc]).on("all", async (event, path) => {
       ],
       plugins: [reactiveJsxPlugin],
     });
-
+    console.clear();
+    console.log("trigger", event, path);
     console.log("\n");
-    // console.log(source);
-    // console.log("\n--\n\n");
     console.log(transformed.code);
   } catch (error) {
     console.error(error);
