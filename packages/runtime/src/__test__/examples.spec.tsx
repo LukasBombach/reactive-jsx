@@ -46,4 +46,63 @@ describe("components", () => {
     expect(getByTestId(container, "p1")).toHaveTextContent("2");
     expect(getByTestId(container, "p2")).toHaveTextContent("4");
   });
+
+  test("side effect", async () => {
+    const spy = jest.spyOn(document, "title", "set").mockImplementation(() => {});
+
+    const Button = () => {
+      let title = "lorem";
+      document.title = title;
+      return <button onClick={() => (title = "ipsum")} />;
+    };
+
+    const el = render(<Button />);
+
+    expect(spy).lastCalledWith("lorem");
+    await user.click(el);
+    expect(spy).lastCalledWith("ipsum");
+
+    spy.mockRestore();
+  });
+
+  test("if statement", async () => {
+    const Button = () => {
+      let count = 0;
+      let text = "even";
+
+      if (count % 2 === 0) {
+        text = "even";
+      } else {
+        text = "odd";
+      }
+
+      return <button onClick={() => count++}>{text}</button>;
+    };
+
+    const el = render(<Button />);
+
+    expect(el).toHaveTextContent("even");
+    await user.click(el);
+    expect(el).toHaveTextContent("odd");
+  });
+
+  test("for statement", async () => {
+    const callback = jest.fn();
+
+    const Button = () => {
+      let count = 0;
+
+      for (let i = 0; i < count; i++) {
+        callback();
+      }
+
+      return <button onClick={() => (count = 10)} />;
+    };
+
+    const el = render(<Button />);
+
+    expect(callback).toHaveBeenCalledTimes(0);
+    await user.click(el);
+    expect(callback).toHaveBeenCalledTimes(10);
+  });
 });
