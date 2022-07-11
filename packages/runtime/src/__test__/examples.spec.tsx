@@ -47,6 +47,28 @@ describe("components", () => {
     expect(getByTestId(container, "p2")).toHaveTextContent("4");
   });
 
+  test("assignments", async () => {
+    const Button = () => {
+      let count = 0;
+      let double = count * 2;
+      let triple;
+      triple = count * 3;
+      return (
+        <button onClick={() => count++}>
+          {count} {double} {triple}
+        </button>
+      );
+    };
+
+    const el = render(<Button />);
+
+    expect(el).toHaveTextContent("0 0 0");
+    await user.click(el);
+    expect(el).toHaveTextContent("1 2 3");
+    await user.click(el);
+    expect(el).toHaveTextContent("2 4 6");
+  });
+
   test("side effect", async () => {
     const spy = jest.spyOn(document, "title", "set").mockImplementation(() => {});
 
