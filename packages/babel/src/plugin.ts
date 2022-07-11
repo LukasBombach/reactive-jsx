@@ -103,10 +103,16 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
             });
           });
 
-          // statements.forEach(path => {
-          //   const VALUE = cloneDeepWithoutLoc(path.node);
-          //   path.replaceWith(reaction({ VALUE }));
-          // });
+          bindings
+            .flatMap(binding => binding.referencePaths)
+            .map(path => path.getStatementParent())
+            .filter(path => path !== null)
+            .filter(path => !path.isReturnStatement()) // dunno why
+            //  if (state.statements.some(parent => statement.isDescendant(parent))) return;
+            .forEach(path => {
+              const VALUE = cloneDeepWithoutLoc(path.node);
+              path.replaceWith(reaction({ VALUE }));
+            });
 
           // Convert declarations (`let count = X` becomes `const [count, setCount] = rjsx.val(X)`)
 
@@ -198,6 +204,10 @@ const add = template.expression`
 
 const sub = template.expression`
   NAME.get() - VALUE
+`;
+
+const reaction = template.statement`
+  rjsx.react(() => { VALUE });
 `;
 
 function getMutatedIdentifiersInEventHandlers(path: NodePath<Program>): NodePath<Identifier>[] {
