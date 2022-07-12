@@ -103,16 +103,37 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
             });
           });
 
+          const statements: NodePath<Statement>[] = [];
+
+          console.log(bindings.map(b => b.path.toString()));
+
+          console.log(bindings.map(b => b.referencePaths).map(p => p.toString()));
+
+          console.log(
+            bindings.map(b =>
+              b.referencePaths
+                .filter(path => !path.findParent(parent => parent.isJSXElement()))
+                .map(path => path.getStatementParent())
+                .map(p => p?.toString())
+            )
+          );
+
           bindings
             .flatMap(binding => binding.referencePaths)
+            .filter(path => !path.findParent(parent => parent.isJSXElement()))
             .map(path => path.getStatementParent())
             .filter((path): path is NodePath<Statement> => path !== null)
-            .filter(path => !path.isReturnStatement()) // dunno why
-            //  if (state.statements.some(parent => statement.isDescendant(parent))) return;
-            .forEach(path => {
-              const VALUE = cloneDeepWithoutLoc(path.node);
-              path.replaceWith(reaction({ VALUE }));
-            });
+            .filter(path => !path.isReturnStatement())
+            .filter(path => !statements.includes(path))
+            .filter(path => !statements.some(parent => path.isDescendant(parent)))
+            .forEach(path => statements.push(path));
+
+          //console.log(statements.map(s => s.toString()));
+
+          statements.forEach(path => {
+            const VALUE = cloneDeepWithoutLoc(path.node);
+            path.replaceWith(reaction({ VALUE }));
+          });
 
           // Convert declarations (`let count = X` becomes `const [count, setCount] = rjsx.val(X)`)
 
@@ -162,6 +183,8 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
 
           // Inject runtime
           path.unshiftContainer("body", runtimeImports());
+
+          console.log(path.toString());
         },
       },
     },

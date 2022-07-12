@@ -87,7 +87,7 @@ describe("components", () => {
     spy.mockRestore();
   });
 
-  test.skip("if statement", async () => {
+  test("if statement", async () => {
     const Button = () => {
       let count = 0;
       let text = "even";
