@@ -6,7 +6,7 @@ import "@testing-library/jest-dom";
 describe("components", () => {
   const user = userEvent.setup();
 
-  test.skip("state & children", async () => {
+  test("state & children", async () => {
     let count = 0;
     const Button = () => <button onClick={() => count++}>{count}</button>;
     const el = render(<Button />);
@@ -15,7 +15,7 @@ describe("components", () => {
     expect(el).toHaveTextContent("1");
   });
 
-  test.skip("state & attrs", async () => {
+  test("state & attrs", async () => {
     let type: "button" | "submit" = "button";
     const Button = () => <button type={type} onClick={() => (type = "submit")} />;
     const el = render(<Button />);
@@ -24,7 +24,7 @@ describe("components", () => {
     expect(el).toHaveAttribute("type", "submit");
   });
 
-  test.skip("context", async () => {
+  test("context", async () => {
     let count = 0;
     const Button = () => <button onClick={() => count++} />;
     const P1 = () => <p data-testid="p1">{count * 2}</p>;
@@ -47,7 +47,7 @@ describe("components", () => {
     expect(getByTestId(container, "p2")).toHaveTextContent("4");
   });
 
-  test.skip("assignments", async () => {
+  test("assignments", async () => {
     const Button = () => {
       let count = 0;
       let double = count * 2;
@@ -69,7 +69,7 @@ describe("components", () => {
     expect(el).toHaveTextContent("2 4 6");
   });
 
-  test.skip("side effect", async () => {
+  test("side effect", async () => {
     const spy = jest.spyOn(document, "title", "set").mockImplementation(() => {});
 
     const Button = () => {
@@ -87,7 +87,7 @@ describe("components", () => {
     spy.mockRestore();
   });
 
-  test("if statement", async () => {
+  /* test("if statement", async () => {
     const Button = () => {
       let count = 0;
       let text = "even";
@@ -106,9 +106,9 @@ describe("components", () => {
     expect(el).toHaveTextContent("even");
     await user.click(el);
     expect(el).toHaveTextContent("odd");
-  });
+  }); */
 
-  test.skip("for statement", async () => {
+  test("for statement", async () => {
     const callback = jest.fn();
 
     const Button = () => {
