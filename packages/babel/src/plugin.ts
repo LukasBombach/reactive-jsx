@@ -105,18 +105,18 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
 
           const statements: NodePath<Statement>[] = [];
 
-          console.log(bindings.map(b => b.path.toString()));
+          // console.log(bindings.map(b => b.path.toString()));
 
-          console.log(bindings.map(b => b.referencePaths).map(p => p.toString()));
+          // console.log(bindings.map(b => b.referencePaths).map(p => p.toString()));
 
-          console.log(
+          /* console.log(
             bindings.map(b =>
               b.referencePaths
                 .filter(path => !path.findParent(parent => parent.isJSXElement()))
                 .map(path => path.getStatementParent())
                 .map(p => p?.toString())
             )
-          );
+          ); */
 
           bindings
             .flatMap(binding => binding.referencePaths)
@@ -184,7 +184,7 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
           // Inject runtime
           path.unshiftContainer("body", runtimeImports());
 
-          console.log(path.toString());
+          // console.log(path.toString());
         },
       },
     },
@@ -245,6 +245,17 @@ function getMutatedIdentifiersInEventHandlers(path: NodePath<Program>): NodePath
           },
           UpdateExpression: path => {
             paths.push(path.get("argument"));
+          },
+          Identifier: path => {
+            // path3.scope.getBinding(path3.node.name).path.type
+            // FunctionDeclaration
+
+            // VariableDeclarator
+            // path3.scope.getBinding(path3.node.name).path.get("init").type
+            // ArrowFunctionExpression
+            // FunctionDeclaration
+
+            debugger;
           },
         });
       }

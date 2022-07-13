@@ -12,7 +12,7 @@
     "dev": "node scripts/dev.js",
     "repl": "node scripts/repl.js",
     "test": "jest",
-    "testd": "jest --watch jsxChildren.spec.tsx"
+    "testd": "jest --watch __test__/examples.spec.tsx"
   },
   "devDependencies": {
     "@babel/core": "7.18.6",
