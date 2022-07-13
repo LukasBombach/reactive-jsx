@@ -3,9 +3,9 @@ import userEvent from "@testing-library/user-event";
 import { render } from "@reactive-jsx/runtime";
 import "@testing-library/jest-dom";
 
-describe("components", () => {
-  const user = userEvent.setup();
+const user = userEvent.setup();
 
+describe("components", () => {
   test("state & children", async () => {
     let count = 0;
     const Button = () => <button onClick={() => count++}>{count}</button>;
@@ -126,5 +126,40 @@ describe("components", () => {
     expect(callback).toHaveBeenCalledTimes(0);
     await user.click(el);
     expect(callback).toHaveBeenCalledTimes(10);
+  });
+});
+
+describe.only("fn calls", () => {
+  test("function statement", async () => {
+    let count = 0;
+    function inc() {
+      count++;
+    }
+    const Button = () => <button onClick={inc}>{count}</button>;
+    const el = render(<Button />);
+    expect(el).toHaveTextContent("0");
+    await user.click(el);
+    expect(el).toHaveTextContent("1");
+  });
+
+  test("function in const", async () => {
+    let count = 0;
+    const inc = () => count++;
+    const Button = () => <button onClick={inc}>{count}</button>;
+    const el = render(<Button />);
+    expect(el).toHaveTextContent("0");
+    await user.click(el);
+    expect(el).toHaveTextContent("1");
+  });
+
+  test("fn called by fn", async () => {
+    let count = 0;
+    const inc = () => inc2();
+    const inc2 = () => count++;
+    const Button = () => <button onClick={inc}>{count}</button>;
+    const el = render(<Button />);
+    expect(el).toHaveTextContent("0");
+    await user.click(el);
+    expect(el).toHaveTextContent("1");
   });
 });
