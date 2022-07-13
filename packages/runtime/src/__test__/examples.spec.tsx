@@ -132,7 +132,7 @@ describe("doesnt work yet", () => {
 });
 
 describe.only("fn calls", () => {
-  test("function statement", async () => {
+  /*  test("function statement", async () => {
     let count = 0;
 
     function inc() {
@@ -148,12 +148,12 @@ describe.only("fn calls", () => {
     );
 
     const el = render(<Button />);
-    // expect(el).toHaveTextContent("0");
-    // await user.click(el);
-    // expect(el).toHaveTextContent("1");
-  });
+    expect(el).toHaveTextContent("0");
+    await user.click(el);
+    expect(el).toHaveTextContent("1");
+  }); */
 
-  /* test("function statement", async () => {
+  test("function statement", async () => {
     let count = 0;
     function inc() {
       count++;
@@ -165,7 +165,7 @@ describe.only("fn calls", () => {
     expect(el).toHaveTextContent("1");
   });
 
-  test("function in const", async () => {
+  /* test("function in const", async () => {
     let count = 0;
     const inc = () => count++;
     const Button = () => <button onClick={inc}>{count}</button>;
@@ -173,9 +173,9 @@ describe.only("fn calls", () => {
     expect(el).toHaveTextContent("0");
     await user.click(el);
     expect(el).toHaveTextContent("1");
-  });
+  }); */
 
-  test("fn called by fn", async () => {
+  /* test.skip("fn called by fn", async () => {
     let count = 0;
     const inc = () => inc2();
     const inc2 = () => count++;

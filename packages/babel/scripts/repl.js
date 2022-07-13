@@ -26,10 +26,10 @@ chokidar.watch([pluginSrc]).on("all", async () => {
 
 chokidar.watch([pluginDist, replSrc]).on("all", async (event, path) => {
   try {
-    console.clear();
-
     const reactiveJsxPlugin = await import(`../${pluginDist}?cachebust=${Date.now()}`).then(m => m.default);
     const source = await fs.readFile(replSrc, "utf-8");
+
+    console.log("\033[2J");
 
     const transformed = await transformAsync(source, {
       filename: "repl.tsx",
@@ -57,7 +57,7 @@ chokidar.watch([pluginDist, replSrc]).on("all", async (event, path) => {
 
     //console.log("trigger", event, path);
     // console.log("\n");
-    //console.log(transformed.code);
+    console.log(transformed.code);
   } catch (error) {
     console.error(error);
   }

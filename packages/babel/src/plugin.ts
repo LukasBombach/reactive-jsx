@@ -20,6 +20,7 @@ import type {
   VariableDeclarator,
   Program,
   VariableDeclaration,
+  FunctionDeclaration,
 } from "@babel/types";
 
 let runs = 0;
@@ -120,6 +121,7 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
 
           bindings
             .flatMap(binding => binding.referencePaths)
+            .filter(path => !(path.parentPath && cheapTempIsReactiveSetter(path.parentPath)))
             .filter(path => !path.findParent(parent => parent.isJSXElement()))
             .map(path => path.getStatementParent())
             .filter((path): path is NodePath<Statement> => path !== null)
@@ -128,7 +130,25 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
             .filter(path => !statements.some(parent => path.isDescendant(parent)))
             .forEach(path => statements.push(path));
 
-          //console.log(statements.map(s => s.toString()));
+          console.log(
+            bindings
+              .flatMap(binding => binding.referencePaths)
+              .filter(path => !path.findParent(parent => parent.isJSXElement()))
+              .map(path => path.parentPath)
+              .map(s => {
+                return [s?.toString(), s && cheapTempIsReactiveSetter(s)];
+              })
+          );
+
+          console.log(statements.map(s => s.toString()));
+
+          function cheapTempIsReactiveSetter(path: NodePath<Node>): boolean {
+            return (
+              path.isCallExpression() &&
+              path.get("callee").isMemberExpression() &&
+              (path.get("callee").get("property") as NodePath<Identifier>)?.node?.name === "set"
+            );
+          }
 
           statements.forEach(path => {
             const VALUE = cloneDeepWithoutLoc(path.node);
@@ -233,6 +253,25 @@ const reaction = template.statement`
   rjsx.react(() => { VALUE });
 `;
 
+function followFunctionForMutations(
+  path: NodePath<FunctionDeclaration | ArrowFunctionExpression | FunctionExpression>,
+  identifiers: NodePath<Node>[]
+) {
+  path.traverse({
+    AssignmentExpression: path => {
+      identifiers.push(path.get("left"));
+    },
+    UpdateExpression: path => {
+      identifiers.push(path.get("argument"));
+    },
+    CallExpression: path => {
+      const callee = path.get("callee");
+      // todo
+      console.log(callee);
+    },
+  });
+}
+
 function getMutatedIdentifiersInEventHandlers(path: NodePath<Program>): NodePath<Identifier>[] {
   const paths: NodePath<Node>[] = [];
 
@@ -247,15 +286,18 @@ function getMutatedIdentifiersInEventHandlers(path: NodePath<Program>): NodePath
             paths.push(path.get("argument"));
           },
           Identifier: path => {
-            // path3.scope.getBinding(path3.node.name).path.type
-            // FunctionDeclaration
-
-            // VariableDeclarator
-            // path3.scope.getBinding(path3.node.name).path.get("init").type
-            // ArrowFunctionExpression
-            // FunctionDeclaration
-
-            debugger;
+            const binding = path.scope.getBinding(path.node.name);
+            if (!binding) return;
+            if (binding.path.isFunctionDeclaration()) {
+              followFunctionForMutations(binding.path, paths);
+            }
+            if (binding.path.isVariableDeclarator()) {
+              const init = binding.path.get("init");
+              if (!init) return;
+              if (init.isArrowFunctionExpression() || init.isFunctionExpression()) {
+                followFunctionForMutations(init, paths);
+              }
+            }
           },
         });
       }
