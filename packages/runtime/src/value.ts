@@ -21,7 +21,9 @@ export function value<T>(value: (() => T) | T, name?: string): Signal<T> {
     reactions: new Set(),
     get: () => {
       // todo prevent recursion when this getter is inside its setter here
-      if (transaction.current) signal.reactions.add(transaction.current);
+      // todo ^ that todo is solved in the worst manner:
+      const reactionIsSetter = transaction.current?.name === `${name}.set`;
+      if (transaction.current && !reactionIsSetter) signal.reactions.add(transaction.current);
       debug("get", name, "<", transaction, transaction.current?.name);
       return signal.value;
     },

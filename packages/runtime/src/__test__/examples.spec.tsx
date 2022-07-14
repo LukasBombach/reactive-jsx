@@ -6,7 +6,7 @@ import "@testing-library/jest-dom";
 const user = userEvent.setup();
 
 describe("components", () => {
-  /* test("state & children", async () => {
+  test("state & children", async () => {
     let count = 0;
     const Button = () => <button onClick={() => count++}>{count}</button>;
     const el = render(<Button />);
@@ -105,7 +105,7 @@ describe("components", () => {
     expect(callback).toHaveBeenCalledTimes(0);
     await user.click(el);
     expect(callback).toHaveBeenCalledTimes(10);
-  }); */
+  });
 });
 
 describe("doesnt work yet", () => {
@@ -131,7 +131,7 @@ describe("doesnt work yet", () => {
   }); */
 });
 
-describe.only("fn calls", () => {
+describe("fn calls", () => {
   /*  test("function statement", async () => {
     let count = 0;
 
@@ -165,7 +165,7 @@ describe.only("fn calls", () => {
     expect(el).toHaveTextContent("1");
   });
 
-  /* test("function in const", async () => {
+  test("function in const", async () => {
     let count = 0;
     const inc = () => count++;
     const Button = () => <button onClick={inc}>{count}</button>;
@@ -173,7 +173,7 @@ describe.only("fn calls", () => {
     expect(el).toHaveTextContent("0");
     await user.click(el);
     expect(el).toHaveTextContent("1");
-  }); */
+  });
 
   /* test.skip("fn called by fn", async () => {
     let count = 0;
