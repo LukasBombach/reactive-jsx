@@ -106,19 +106,6 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
 
           const statements: NodePath<Statement>[] = [];
 
-          // console.log(bindings.map(b => b.path.toString()));
-
-          // console.log(bindings.map(b => b.referencePaths).map(p => p.toString()));
-
-          /* console.log(
-            bindings.map(b =>
-              b.referencePaths
-                .filter(path => !path.findParent(parent => parent.isJSXElement()))
-                .map(path => path.getStatementParent())
-                .map(p => p?.toString())
-            )
-          ); */
-
           bindings
             .flatMap(binding => binding.referencePaths)
             .filter(path => !(path.parentPath && cheapTempIsReactiveSetter(path.parentPath)))
@@ -129,18 +116,6 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
             .filter(path => !statements.includes(path))
             .filter(path => !statements.some(parent => path.isDescendant(parent)))
             .forEach(path => statements.push(path));
-
-          console.log(
-            bindings
-              .flatMap(binding => binding.referencePaths)
-              .filter(path => !path.findParent(parent => parent.isJSXElement()))
-              .map(path => path.parentPath)
-              .map(s => {
-                return [s?.toString(), s && cheapTempIsReactiveSetter(s)];
-              })
-          );
-
-          console.log(statements.map(s => s.toString()));
 
           function cheapTempIsReactiveSetter(path: NodePath<Node>): boolean {
             return (
@@ -156,8 +131,6 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
           });
 
           // Convert declarations (`let count = X` becomes `const [count, setCount] = rjsx.val(X)`)
-
-          // console.log(bindings.map(b => b.path.toString()));
 
           bindings.forEach(binding => {
             if (!binding.path.isVariableDeclarator()) return;
@@ -203,8 +176,6 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
 
           // Inject runtime
           path.unshiftContainer("body", runtimeImports());
-
-          // console.log(path.toString());
         },
       },
     },
@@ -318,20 +289,6 @@ function getAssignmentsUsingReferences(bindings: Binding[]): NodePath<Identifier
 function isComponent(path: NodePath<VariableDeclarator>): boolean {
   const init = path.get("init");
   return init.isArrowFunctionExpression() && init.get("body").isJSXElement();
-
-  /* if (!init) {
-    console.warn("cannot find init");
-    return true;
-  }
-
-  console.log("---");
-  console.log("");
-  console.log(init.type, init.isArrowFunctionExpression() && init.get("body").isJSXElement(), init.toString());
-  console.log("");
-  console.log("---");
-  console.log("");
-
-  return true; */
 }
 
 function getIdentifiersFromVariableDeclaration(path: NodePath<Node>): NodePath<Identifier>[] {
