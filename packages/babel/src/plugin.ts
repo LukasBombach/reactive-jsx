@@ -34,10 +34,29 @@ function getMutatedVariables(functions: NodePath<SomeKindOfFunction>[]): NodePat
       },
       CallExpression: path => {
         const callee = path.get("callee");
-        // todo follow function call
+        const fn = getFunction(callee);
+        if (fn) identifiers.push(...getMutatedVariables([fn]));
       },
     })
   );
 
   return identifiers;
+}
+
+function getFunction(path: NodePath<Node>): NodePath<SomeKindOfFunction> | undefined {
+  if (!path.isIdentifier()) return;
+  const binding = path.scope.getBinding(path.node.name);
+  if (!binding) return;
+
+  if (binding.path.isFunctionDeclaration()) {
+    return binding.path;
+  }
+
+  if (binding.path.isVariableDeclarator()) {
+    const init = binding.path.get("init");
+    if (!init) return;
+    if (init.isArrowFunctionExpression() || init.isFunctionExpression()) {
+      return init;
+    }
+  }
 }
