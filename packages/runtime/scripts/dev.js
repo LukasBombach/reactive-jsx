@@ -1,12 +1,11 @@
-import { build } from "esbuild";
+const { build } = require("esbuild");
 const exportAsString = require("./exportAsString.js");
 
 build({
   entryPoints: ["src/index.ts"],
-  outfile: "dist/bundle.js",
-  format: "esm",
+  outfile: "dist/index.js",
+  format: "cjs",
   bundle: true,
-  // minify: true,
   watch: {
     onRebuild(error) {
       if (error) {
@@ -14,10 +13,10 @@ build({
         return;
       }
       console.log("build succeeded");
-      exportAsString("dist/bundle.js", "dist/index.js", "dist/index.d.ts");
+      exportAsString("dist/index.js", "dist/as-string.js", "dist/as-string.d.ts");
     },
   },
 }).then(() => {
   console.log("build succeeded");
-  exportAsString("dist/bundle.js", "dist/index.js", "dist/index.d.ts");
+  exportAsString("dist/index.js", "dist/as-string.js", "dist/as-string.d.ts");
 });

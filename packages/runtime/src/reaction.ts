@@ -1,23 +1,28 @@
-import type { Runtime } from "./runtime";
+import { transaction } from "./transaction";
+import { debug } from "./debug";
 
-export type Reaction = {
+import type { Transaction } from "./transaction";
+
+export type Reaction<T> = {
   name?: string;
-  run: (from?: string) => void;
+  run: (from?: string) => T;
 };
 
-export function createReactions({ transaction, log }: Pick<Runtime, "transaction" | "log">) {
-  return function react<T>(fn: (current: T | undefined) => T, name?: string): void {
-    let current: T | undefined = undefined;
-    const reaction: Reaction = {
-      name,
-      run: (from?: string) => {
-        log(`react(${from ? `${from}.` : ""}${name})`);
-        transaction.current = reaction;
-        current = fn(current);
-        transaction.current = null;
-      },
-    };
-
-    reaction.run();
+export function react<T>(fn: (value: T | undefined) => T, name?: string): T {
+  let value: T | undefined = undefined;
+  const reaction: Reaction<T> = {
+    name,
+    run: from => {
+      if (from) debug("run", from, ">", name);
+      else debug("run", name);
+      const previous = transaction.current;
+      transaction.current = reaction;
+      debug("transaction", transaction);
+      value = fn(value);
+      transaction.current = previous;
+      return value;
+    },
   };
+
+  return reaction.run();
 }

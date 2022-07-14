@@ -1,1 +1,8 @@
-export { createRuntime } from "./runtime";
+import { value } from "./value";
+import { react } from "./reaction";
+import { createElement } from "./createElement";
+import { render } from "./render";
+
+export { render } from "./render";
+
+export default { value, react, createElement, render };

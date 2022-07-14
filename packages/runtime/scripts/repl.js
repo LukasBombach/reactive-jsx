@@ -1,7 +1,7 @@
-import { spawn } from "child_process";
-import { emitKeypressEvents } from "readline";
-import { build } from "esbuild";
-import chalk from "chalk";
+const { spawn } = require("child_process");
+const { emitKeypressEvents } = require("readline");
+const { build } = require("esbuild");
+const chalk = require("chalk");
 
 emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
@@ -13,9 +13,10 @@ process.stdin.on("keypress", (_str, key) => {
 });
 
 build({
-  entryPoints: ["src/index.ts"],
-  outfile: "dist/bundle.js",
+  entryPoints: ["src/repl.ts"],
+  outfile: "dist/repl.js",
   bundle: true,
+  format: "cjs",
   watch: {
     onRebuild(error) {
       if (error) {
@@ -30,6 +31,6 @@ build({
 });
 
 function executeOutput() {
-  const process = spawn("node", ["dist/bundle.js"], { stdio: "inherit" });
+  const process = spawn("node", ["dist/repl.js"], { stdio: "inherit" });
   process.on("close", () => console.log(chalk.dim("Press"), "q", chalk.dim("to quit")));
 }

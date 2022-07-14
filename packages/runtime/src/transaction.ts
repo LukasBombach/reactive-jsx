@@ -1,10 +1,9 @@
 import type { Reaction } from "./reaction";
 
 export interface Transaction {
-  reactions: Set<Reaction>;
-  current: Reaction | null;
+  queue: Set<Reaction<any>>;
+  current: Reaction<any> | null;
+  id: number;
 }
 
-export function createTransaction(): Transaction {
-  return { reactions: new Set(), current: null };
-}
+export const transaction: Transaction = { queue: new Set(), current: null, id: Math.random() };

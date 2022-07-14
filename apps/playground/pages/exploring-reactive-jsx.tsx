@@ -263,6 +263,7 @@ export default function ExploringReactiveJsx() {
 
         <p>check out the dev tools, the only things that get updated are text fragments, not event the enire text</p>
         <p>also, here is the callstack for the updates, no more work is done than the almost-vanilla js itself!</p>
+        <p>ownership model</p>
       </main>
     </Layout>
   );

@@ -1,7 +1,7 @@
 import { rollup } from "rollup";
 import { transform, availablePresets } from "@babel/standalone";
 import reactiveJsxPlugin from "@reactive-jsx/babel";
-import runtime from "@reactive-jsx/runtime";
+import runtime from "@reactive-jsx/runtime/as-string";
 
 import type { Plugin, OutputOptions } from "rollup";
 

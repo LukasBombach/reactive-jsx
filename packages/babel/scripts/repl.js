@@ -5,12 +5,12 @@ const { transformAsync } = require("@babel/core");
 const { build } = require("esbuild");
 const chalk = require("chalk");
 
-emitKeypressEvents(process.stdin);
+/* emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 
 process.stdin.on("keypress", (_str, key) => {
   if (key.name === "q") process.exit();
-});
+}); */
 
 const pluginSrc = "src/plugin.ts";
 const pluginDist = "dist/plugin.js";
@@ -25,11 +25,11 @@ chokidar.watch([pluginSrc]).on("all", async () => {
 });
 
 chokidar.watch([pluginDist, replSrc]).on("all", async (event, path) => {
-  console.clear();
-  console.log("trigger", event, path);
   try {
     const reactiveJsxPlugin = await import(`../${pluginDist}?cachebust=${Date.now()}`).then(m => m.default);
     const source = await fs.readFile(replSrc, "utf-8");
+
+    console.log("\033[2J");
 
     const transformed = await transformAsync(source, {
       filename: "repl.tsx",
@@ -46,8 +46,8 @@ chokidar.watch([pluginDist, replSrc]).on("all", async (event, path) => {
         [
           "@babel/preset-react",
           {
-            pragma: "rjsx.el",
-            pragmaFrag: "rjsx.frag",
+            pragma: "rjsx.createElement",
+            pragmaFrag: "rjsx.Fragment",
           },
         ],
         "@babel/preset-typescript",
@@ -55,13 +55,12 @@ chokidar.watch([pluginDist, replSrc]).on("all", async (event, path) => {
       plugins: [reactiveJsxPlugin],
     });
 
-    console.log("\n");
-    console.log(source);
-    console.log("\n--\n\n");
+    //console.log("trigger", event, path);
+    // console.log("\n");
     console.log(transformed.code);
   } catch (error) {
     console.error(error);
   }
-  console.log("\n");
-  console.log(chalk.dim("> Press"), "q", chalk.dim("to quit", "\n"));
+  // console.log("\n");
+  // console.log(chalk.dim("> Press"), "q", chalk.dim("to quit", "\n"));
 });

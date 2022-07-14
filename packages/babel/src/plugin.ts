@@ -20,6 +20,7 @@ import type {
   VariableDeclarator,
   Program,
   VariableDeclaration,
+  FunctionDeclaration,
 } from "@babel/types";
 
 let runs = 0;
@@ -103,14 +104,33 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
             });
           });
 
-          // statements.forEach(path => {
-          //   const VALUE = cloneDeepWithoutLoc(path.node);
-          //   path.replaceWith(reaction({ VALUE }));
-          // });
+          const statements: NodePath<Statement>[] = [];
+
+          bindings
+            .flatMap(binding => binding.referencePaths)
+            .filter(path => !(path.parentPath && cheapTempIsReactiveSetter(path.parentPath)))
+            .filter(path => !path.findParent(parent => parent.isJSXElement()))
+            .map(path => path.getStatementParent())
+            .filter((path): path is NodePath<Statement> => path !== null)
+            .filter(path => !path.isReturnStatement())
+            .filter(path => !statements.includes(path))
+            .filter(path => !statements.some(parent => path.isDescendant(parent)))
+            .forEach(path => statements.push(path));
+
+          function cheapTempIsReactiveSetter(path: NodePath<Node>): boolean {
+            return (
+              path.isCallExpression() &&
+              path.get("callee").isMemberExpression() &&
+              (path.get("callee").get("property") as NodePath<Identifier>)?.node?.name === "set"
+            );
+          }
+
+          statements.forEach(path => {
+            const VALUE = cloneDeepWithoutLoc(path.node);
+            path.replaceWith(reaction({ VALUE }));
+          });
 
           // Convert declarations (`let count = X` becomes `const [count, setCount] = rjsx.val(X)`)
-
-          // console.log(bindings.map(b => b.path.toString()));
 
           bindings.forEach(binding => {
             if (!binding.path.isVariableDeclarator()) return;
@@ -173,12 +193,11 @@ const asFunction = template.statement`
 `;
 
 const runtimeImports = template.smart(`
-  import { createRuntime } from "@reactive-jsx/runtime";
-  const rjsx = createRuntime();
+  import rjsx from "@reactive-jsx/runtime";
 `);
 
 const declaration = template.statement`
-  const NAME = rjsx.value(() => VALUE);
+  const NAME = rjsx.value(() => VALUE, "NAME");
 `;
 
 const getter = template.statement`
@@ -201,6 +220,29 @@ const sub = template.expression`
   NAME.get() - VALUE
 `;
 
+const reaction = template.statement`
+  rjsx.react(() => { VALUE });
+`;
+
+function followFunctionForMutations(
+  path: NodePath<FunctionDeclaration | ArrowFunctionExpression | FunctionExpression>,
+  identifiers: NodePath<Node>[]
+) {
+  path.traverse({
+    AssignmentExpression: path => {
+      identifiers.push(path.get("left"));
+    },
+    UpdateExpression: path => {
+      identifiers.push(path.get("argument"));
+    },
+    CallExpression: path => {
+      const callee = path.get("callee");
+      // todo
+      console.log(callee);
+    },
+  });
+}
+
 function getMutatedIdentifiersInEventHandlers(path: NodePath<Program>): NodePath<Identifier>[] {
   const paths: NodePath<Node>[] = [];
 
@@ -213,6 +255,20 @@ function getMutatedIdentifiersInEventHandlers(path: NodePath<Program>): NodePath
           },
           UpdateExpression: path => {
             paths.push(path.get("argument"));
+          },
+          Identifier: path => {
+            const binding = path.scope.getBinding(path.node.name);
+            if (!binding) return;
+            if (binding.path.isFunctionDeclaration()) {
+              followFunctionForMutations(binding.path, paths);
+            }
+            if (binding.path.isVariableDeclarator()) {
+              const init = binding.path.get("init");
+              if (!init) return;
+              if (init.isArrowFunctionExpression() || init.isFunctionExpression()) {
+                followFunctionForMutations(init, paths);
+              }
+            }
           },
         });
       }
@@ -233,20 +289,6 @@ function getAssignmentsUsingReferences(bindings: Binding[]): NodePath<Identifier
 function isComponent(path: NodePath<VariableDeclarator>): boolean {
   const init = path.get("init");
   return init.isArrowFunctionExpression() && init.get("body").isJSXElement();
-
-  /* if (!init) {
-    console.warn("cannot find init");
-    return true;
-  }
-
-  console.log("---");
-  console.log("");
-  console.log(init.type, init.isArrowFunctionExpression() && init.get("body").isJSXElement(), init.toString());
-  console.log("");
-  console.log("---");
-  console.log("");
-
-  return true; */
 }
 
 function getIdentifiersFromVariableDeclaration(path: NodePath<Node>): NodePath<Identifier>[] {
