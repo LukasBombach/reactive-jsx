@@ -5,12 +5,11 @@ import "@testing-library/jest-dom";
 
 const user = userEvent.setup();
 
-test("function statement", async () => {
+test("fn called by fn", async () => {
   let count = 0;
-  function inc() {
-    count++;
-  }
-  const Button = () => <button onClick={() => count++}>{count}</button>;
+  const inc = () => inc2();
+  const inc2 = () => count++;
+  const Button = () => <button onClick={inc}>{count}</button>;
   const el = render(<Button />);
   expect(el).toHaveTextContent("0");
   await user.click(el);

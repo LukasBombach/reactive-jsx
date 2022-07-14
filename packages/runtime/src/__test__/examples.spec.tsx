@@ -175,7 +175,7 @@ describe("fn calls", () => {
     expect(el).toHaveTextContent("1");
   });
 
-  /* test.skip("fn called by fn", async () => {
+  test("fn called by fn", async () => {
     let count = 0;
     const inc = () => inc2();
     const inc2 = () => count++;
@@ -184,5 +184,5 @@ describe("fn calls", () => {
     expect(el).toHaveTextContent("0");
     await user.click(el);
     expect(el).toHaveTextContent("1");
-  }); */
+  });
 });

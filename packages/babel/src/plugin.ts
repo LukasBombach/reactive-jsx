@@ -47,6 +47,8 @@ function reactiveJsxPlugin(): { name: string; visitor: Visitor } {
 
           const bindings = [...directBindings, ...indirectBindings];
 
+          console.log(bindings.flatMap(b => [b.path.type, b.path.toString()]));
+
           // Convert usages to getters (`count` becomes `count()`)
           bindings.forEach(binding => {
             if (!binding.path.isVariableDeclarator()) return;
@@ -224,6 +226,22 @@ const reaction = template.statement`
   rjsx.react(() => { VALUE });
 `;
 
+function followIdentifierIfFunction(path: NodePath<Node>, identifiers: NodePath<Node>[]) {
+  if (!path.isIdentifier()) return;
+  const binding = path.scope.getBinding(path.node.name);
+  if (!binding) return;
+  if (binding.path.isFunctionDeclaration()) {
+    followFunctionForMutations(binding.path, identifiers);
+  }
+  if (binding.path.isVariableDeclarator()) {
+    const init = binding.path.get("init");
+    if (!init) return;
+    if (init.isArrowFunctionExpression() || init.isFunctionExpression()) {
+      followFunctionForMutations(init, identifiers);
+    }
+  }
+}
+
 function followFunctionForMutations(
   path: NodePath<FunctionDeclaration | ArrowFunctionExpression | FunctionExpression>,
   identifiers: NodePath<Node>[]
@@ -238,44 +256,35 @@ function followFunctionForMutations(
     CallExpression: path => {
       const callee = path.get("callee");
       // todo
-      console.log(callee);
+      // debugger;
+      // console.log(callee);
+      followIdentifierIfFunction(callee, identifiers);
     },
   });
 }
 
 function getMutatedIdentifiersInEventHandlers(path: NodePath<Program>): NodePath<Identifier>[] {
-  const paths: NodePath<Node>[] = [];
+  const identifiers: NodePath<Node>[] = [];
 
   path.traverse({
     JSXAttribute: path => {
       if (isEventHandler(path)) {
         path.traverse({
           AssignmentExpression: path => {
-            paths.push(path.get("left"));
+            identifiers.push(path.get("left"));
           },
           UpdateExpression: path => {
-            paths.push(path.get("argument"));
+            identifiers.push(path.get("argument"));
           },
           Identifier: path => {
-            const binding = path.scope.getBinding(path.node.name);
-            if (!binding) return;
-            if (binding.path.isFunctionDeclaration()) {
-              followFunctionForMutations(binding.path, paths);
-            }
-            if (binding.path.isVariableDeclarator()) {
-              const init = binding.path.get("init");
-              if (!init) return;
-              if (init.isArrowFunctionExpression() || init.isFunctionExpression()) {
-                followFunctionForMutations(init, paths);
-              }
-            }
+            followIdentifierIfFunction(path, identifiers);
           },
         });
       }
     },
   });
 
-  return paths.filter(identifier);
+  return identifiers.filter(identifier);
 }
 
 function getAssignmentsUsingReferences(bindings: Binding[]): NodePath<Identifier>[] {
