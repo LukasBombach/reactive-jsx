@@ -11,39 +11,41 @@ export default function reactiveJsxPlugin(): { name: string; visitor: Visitor } 
         enter(path) {
           const eventHandlers = getEventHandlers(path);
 
-          // todo get functions called in event handlers
-          // todo get assigments in there
-          // todo instead of this
-
-          const mutations = getMutatedVariables(eventHandlers);
+          const mutatedVariables = eventHandlers.flatMap(getMutatedVariables).map(getDeclaration).filter(unique);
+          const assignedVariables = mutatedVariables.flatMap(getAssignments).map(getDeclaration).filter(unique);
         },
       },
     },
   };
 }
 
+function unique<T>(value: T, index: number, array: T[]): boolean {
+  return array.indexOf(value) === index;
+}
+
+function getDeclaration(path: NodePath<Node>): NodePath<Node> {}
+function getAssignments(path: NodePath<Node>): NodePath<Node>[] {}
+
 type SomeKindOfFunction = ArrowFunctionExpression | FunctionExpression | FunctionDeclaration;
 
-function getMutatedVariables(functions: NodePath<SomeKindOfFunction>[]): NodePath<Identifier>[] {
+function getMutatedVariables(path: NodePath<SomeKindOfFunction>): NodePath<Identifier>[] {
   const identifiers: NodePath<Identifier>[] = [];
 
-  functions.forEach(path =>
-    path.traverse({
-      AssignmentExpression: path => {
-        const left = path.get("left");
-        if (left.isIdentifier()) identifiers.push(left);
-      },
-      UpdateExpression: path => {
-        const argument = path.get("argument");
-        if (argument.isIdentifier()) identifiers.push(argument);
-      },
-      CallExpression: path => {
-        const callee = path.get("callee");
-        const fn = getFunction(callee);
-        if (fn) identifiers.push(...getMutatedVariables([fn]));
-      },
-    })
-  );
+  path.traverse({
+    AssignmentExpression: path => {
+      const left = path.get("left");
+      if (left.isIdentifier()) identifiers.push(left);
+    },
+    UpdateExpression: path => {
+      const argument = path.get("argument");
+      if (argument.isIdentifier()) identifiers.push(argument);
+    },
+    CallExpression: path => {
+      const callee = path.get("callee");
+      const fn = getFunction(callee);
+      if (fn) identifiers.push(...getMutatedVariables(fn));
+    },
+  });
 
   return identifiers;
 }
