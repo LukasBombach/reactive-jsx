@@ -10,6 +10,11 @@ export default function reactiveJsxPlugin(): { name: string; visitor: Visitor } 
       Program: {
         enter(path) {
           const eventHandlers = getEventHandlers(path);
+
+          // todo get functions called in event handlers
+          // todo get assigments in there
+          // todo instead of this
+
           const mutations = getMutatedVariables(eventHandlers);
         },
       },
