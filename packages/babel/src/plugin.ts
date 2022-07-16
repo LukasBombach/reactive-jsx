@@ -102,7 +102,9 @@ function getMutatedVariables(path: NodePath<SomeKindOfFunction>): NodePath<Ident
 
 function getFunction(path: NodePath<Node>): NodePath<SomeKindOfFunction> | undefined {
   if (!path.isIdentifier()) return;
+
   const binding = path.scope.getBinding(path.node.name);
+
   if (!binding) return;
 
   if (binding.path.isFunctionDeclaration()) {
