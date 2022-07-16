@@ -123,15 +123,3 @@ const Button = () => {
 ```
 
 # Implementation
-
-```
-
-const mutatedVariables =
-
-for (fn in eventHandlers) {
-  getMutatedVaribles
-}
-
-
-
-```
