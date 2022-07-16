@@ -9,6 +9,7 @@ import type {
   FunctionDeclaration,
   FunctionExpression,
   Identifier,
+  Statement,
   VariableDeclaration,
 } from "@babel/types";
 
@@ -68,7 +69,19 @@ function getAssignments(path: Binding): NodePath<Identifier>[] {
   return [...fromVariableDeclaration, ...fromExpressionStatement];
 }
 
-function getStatements(path: Binding): NodePath<Statement>[] {}
+function getStatements(path: Binding): NodePath<Statement>[] {
+  const statements: NodePath<Statement>[] = [];
+
+  path.referencePaths
+    .map(path => path.getStatementParent())
+    .filter(isNonNullable)
+    .filter(path => !path.isReturnStatement()) // todo make return statements work
+    .filter(path => !statements.includes(path))
+    .filter(path => !statements.some(parent => path.isDescendant(parent)))
+    .forEach(path => statements.push(path));
+
+  return statements;
+}
 
 function getGetters(path: Binding): NodePath<Node>[] {
   return path.referencePaths;
