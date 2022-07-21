@@ -1,19 +1,13 @@
 let count = 0;
-let double = count * 2;
-let quad = double * 2;
-
-function inc() {
-  inc2();
-}
-
-function inc2() {
-  count++;
-}
 
 document.title = `title is ${count}`;
 
-export const Button = () => (
-  <button onMouseUp={inc}>
-    {count} {double} {quad}
-  </button>
-);
+if (count === 1) {
+  console.log(`count is ${count}`);
+}
+
+for (let i = 0; i < 10; i++) {
+  console.log(`loop ${count}`);
+}
+
+export const Button = () => <button onMouseUp={() => count++} />;
