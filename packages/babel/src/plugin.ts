@@ -31,6 +31,18 @@ export default function reactiveJsxPlugin(): { name: string; visitor: Visitor } 
           const getters = declarations.flatMap(getGetters);
           const setters = declarations.flatMap(getSetters);
           const statements = declarations.flatMap(getStatements);
+
+          console.log("\ndeclarations\n-----");
+          declarations.forEach(b => console.log(b.path.type, "\n" + b.path.toString(), "\n"));
+
+          console.log("\ngetters\n-----");
+          getters.forEach(p => console.log(p.type, "\n" + p.parentPath?.toString(), "\n"));
+
+          console.log("\nsetters\n-----");
+          setters.forEach(p => console.log(p.type, "\n" + p.parentPath?.toString(), "\n"));
+
+          console.log("\nstatements\n-----");
+          statements.forEach(p => console.log(p.type, "\n" + p.toString(), "\n"));
         },
       },
     },

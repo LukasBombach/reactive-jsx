@@ -1,17 +1,9 @@
-import { getByRole, getByTestId } from "@testing-library/dom";
-import userEvent from "@testing-library/user-event";
-import { render } from "@reactive-jsx/runtime";
-import "@testing-library/jest-dom";
+let count = 0;
 
-const user = userEvent.setup();
+function inc() {
+  count++;
+}
 
-test("fn called by fn", async () => {
-  let count = 0;
-  const inc = () => inc2();
-  const inc2 = () => count++;
-  const Button = () => <button onClick={inc}>{count}</button>;
-  const el = render(<Button />);
-  expect(el).toHaveTextContent("0");
-  await user.click(el);
-  expect(el).toHaveTextContent("1");
-});
+document.title = `title is ${count}`;
+
+export const Button = () => <button onClick={inc}>{count}</button>;
