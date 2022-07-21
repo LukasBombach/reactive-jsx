@@ -8,12 +8,14 @@ export function getStatements(path: Binding): NodePath<Statement>[] {
   const statements: NodePath<Statement>[] = [];
 
   path.referencePaths
-    .map(path => path.getStatementParent())
+    .filter(ref => !ref.findParent(parent => parent.isJSXElement()))
+    .map(ref => ref.getStatementParent())
     .filter(isNonNullable)
-    .filter(path => !path.isReturnStatement()) // todo make return statements work
-    .filter(path => !statements.includes(path))
-    .filter(path => !statements.some(parent => path.isDescendant(parent)))
-    .forEach(path => statements.push(path));
+    .filter(ref => !path.constantViolations.map(v => v.parentPath).includes(ref))
+    .filter(ref => !ref.isReturnStatement()) // todo make return statements work
+    .filter(ref => !statements.includes(ref))
+    .filter(ref => !statements.some(parent => ref.isDescendant(parent)))
+    .forEach(ref => statements.push(ref));
 
   return statements;
 }

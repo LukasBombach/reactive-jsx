@@ -1,7 +1,7 @@
 const { emitKeypressEvents } = require("readline");
 const { promises: fs } = require("fs");
 const chokidar = require("chokidar");
-const { transformAsync } = require("@babel/core");
+const { transform } = require("@babel/core");
 const { build } = require("esbuild");
 const chalk = require("chalk");
 
@@ -16,7 +16,7 @@ const pluginSrc = "src/plugin.ts";
 const pluginDist = "dist/plugin.js";
 const replSrc = "src/repl.tsx";
 
-chokidar.watch([pluginSrc]).on("all", async () => {
+chokidar.watch(["src/**/*"]).on("all", async () => {
   await build({
     entryPoints: [pluginSrc],
     outfile: pluginDist,
@@ -30,7 +30,9 @@ chokidar.watch([pluginDist, replSrc]).on("all", async (event, path) => {
     const reactiveJsxPlugin = await import(`../${pluginDist}?cachebust=${Date.now()}`).then(m => m.default);
     const source = await fs.readFile(replSrc, "utf-8");
 
-    const transformed = await transformAsync(source, {
+    console.clear();
+
+    const transformed = transform(source, {
       filename: "repl.tsx",
       presets: [
         [

@@ -1,4 +1,3 @@
-
 import type { NodePath, Node } from "@babel/core";
 import type { Binding } from "@babel/traverse";
 import type { Identifier } from "@babel/types";
@@ -9,7 +8,7 @@ export function getDeclaration(path: NodePath<Identifier>): Binding | undefined 
 }
 
 export function getGetters(path: Binding): NodePath<Node>[] {
-  return path.referencePaths;
+  return path.referencePaths.filter(p => !p.findParent(p => path.constantViolations.includes(p)));
 }
 
 export function getSetters(path: Binding): NodePath<Node>[] {
