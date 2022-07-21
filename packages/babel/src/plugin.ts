@@ -36,7 +36,7 @@ export default function reactiveJsxPlugin(): { name: string; visitor: Visitor } 
           declarations.forEach(b => console.log(b.path.type, "\n" + b.path.toString(), "\n"));
 
           console.log("\ngetters\n-----");
-          getters.forEach(p => console.log(p.type, "\n" + p.parentPath?.toString(), "\n"));
+          getters.forEach(p => console.log(p.type, "\n" + p.toString(), p.parentPath?.toString(), "\n"));
 
           console.log("\nsetters\n-----");
           setters.forEach(p => console.log(p.type, "\n" + p.parentPath?.toString(), "\n"));
