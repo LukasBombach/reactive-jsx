@@ -27,8 +27,9 @@ chokidar.watch(["src/**/*"]).on("all", async () => {
 
 chokidar.watch([pluginDist, replSrc]).on("all", async (event, path) => {
   try {
-    const reactiveJsxPlugin = await import(`../${pluginDist}?cachebust=${Date.now()}`).then(m => m.default);
     const source = await fs.readFile(replSrc, "utf-8");
+
+    delete require.cache[require.resolve(`../${pluginDist}`)];
 
     console.clear();
 
@@ -53,7 +54,7 @@ chokidar.watch([pluginDist, replSrc]).on("all", async (event, path) => {
         ],
         "@babel/preset-typescript",
       ],
-      plugins: [reactiveJsxPlugin],
+      plugins: [require(`../${pluginDist}`)],
     });
 
     //console.log("trigger", event, path);

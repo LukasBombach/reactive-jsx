@@ -11,6 +11,7 @@ export function getAssignments(path: Binding): NodePath<Identifier>[] {
   const fromVariableDeclaration = statements
     .filter(isVariableDeclaration)
     .flatMap(path => path.get("declarations"))
+    .filter(path => !path.get("init").isFunctionExpression())
     .map(path => path.get("id"))
     .filter(isIdentifier);
 
