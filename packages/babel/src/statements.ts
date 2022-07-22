@@ -17,5 +17,7 @@ export function getStatements(path: Binding): NodePath<Node>[] {
 
 function findReactiveBlock(path: NodePath<Node>) {
   const blockTypes = ["ForStatement", "WhileStatement", "IfStatement", "AssignmentExpression"];
-  return path.findParent(p => blockTypes.includes(p.type));
+  const ancestry = path.getAncestry();
+  // findLast
+  return ancestry.reverse().find(p => blockTypes.includes(p.type));
 }
