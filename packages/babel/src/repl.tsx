@@ -1,6 +1,8 @@
 let count = 0;
 let double = count * 2;
 
+document.title = `title is STATIC`;
+
 document.title = `title is ${count}`;
 
 if (count === 1) {
@@ -8,6 +10,10 @@ if (count === 1) {
 }
 
 for (let i = 0; i < 10; i++) {
+  console.log(`loop ${count}`);
+}
+
+while (count < 2) {
   console.log(`loop ${count}`);
 }
 
