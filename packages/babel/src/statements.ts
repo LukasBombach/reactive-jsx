@@ -16,6 +16,6 @@ export function getStatements(path: Binding): NodePath<Node>[] {
 }
 
 function findReactiveBlock(path: NodePath<Node>) {
-  const blockTypes = ["ForStatement", "WhileStatement", "IfStatement"];
+  const blockTypes = ["ForStatement", "WhileStatement", "IfStatement", "AssignmentExpression"];
   return path.findParent(p => blockTypes.includes(p.type));
 }

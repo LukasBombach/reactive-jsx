@@ -1,4 +1,5 @@
 let count = 0;
+let double = count * 2;
 
 document.title = `title is ${count}`;
 
