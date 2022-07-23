@@ -5,17 +5,17 @@
   "types": "./index.tsx",
   "license": "MIT",
   "dependencies": {
-    "@babel/standalone": "7.18.7",
-    "@codemirror/lang-javascript": "6.0.1",
-    "@uiw/react-codemirror": "4.10.3",
-    "rollup": "2.75.7"
+    "@babel/standalone": "7.18.9",
+    "@codemirror/lang-javascript": "6.0.2",
+    "@uiw/react-codemirror": "4.11.4",
+    "rollup": "2.77.0"
   },
   "devDependencies": {
     "@reactive-jsx/config": "*",
     "@reactive-jsx/tsconfig": "*",
     "@types/babel__standalone": "7.1.4",
-    "@types/react": "18.0.14",
-    "@types/react-dom": "18.0.5",
+    "@types/react": "18.0.15",
+    "@types/react-dom": "18.0.6",
     "@types/rollup": "0.54.0",
     "typescript": "4.7.4",
     "typescript-plugin-css-modules": "3.4.0"
