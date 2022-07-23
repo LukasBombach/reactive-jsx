@@ -1,6 +1,16 @@
+import { NodePath } from "@babel/traverse";
 import { getProgram } from "./getProgram";
 import { visit } from "./visit";
 import { getDeclarations } from "../declarations";
+
+expect.addSnapshotSerializer({
+  test: val => {
+    return val && val.path instanceof NodePath;
+  },
+  print: val => {
+    return val.path.toString();
+  },
+});
 
 describe("declarations", () => {
   test("x", async () => {
@@ -10,7 +20,12 @@ describe("declarations", () => {
 
         console.log(declarations.map(b => b.path.toString()));
 
-        expect(declarations).toHaveLength(1);
+        expect(declarations).toMatchInlineSnapshot(`
+Array [
+  count = 0,
+  Button = () => <button onClick={() => count++} />,
+]
+`);
       },
     });
   });
