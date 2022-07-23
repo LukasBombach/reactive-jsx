@@ -1,9 +1,6 @@
-import { getEventHandlers } from "./eventHandlers";
+import { getDeclarations } from "./declarations";
 import { getStatements } from "./statements";
-import { getAssignments } from "./assignments";
-import { getMutatedVariables } from "./mutations";
-import { getDeclaration, getGetters, getSetters } from "./variables";
-import { unique, isNonNullable } from "./typeGuards";
+import { getGetters, getSetters } from "./variables";
 
 import type { Visitor } from "@babel/core";
 
@@ -13,21 +10,7 @@ export default function reactiveJsxPlugin(): { name: string; visitor: Visitor } 
     visitor: {
       Program: {
         enter(path) {
-          const eventHandlers = getEventHandlers(path);
-
-          const mutatedVariables = eventHandlers
-            .flatMap(getMutatedVariables)
-            .map(getDeclaration)
-            .filter(isNonNullable)
-            .filter(unique);
-
-          const assignedVariables = mutatedVariables
-            .flatMap(getAssignments)
-            .map(getDeclaration)
-            .filter(isNonNullable)
-            .filter(unique);
-
-          const declarations = [...mutatedVariables, ...assignedVariables].filter(unique);
+          const declarations = getDeclarations(path);
           const getters = declarations.flatMap(getGetters);
           const setters = declarations.flatMap(getSetters);
           const statements = declarations.flatMap(getStatements);

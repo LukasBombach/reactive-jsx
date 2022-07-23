@@ -10,8 +10,11 @@ export function getEventHandlers(path: NodePath<Node>): NodePath<SomeKindOfFunct
     JSXAttribute: path => {
       const identifier = path.get("name").node.name;
       const name = typeof identifier === "string" ? identifier : identifier.name;
+
       if (!/^on[A-Z]/.test(name)) return;
+
       const value = path.get("value");
+
       if (!value.isJSXExpressionContainer()) return;
       const expression = value.get("expression");
 
