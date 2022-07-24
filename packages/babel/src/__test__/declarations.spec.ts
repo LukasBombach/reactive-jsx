@@ -2,7 +2,7 @@ import { program } from "./visit";
 import { getDeclarations } from "../declarations";
 import "./jest.extend";
 
-describe("declarations - direct and derived", () => {
+describe("declarations: direct and derived", () => {
   test("x", async () => {
     await program(
       `
@@ -109,7 +109,7 @@ describe("declarations - direct and derived", () => {
   });
 });
 
-describe("declarations - eventHandlers", () => {
+describe("declarations: eventHandlers", () => {
   test("y", async () => {
     await program(
       `
