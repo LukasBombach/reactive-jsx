@@ -4,15 +4,6 @@ import { visit } from "./visit";
 import { getDeclarations } from "../declarations";
 import "./jest.extend";
 
-/* expect.addSnapshotSerializer({
-  test: val => {
-    return val && val.path instanceof NodePath;
-  },
-  print: val => {
-    return val.path.toString();
-  },
-}); */
-
 describe("declarations", () => {
   test("x", async () => {
     await visit("let count = 0; const Button = () => <button onClick={() => count++} />;", {

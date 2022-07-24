@@ -1,6 +1,50 @@
 import { diff } from "jest-diff";
 import { NodePath } from "@babel/traverse";
 
+import type { MatcherHintOptions } from "jest-matcher-utils";
+
+declare global {
+  namespace jest {
+    interface Matchers<R> {
+      toMatchSourceCode(received: any): CustomMatcherResult;
+    }
+  }
+}
+
+const EXPECTED_LABEL = "Expected";
+const RECEIVED_LABEL = "Received";
+
+expect.extend({
+  toMatchSourceCode(received, expected) {
+    const matcherName = "toMatchSourceCode";
+
+    const options: MatcherHintOptions = {
+      comment: "deep equality",
+      isNot: this.isNot,
+      promise: this.promise,
+    };
+
+    const receivedCode = getSourceCode(received);
+
+    const pass = this.equals(receivedCode, expected, [this.utils.iterableEquality]);
+
+    const message = pass
+      ? () =>
+          this.utils.matcherHint(matcherName, undefined, undefined, options) +
+          "\n\n" +
+          `Expected: not ${this.utils.printExpected(expected)}\n` +
+          (this.utils.stringify(expected) !== this.utils.stringify(receivedCode)
+            ? `Received:     ${this.utils.printReceived(receivedCode)}`
+            : "")
+      : () =>
+          this.utils.matcherHint(matcherName, undefined, undefined, options) +
+          "\n\n" +
+          this.utils.printDiffOrStringify(expected, receivedCode, EXPECTED_LABEL, RECEIVED_LABEL, this.expand);
+
+    return { actual: receivedCode, expected, message, name: matcherName, pass };
+  },
+});
+
 function isNodePath(value: unknown): value is NodePath {
   return value instanceof NodePath;
 }
@@ -13,52 +57,18 @@ function isBindingish(value: any): value is { path: NodePath } {
   }
 }
 
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      toMatchSourceCode(received: any): CustomMatcherResult;
-    }
+function getSourceCode(received: any): string | string[] {
+  if (isNodePath(received)) {
+    return received.toString();
   }
+
+  if (isBindingish(received)) {
+    return received.path.toString();
+  }
+
+  if (Array.isArray(received)) {
+    return received.flatMap(item => getSourceCode(item));
+  }
+
+  throw new Error(`todo type "${typeof received}"`);
 }
-
-expect.extend({
-  toMatchSourceCode(received, expected) {
-    const { matcherHint } = this.utils;
-
-    const result = (pass: boolean, rec: any, exp: any) => {
-      const passMessage =
-        matcherHint(".not.toMatchSourceCode", undefined, undefined) +
-        "\n\n" +
-        "Expected value no to match source code:\n" +
-        `  ${diff(exp, rec)}`;
-
-      const failMessage =
-        matcherHint(".toMatchSourceCode", undefined, undefined) +
-        "\n\n" +
-        "Expected value to match source code:\n" +
-        `  ${diff(exp, rec)}`;
-
-      return { pass, message: () => (pass ? passMessage : failMessage) };
-    };
-
-    if (Array.isArray(received) !== Array.isArray(expected)) {
-      return result(false, received, expected);
-    }
-
-    if (isNodePath(received)) {
-      const receivedSource = received.toString();
-      return result(receivedSource === expected, receivedSource, expected);
-    }
-
-    if (isBindingish(received)) {
-      const receivedSource = received.path.toString();
-      return result(receivedSource === expected, receivedSource, expected);
-    }
-
-    if (Array.isArray(received) && Array.isArray(expected)) {
-      return result(false, received, expected);
-    }
-
-    throw new Error(`todo actual type "${typeof expected}" received type "${typeof received}"`);
-  },
-});
