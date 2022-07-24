@@ -3,7 +3,7 @@ import { isVariableDeclaration, isExpressionStatement, isIdentifier, isAssignmen
 
 import type { NodePath } from "@babel/core";
 import type { Binding } from "@babel/traverse";
-import type { Identifier } from "@babel/types";
+import type { Identifier, VariableDeclarator } from "@babel/types";
 
 export function getAssignments(path: Binding): NodePath<Identifier>[] {
   const statements = path.referencePaths.map(path => path.getStatementParent()).filter(isNonNullable);
@@ -12,6 +12,7 @@ export function getAssignments(path: Binding): NodePath<Identifier>[] {
     .filter(isVariableDeclaration)
     .flatMap(path => path.get("declarations"))
     .filter(path => !path.get("init").isFunctionExpression())
+    .filter(path => !path.get("init").isArrowFunctionExpression())
     .map(path => path.get("id"))
     .filter(isIdentifier);
 
