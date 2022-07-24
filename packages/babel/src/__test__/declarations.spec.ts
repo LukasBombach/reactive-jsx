@@ -86,4 +86,25 @@ describe("declarations", () => {
       }
     );
   });
+
+  test("x", async () => {
+    await program(
+      `
+      let count = 0;
+      let double = count * 2;
+      let quad = double * 2;
+      let eightfold = quad * 2;
+      const Button = () => <button onClick={() => count++} />;
+    `,
+      path => {
+        const declarations = getDeclarations(path);
+        expect(declarations).toMatchSourceCode([
+          "count = 0",
+          "double = count * 2",
+          "quad = double * 2",
+          "eightfold = quad * 2",
+        ]);
+      }
+    );
+  });
 });
