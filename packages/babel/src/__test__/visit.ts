@@ -10,3 +10,11 @@ export async function visit(code: string, visitor: Visitor) {
     plugins: [() => ({ visitor })],
   });
 }
+
+export async function program(code: string, Program: Visitor["Program"]) {
+  await transformAsync(code, {
+    filename: "test.tsx",
+    presets: ["@babel/preset-env", "@babel/preset-react"],
+    plugins: [() => ({ visitor: { Program } })],
+  });
+}
