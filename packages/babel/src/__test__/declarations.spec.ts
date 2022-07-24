@@ -1,5 +1,3 @@
-import { NodePath } from "@babel/traverse";
-import { getProgram } from "./getProgram";
 import { visit } from "./visit";
 import { getDeclarations } from "../declarations";
 import "./jest.extend";

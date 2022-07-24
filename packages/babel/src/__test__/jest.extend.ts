@@ -19,7 +19,7 @@ expect.extend({
     const matcherName = "toMatchSourceCode";
 
     const options: MatcherHintOptions = {
-      comment: "deep equality",
+      comment: "deep source code equality",
       isNot: this.isNot,
       promise: this.promise,
     };
