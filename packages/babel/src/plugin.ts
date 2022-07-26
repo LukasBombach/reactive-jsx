@@ -1,6 +1,8 @@
 import { getDeclarations } from "./declarations";
 import { getStatements } from "./statements";
 import { getGetters, getSetters } from "./variables";
+import { convertDeclaration, convertGetter, convertSetter, convertStatement } from "./convert";
+import { isVariableDeclarator, isIdentifier } from "./typeGuards";
 
 import type { Visitor } from "@babel/core";
 
@@ -15,17 +17,29 @@ export default function reactiveJsxPlugin(): { name: string; visitor: Visitor } 
           const setters = declarations.flatMap(getSetters);
           const statements = declarations.flatMap(getStatements);
 
-          console.log("\n\ndeclarations\n---------------------------------------------");
-          declarations.forEach(b => console.log(b.path.type, "\n" + b.path.toString(), "\n"));
+          declarations
+            .map(decl => decl.path)
+            .filter(isVariableDeclarator)
+            .forEach(path => {
+              const reactiveDeclaration = convertDeclaration(path);
+              path.parentPath?.replaceWith(reactiveDeclaration);
+            });
 
-          console.log("\n\ngetters\n---------------------------------------------");
-          getters.forEach(p => console.log(p.type, "\n" + p.toString(), "|", p.parentPath?.toString(), "\n"));
+          // todo what if getter is not a filter?
+          getters.filter(isIdentifier).forEach(path => {
+            const reactiveGetter = convertGetter(path);
+            path.replaceWith(reactiveGetter);
+          });
 
-          console.log("\n\nsetters\n---------------------------------------------");
-          setters.forEach(p => console.log(p.type, "\n" + p.parentPath?.toString(), "\n"));
+          setters.forEach(path => {
+            const reactiveSetter = convertSetter(path);
+            path.replaceWith(reactiveSetter);
+          });
 
-          console.log("\n\nstatements\n---------------------------------------------");
-          statements.forEach(p => console.log(p.type, "\n" + p.toString(), "\n"));
+          statements.forEach(path => {
+            const reactiveStatement = convertStatement(path);
+            path.replaceWith(reactiveStatement);
+          });
         },
       },
     },

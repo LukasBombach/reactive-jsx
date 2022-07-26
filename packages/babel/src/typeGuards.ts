@@ -1,5 +1,6 @@
 import type { NodePath, Node } from "@babel/core";
-import type { AssignmentExpression, ExpressionStatement, Identifier, VariableDeclaration } from "@babel/types";
+import type { AssignmentExpression, ExpressionStatement, Identifier } from "@babel/types";
+import type { VariableDeclaration, VariableDeclarator } from "@babel/types";
 
 export function unique<T>(value: T, index: number, array: T[]): boolean {
   return array.indexOf(value) === index;
@@ -23,4 +24,8 @@ export function isIdentifier(path: NodePath<Node>): path is NodePath<Identifier>
 
 export function isAssignmentExpression(path: NodePath<Node>): path is NodePath<AssignmentExpression> {
   return path.isAssignmentExpression();
+}
+
+export function isVariableDeclarator(path: NodePath<Node>): path is NodePath<VariableDeclarator> {
+  return path.isVariableDeclarator();
 }
