@@ -1,10 +1,9 @@
 import { statement } from "@babel/template";
 import { cloneDeepWithoutLoc } from "@babel/types";
-import { isVariableDeclaration, isExpressionStatement, isIdentifier, isAssignmentExpression } from "./typeGuards";
 
 import type { NodePath, Node } from "@babel/core";
 import type { VariableDeclarator, Statement, Identifier } from "@babel/types";
-import type { AssignmentExpression } from "@babel/types";
+import type { AssignmentExpression, UpdateExpression } from "@babel/types";
 
 export function convertDeclaration(path: NodePath<VariableDeclarator>): Statement {
   const id = path.get("id");
@@ -27,6 +26,14 @@ export function convertSetter(path: NodePath<AssignmentExpression>): Statement {
   return buildSetter({ NAME, VALUE: cloneDeepWithoutLoc(path.node.right) });
 }
 
+export function convertUpdateExpression(path: NodePath<UpdateExpression>): Statement {
+  const argument = path.get("argument");
+  if (!argument.isIdentifier()) throw new Error("argument is not an identifier");
+  const NAME = argument.node.name;
+  const buildUpdateExpression = path.node.operator === "++" ? buildInc : buildDec;
+  return buildUpdateExpression({ NAME });
+}
+
 export function convertStatement(path: NodePath<Node>): Statement {
   const VALUE = cloneDeepWithoutLoc(path.node);
   return buildReaction({ VALUE });
@@ -42,6 +49,14 @@ const buildGetter = statement`
 
 const buildSetter = statement`
   NAME.set(() => VALUE)
+`;
+
+const buildInc = statement`
+  NAME.set(() => NAME.get() + 1)
+`;
+
+const buildDec = statement`
+  NAME.set(() => NAME.get() - 1)
 `;
 
 const buildReaction = statement`

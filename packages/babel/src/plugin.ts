@@ -1,7 +1,7 @@
 import { getDeclarations } from "./declarations";
 import { getStatements } from "./statements";
 import { getGetters, getSetters } from "./variables";
-import { convertDeclaration, convertGetter, convertSetter, convertStatement } from "./convert";
+import { convertDeclaration, convertGetter, convertSetter, convertUpdateExpression, convertStatement } from "./convert";
 import { isVariableDeclarator, isIdentifier, isAssignmentExpression, isUpdateExpression } from "./typeGuards";
 
 import type { Visitor } from "@babel/core";
@@ -37,7 +37,7 @@ export default function reactiveJsxPlugin(): { name: string; visitor: Visitor } 
           });
 
           setters.filter(isUpdateExpression).forEach(path => {
-            const reactiveSetter = convertSetter(path);
+            const reactiveSetter = convertUpdateExpression(path);
             path.replaceWith(reactiveSetter);
           });
 
