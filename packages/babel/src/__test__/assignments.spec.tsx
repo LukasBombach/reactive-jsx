@@ -5,7 +5,7 @@ describe("assignments", () => {
     const count = 1;
     const Button = () => <Button onClick={() => count = count + 1} />
   `).toBeTransformedTo(`
-    const [getCount, setCount] = rsjx.value(1);
+    const [getCount, setCount] = rjsx.value(1);
     const Button = () => <Button onClick={() => setCount(getCount() + 1)} />
   `);
 
@@ -13,7 +13,7 @@ describe("assignments", () => {
     const count = 5;
     const Button = () => <Button onClick={() => count = count + 23} />
   `).toBeTransformedTo(`
-    const [getCount, setCount] = rsjx.value(5);
+    const [getCount, setCount] = rjsx.value(5);
     const Button = () => <Button onClick={() => setCount(getCount() + 23)} />
   `);
 
@@ -21,7 +21,7 @@ describe("assignments", () => {
     const count = 1;
     const Button = () => <Button onClick={() => count += 1} />
   `).toBeTransformedTo(`
-    const [getCount, setCount] = rsjx.value(1);
+    const [getCount, setCount] = rjsx.value(1);
     const Button = () => <Button onClick={() => setCount(getCount() + 1)} />
   `);
 
@@ -29,7 +29,7 @@ describe("assignments", () => {
     const count = 5;
     const Button = () => <Button onClick={() => count += 23} />
   `).toBeTransformedTo(`
-    const [getCount, setCount] = rsjx.value(5);
+    const [getCount, setCount] = rjsx.value(5);
     const Button = () => <Button onClick={() => setCount(getCount() + 23)} />
   `);
 
@@ -37,7 +37,7 @@ describe("assignments", () => {
     const count = 1;
     const Button = () => <Button onClick={() => count++} />
   `).toBeTransformedTo(`
-    const [getCount, setCount] = rsjx.value(1);
+    const [getCount, setCount] = rjsx.value(1);
     const Button = () => <Button onClick={() => setCount(getCount() + 1)} />
   `);
 
@@ -45,7 +45,7 @@ describe("assignments", () => {
     const count = 1;
     const Button = () => <Button onClick={() => count = count - 1} />
   `).toBeTransformedTo(`
-    const [getCount, setCount] = rsjx.value(1);
+    const [getCount, setCount] = rjsx.value(1);
     const Button = () => <Button onClick={() => setCount(getCount() - 1)} />
   `);
 
@@ -53,7 +53,7 @@ describe("assignments", () => {
     const count = 5;
     const Button = () => <Button onClick={() => count = count - 23} />
   `).toBeTransformedTo(`
-    const [getCount, setCount] = rsjx.value(5);
+    const [getCount, setCount] = rjsx.value(5);
     const Button = () => <Button onClick={() => setCount(getCount() - 23)} />
   `);
 
@@ -61,7 +61,7 @@ describe("assignments", () => {
     const count = 1;
     const Button = () => <Button onClick={() => count -= 1} />
   `).toBeTransformedTo(`
-    const [getCount, setCount] = rsjx.value(1);
+    const [getCount, setCount] = rjsx.value(1);
     const Button = () => <Button onClick={() => setCount(getCount() - 1)} />
   `);
 
@@ -69,7 +69,7 @@ describe("assignments", () => {
     const count = 5;
     const Button = () => <Button onClick={() => count -= 23} />
   `).toBeTransformedTo(`
-    const [getCount, setCount] = rsjx.value(5);
+    const [getCount, setCount] = rjsx.value(5);
     const Button = () => <Button onClick={() => setCount(getCount() - 23)} />
   `);
 
@@ -77,7 +77,7 @@ describe("assignments", () => {
     const count = 1;
     const Button = () => <Button onClick={() => count--} />
   `).toBeTransformedTo(`
-    const [getCount, setCount] = rsjx.value(1);
+    const [getCount, setCount] = rjsx.value(1);
     const Button = () => <Button onClick={() => setCount(getCount() - 1)} />
   `);
 });

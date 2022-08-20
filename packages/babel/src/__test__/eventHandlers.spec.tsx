@@ -6,7 +6,7 @@ describe("transitive assignments", () => {
     const handler = () => count++;
     const Button = () => <Button onClick={handler} />
   `).toBeTransformedTo(`
-    const [getCount, setCount] = rsjx.value(1);
+    const [getCount, setCount] = rjsx.value(1);
     const handler = () => setCount(getCount() + 1);
     const Button = () => <Button onClick={handler} />
   `);
@@ -16,7 +16,7 @@ describe("transitive assignments", () => {
     function handler() { count++; }
     const Button = () => <Button onClick={handler} />
   `).toBeTransformedTo(`
-    const [getCount, setCount] = rsjx.value(1);
+    const [getCount, setCount] = rjsx.value(1);
     function handler() { setCount(getCount() + 1); }
     const Button = () => <Button onClick={handler} />
   `);
@@ -27,7 +27,7 @@ describe("transitive assignments", () => {
     const handler2 = () => count++;
     const Button = () => <Button onClick={handler} />
   `).toBeTransformedTo(`
-    const [getCount, setCount] = rsjx.value(1);
+    const [getCount, setCount] = rjsx.value(1);
     const handler = () => handler2();
     const handler2 = () => setCount(getCount() + 1);
     const Button = () => <Button onClick={handler} />
@@ -40,7 +40,7 @@ describe("transitive assignments", () => {
     const handler3 = () => count++;
     const Button = () => <Button onClick={handler} />
   `).toBeTransformedTo(`
-    const [getCount, setCount] = rsjx.value(1);
+    const [getCount, setCount] = rjsx.value(1);
     const handler = () => handler2();
     const handler2 = () => handler3();
     const handler3 = () => setCount(getCount() + 1);
