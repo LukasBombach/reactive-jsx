@@ -44,11 +44,16 @@ test("x", async () => {
   const { code } =
     (await transform(`
     const count = 1;
-    const Button = () => <Button onClick={() => count = count + 1} />
+    const Button = () => <button onClick={() => count = count + 1} />
   `)) ?? {};
 
-  expect(code).toBe(`
-    const [getCount, setCount] = rjsx.value(1);
-    const Button = () => <Button onClick={() => setCount(getCount() + 1)} />
+  expect(code).toMatchInlineSnapshot(`
+    "const count = rjsx.value(() => 1, \\"count\\");
+
+    const Button = () => rjsx.createElement(\\"button\\", {
+      onClick: () => rjsx.react(() => {
+        count.set(() => count + 1);
+      })
+    });"
   `);
 });
