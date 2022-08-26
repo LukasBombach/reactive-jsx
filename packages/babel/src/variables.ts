@@ -8,7 +8,7 @@ export function getDeclaration(path: NodePath<Identifier>): Binding | undefined 
 }
 
 export function getGetters(path: Binding): NodePath<Node>[] {
-  return path.referencePaths.filter(p => !p.findParent(p => path.constantViolations.includes(p)));
+  return path.referencePaths.filter(p => p.parentPath && !path.constantViolations.includes(p.parentPath));
 }
 
 export function getSetters(path: Binding): NodePath<Node>[] {

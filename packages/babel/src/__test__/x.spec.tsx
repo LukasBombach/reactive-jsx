@@ -65,6 +65,21 @@ test("x", () => {
 test("x", () => {
   const code = t(`
       const count = 1;
+      const Button = () => <button onClick={() => count = count - 1} />
+    `);
+
+  expect(code).toMatchInlineSnapshot(`
+    "const count = rjsx.value(() => 1, \\"count\\");
+
+    const Button = () => rjsx.createElement(\\"button\\", {
+      onClick: () => count.set(() => count.get() - 1)
+    });"
+  `);
+});
+
+test("x", () => {
+  const code = t(`
+      const count = 1;
       const Button = () => <button onClick={() => count--} />
     `);
 
