@@ -1,4 +1,4 @@
-import { isNonNullable } from "./typeGuards";
+import { unique, isNonNullable } from "./typeGuards";
 import { isVariableDeclaration, isExpressionStatement, isIdentifier, isAssignmentExpression } from "./typeGuards";
 
 import type { NodePath } from "@babel/core";
@@ -23,5 +23,15 @@ export function getAssignments(path: Binding): NodePath<Identifier>[] {
     .map(path => path.get("left"))
     .filter(isIdentifier);
 
-  return [...fromVariableDeclaration, ...fromExpressionStatement];
+  /* console.log(
+    statements
+      .filter(isExpressionStatement)
+      .map(path => path.get("expression"))
+      .filter(isAssignmentExpression)
+      .map(path => path.get("left"))
+      .filter(isIdentifier)
+      .map(path => `${path.type} ${path.toString()}`)
+  ); */
+
+  return [...fromVariableDeclaration, ...fromExpressionStatement].filter(unique);
 }
