@@ -23,6 +23,8 @@ export function getAssignments(path: Binding): NodePath<Identifier>[] {
     .map(path => path.get("left"))
     .filter(isIdentifier);
 
+  // console.log(fromExpressionStatement.map(path => `${path.type}: ${path.toString()}`));
+
   /* console.log(
     statements
       .filter(isExpressionStatement)
