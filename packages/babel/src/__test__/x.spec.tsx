@@ -1,10 +1,9 @@
-import { transformAsync } from "@babel/core";
+import { transform as babelTransform } from "@babel/core";
+import * as plugin from "../plugin";
 
-const pluginDist = "dist/plugin.js";
-
-async function transform(source: string): Promise<string> {
-  const result = await transformAsync(source, {
-    filename: "repl.tsx",
+function transform(source: string): string {
+  const result = babelTransform(source, {
+    filename: "test.tsx",
     presets: [
       [
         "@babel/preset-env",
@@ -23,28 +22,23 @@ async function transform(source: string): Promise<string> {
         },
       ],
     ],
-    plugins: [require(`../../${pluginDist}`)],
+    plugins: [plugin],
   });
 
-  if (result === null) {
-    throw new Error("result is null");
-  }
-
-  if (typeof result.code !== "string") {
-    throw new Error("code is not a string");
+  if (!result?.code) {
+    throw new Error("failed to compile code");
   }
 
   return result.code;
 }
 
-describe("x", () => {
-  test("x", async () => {
-    const code = await transform(`
+test("x", () => {
+  const code = transform(`
       const count = 1;
       const Button = () => <button onClick={() => count = count + 1} />
     `);
 
-    expect(code).toMatchInlineSnapshot(`
+  expect(code).toMatchInlineSnapshot(`
       "const count = rjsx.value(() => 1, \\"count\\");
 
       const Button = () => rjsx.createElement(\\"button\\", {
@@ -53,5 +47,4 @@ describe("x", () => {
         })
       });"
     `);
-  });
 });
