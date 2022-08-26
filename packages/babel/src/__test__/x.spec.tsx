@@ -50,21 +50,6 @@ test("x", () => {
 test("x", () => {
   const code = t(`
       const count = 1;
-      const Button = () => <button onClick={() => count++} />
-    `);
-
-  expect(code).toMatchInlineSnapshot(`
-    "const count = rjsx.value(() => 1, \\"count\\");
-
-    const Button = () => rjsx.createElement(\\"button\\", {
-      onClick: () => count.set(() => count.get() + 1)
-    });"
-  `);
-});
-
-test("x", () => {
-  const code = t(`
-      const count = 1;
       const Button = () => <button onClick={() => count = count - 1} />
     `);
 
@@ -77,7 +62,22 @@ test("x", () => {
   `);
 });
 
-test("x", () => {
+test("y", () => {
+  const code = t(`
+      const count = 1;
+      const Button = () => <button onClick={() => count++} />
+    `);
+
+  expect(code).toMatchInlineSnapshot(`
+    "const count = rjsx.value(() => 1, \\"count\\");
+
+    const Button = () => rjsx.createElement(\\"button\\", {
+      onClick: () => count.set(() => count.get() + 1)
+    });"
+  `);
+});
+
+test("y", () => {
   const code = t(`
       const count = 1;
       const Button = () => <button onClick={() => count--} />
@@ -88,6 +88,46 @@ test("x", () => {
 
     const Button = () => rjsx.createElement(\\"button\\", {
       onClick: () => count.set(() => count.get() - 1)
+    });"
+  `);
+});
+
+test("z", () => {
+  const code = t(`
+      const count = 1;
+      function handleClick() { count = count +1; }
+      const Button = () => <button onClick={handleClick} />
+    `);
+
+  expect(code).toMatchInlineSnapshot(`
+    "const count = rjsx.value(() => 1, \\"count\\");
+
+    function handleClick() {
+      count.set(() => count.get() + 1);
+    }
+
+    const Button = () => rjsx.createElement(\\"button\\", {
+      onClick: handleClick
+    });"
+  `);
+});
+
+test("z", () => {
+  const code = t(`
+      const count = 1;
+      function handleClick() { count++; }
+      const Button = () => <button onClick={handleClick} />
+    `);
+
+  expect(code).toMatchInlineSnapshot(`
+    "const count = rjsx.value(() => 1, \\"count\\");
+
+    function handleClick() {
+      count.set(() => count.get() + 1);
+    }
+
+    const Button = () => rjsx.createElement(\\"button\\", {
+      onClick: handleClick
     });"
   `);
 });
