@@ -42,7 +42,37 @@ test("x", () => {
     "const count = rjsx.value(() => 1, \\"count\\");
 
     const Button = () => rjsx.createElement(\\"button\\", {
-      onClick: () => count.set(() => count + 1)
+      onClick: () => count.set(() => count.get() + 1)
+    });"
+  `);
+});
+
+test("x", () => {
+  const code = t(`
+      const count = 1;
+      const Button = () => <button onClick={() => count++} />
+    `);
+
+  expect(code).toMatchInlineSnapshot(`
+    "const count = rjsx.value(() => 1, \\"count\\");
+
+    const Button = () => rjsx.createElement(\\"button\\", {
+      onClick: () => count.set(() => count.get() + 1)
+    });"
+  `);
+});
+
+test("x", () => {
+  const code = t(`
+      const count = 1;
+      const Button = () => <button onClick={() => count--} />
+    `);
+
+  expect(code).toMatchInlineSnapshot(`
+    "const count = rjsx.value(() => 1, \\"count\\");
+
+    const Button = () => rjsx.createElement(\\"button\\", {
+      onClick: () => count.set(() => count.get() - 1)
     });"
   `);
 });
