@@ -1,8 +1,8 @@
-import { transform as babelTransform } from "@babel/core";
+import { transform } from "@babel/core";
 import * as plugin from "../plugin";
 
-function transform(source: string): string {
-  const result = babelTransform(source, {
+function t(source: string): string {
+  const result = transform(source, {
     filename: "test.tsx",
     presets: [
       [
@@ -33,18 +33,16 @@ function transform(source: string): string {
 }
 
 test("x", () => {
-  const code = transform(`
+  const code = t(`
       const count = 1;
       const Button = () => <button onClick={() => count = count + 1} />
     `);
 
   expect(code).toMatchInlineSnapshot(`
-      "const count = rjsx.value(() => 1, \\"count\\");
+    "const count = rjsx.value(() => 1, \\"count\\");
 
-      const Button = () => rjsx.createElement(\\"button\\", {
-        onClick: () => rjsx.react(() => {
-          count.set(() => count + 1);
-        })
-      });"
-    `);
+    const Button = () => rjsx.createElement(\\"button\\", {
+      onClick: () => count.set(() => count + 1)
+    });"
+  `);
 });
