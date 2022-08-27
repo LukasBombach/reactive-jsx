@@ -20,15 +20,24 @@ function findReactiveBlock(path: NodePath<Node>): NodePath<Node> | undefined {
 
   const ancestry = path.getAncestry();
 
+  // console.log(ancestry.map(path => `${path.type} | ${path.toString()}`));
+
   if (ancestry.some(isJsxEventHandler)) {
     return undefined;
   }
 
-  // findLast
+  // reverse.find = find from the outside in (findLast)
   return ancestry.reverse().find(p => blockTypes.includes(p.type));
 }
 
 const isJsxEventHandler = (path: NodePath<Node>): boolean => {
+  if (path.isFunctionDeclaration() && path.node.id) {
+    const name = path.node.id.name;
+    const binding = path.scope.getBinding(name);
+    if (!binding) return false;
+    return binding.referencePaths.flatMap(path => path.getAncestry()).some(isJsxEventHandler);
+  }
+
   if (!path.isJSXAttribute()) return false;
 
   const identifier = path.get("name").node.name;
