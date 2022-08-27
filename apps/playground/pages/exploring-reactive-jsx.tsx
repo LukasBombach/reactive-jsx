@@ -11,7 +11,14 @@ export default function ExploringReactiveJsx() {
           Writing simpler components by transpiling away the hard parts
         </blockquote>
       </header>
-      <main></main>
+      <main>
+        <P>
+          Implementing complex user interfaces is by no means trivial. Concurrent Whoever argues Whoever argues
+          otherwise
+          <strong className="pb-px border-b-[3px] border-b-sky-300">React is a great libary.</strong> It helps
+          implemeting user interfaces
+        </P>
+      </main>
     </Layout>
   );
 }
