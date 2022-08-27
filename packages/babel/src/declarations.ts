@@ -23,7 +23,12 @@ export function getDeclarations(path: NodePath<Program>) {
 }
 
 function findAssignedVariables(bindings: Binding[]): Binding[] {
-  const assignments = bindings.flatMap(getAssignments).map(getDeclaration).filter(isNonNullable).filter(unique);
+  const assignments = bindings
+    .flatMap(getAssignments)
+    .map(getDeclaration)
+    .filter(isNonNullable)
+    .filter(unique)
+    .filter(assignment => !bindings.includes(assignment));
 
   if (assignments.length) {
     return [...assignments, ...findAssignedVariables(assignments)].filter(unique);
