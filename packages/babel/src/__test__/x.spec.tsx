@@ -32,7 +32,7 @@ function t(source: string): string {
   return result.code;
 }
 
-test("x", () => {
+test("positive assignment", () => {
   const code = t(`
       const count = 1;
       const Button = () => <button onClick={() => count = count + 1} />
@@ -47,7 +47,7 @@ test("x", () => {
   `);
 });
 
-test("x", () => {
+test("negative assignment", () => {
   const code = t(`
       const count = 1;
       const Button = () => <button onClick={() => count = count - 1} />
@@ -62,7 +62,7 @@ test("x", () => {
   `);
 });
 
-test("y", () => {
+test("positive update", () => {
   const code = t(`
       const count = 1;
       const Button = () => <button onClick={() => count++} />
@@ -77,7 +77,7 @@ test("y", () => {
   `);
 });
 
-test("y", () => {
+test("negative update", () => {
   const code = t(`
       const count = 1;
       const Button = () => <button onClick={() => count--} />
@@ -92,10 +92,10 @@ test("y", () => {
   `);
 });
 
-test("z", () => {
+test("Event handler reference with assignment", () => {
   const code = t(`
       const count = 1;
-      function handleClick() { count = count +1; }
+      function handleClick() { count = count + 1; }
       const Button = () => <button onClick={handleClick} />
     `);
 
@@ -112,7 +112,7 @@ test("z", () => {
   `);
 });
 
-test("z", () => {
+test("Event handler reference with update", () => {
   const code = t(`
       const count = 1;
       function handleClick() { count++; }
