@@ -3,7 +3,7 @@ import {
   BlogTitle,
   P,
   BrandLink,
-  ArticlesHeadline,
+  H2,
   ArticleList,
   Article,
   Title,
@@ -45,7 +45,7 @@ export default function HomePage() {
         </P>
       </header>
       <main>
-        <ArticlesHeadline>Articles</ArticlesHeadline>
+        <H2>Articles</H2>
         <ArticleList>
           <Article href="/exploring-reactive-jsx">
             <Title>Exploring compile time reactive JSX</Title>

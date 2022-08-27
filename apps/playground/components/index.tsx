@@ -51,15 +51,20 @@ export const Intro: TC = ({ children }) => <p className="leading-7 text-sm max-w
 export const P: TC<{ className?: string }> = ({ children, className }) => (
   <p className={["leading-7 text-sm mb-6 max-w-screen-sm", className].join(" ")}>{children}</p>
 );
+
+export const QuoteHighlight: TC = ({ children }) => (
+  <blockquote className="-ml-5 pl-3 border-l-2 sm:pl-4 sm:border-l-[6px] sm:my-10 sm:mb-9 border-slate-200 text-slate-500 italic max-w-screen-sm">
+    {children}
+  </blockquote>
+);
+
 export const Code: TC = ({ children }) => (
   <code className="font-mono text-xs bg-slate-200 dark:text-slate-800 leading-5 px-[4px] rounded inline-block">
     {children}
   </code>
 );
 
-export const ArticlesHeadline: TC = ({ children }) => (
-  <h2 className="font-bold text-lg pb-1 sm:pb-2 max-w-screen-sm">{children}</h2>
-);
+export const H2: TC = ({ children }) => <h2 className="font-bold text-lg pb-1 sm:pb-3 max-w-screen-sm">{children}</h2>;
 
 export const BrandLink: TC<{
   href: string;
