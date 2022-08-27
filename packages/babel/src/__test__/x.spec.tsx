@@ -228,3 +228,103 @@ test("side effects (use effect)", () => {
     });"
   `);
 });
+
+test("reactive blocks: if statement (in test)", () => {
+  const code = t(`
+      const count = 1;
+      
+      if (count > 2) {
+        console.log("Count is < 2");
+      }
+
+      const Button = () => <button onClick={() => count = count + 1} />
+    `);
+
+  expect(code).toMatchInlineSnapshot(`
+    "const count = rjsx.value(() => 1, \\"count\\");
+    rjsx.react(() => {
+      if (count.get() > 2) {
+        console.log(\\"Count is < 2\\");
+      }
+    });
+
+    const Button = () => rjsx.createElement(\\"button\\", {
+      onClick: () => count.set(() => count.get() + 1)
+    });"
+  `);
+});
+
+test("reactive blocks: if statement (in consenquent)", () => {
+  const code = t(`
+      const count = 1;
+      
+      if (someCondition()) {
+        console.log(\`Count is \${count}\`);
+      }
+
+      const Button = () => <button onClick={() => count = count + 1} />
+    `);
+
+  expect(code).toMatchInlineSnapshot(`
+    "const count = rjsx.value(() => 1, \\"count\\");
+    rjsx.react(() => {
+      if (someCondition()) {
+        console.log(\`Count is \${count.get()}\`);
+      }
+    });
+
+    const Button = () => rjsx.createElement(\\"button\\", {
+      onClick: () => count.set(() => count.get() + 1)
+    });"
+  `);
+});
+
+test("reactive blocks: for loop (in test)", () => {
+  const code = t(`
+      const count = 1;
+      
+      for (let i = 0; i < count; i++) {
+        console.log(\`counted \${i} times\`);
+      }
+
+      const Button = () => <button onClick={() => count = count + 1} />
+    `);
+
+  expect(code).toMatchInlineSnapshot(`
+    "const count = rjsx.value(() => 1, \\"count\\");
+    rjsx.react(() => {
+      for (let i = 0; i < count.get(); i++) {
+        console.log(\`counted \${i} times\`);
+      }
+    });
+
+    const Button = () => rjsx.createElement(\\"button\\", {
+      onClick: () => count.set(() => count.get() + 1)
+    });"
+  `);
+});
+
+test("reactive blocks: for loop (in body)", () => {
+  const code = t(`
+      const count = 1;
+      
+      for (let i = 0; i < 10; i++) {
+        console.log(\`loop \${count}\`);
+      }
+
+      const Button = () => <button onClick={() => count = count + 1} />
+    `);
+
+  expect(code).toMatchInlineSnapshot(`
+    "const count = rjsx.value(() => 1, \\"count\\");
+    rjsx.react(() => {
+      for (let i = 0; i < 10; i++) {
+        console.log(\`loop \${count.get()}\`);
+      }
+    });
+
+    const Button = () => rjsx.createElement(\\"button\\", {
+      onClick: () => count.set(() => count.get() + 1)
+    });"
+  `);
+});
