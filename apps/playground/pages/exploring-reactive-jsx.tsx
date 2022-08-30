@@ -13,10 +13,8 @@ export default function ExploringReactiveJsx() {
       </header>
       <main>
         <P>
-          Implementing complex user interfaces is by no means trivial. Concurrent Whoever argues Whoever argues
-          otherwise
-          <strong className="pb-px border-b-[3px] border-b-sky-300">React is a great libary.</strong> It helps
-          implemeting user interfaces
+          Writing
+          <strong className="pb-px border-b-[3px] border-b-sky-300">React is a great libary.</strong>
         </P>
       </main>
     </Layout>
