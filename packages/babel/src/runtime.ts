@@ -5,5 +5,5 @@ export function getRuntimeImports() {
 }
 
 const buildImports = template.smart(`
-  import rjsx from "@reactive-jsx/runtime";
+  import * as rjsx from "@reactive-jsx/runtime";
 `);

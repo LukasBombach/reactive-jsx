@@ -1,8 +1,4 @@
-import { value } from "./value";
-import { react } from "./reaction";
-import { createElement } from "./createElement";
-import { render } from "./render";
-
+export { value } from "./value";
+export { react } from "./reaction";
+export { createElement } from "./createElement";
 export { render } from "./render";
-
-export default { value, react, createElement, render };
