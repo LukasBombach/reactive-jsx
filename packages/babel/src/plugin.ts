@@ -1,9 +1,12 @@
+import template from "@babel/template";
+import { cloneDeepWithoutLoc } from "@babel/types";
 import { getDeclarations } from "./declarations";
 import { getStatements } from "./statements";
 import { getGetters, getSetters } from "./variables";
 import { convertDeclaration, convertGetter, convertSetter, convertUpdateExpression, convertStatement } from "./convert";
 import { getRuntimeImports } from "./runtime";
 import { isVariableDeclarator, isIdentifier, isAssignmentExpression, isUpdateExpression } from "./typeGuards";
+import { isExpression, isJSXExpressionContainer } from "./typeGuards";
 
 import type { Visitor } from "@babel/core";
 
@@ -47,9 +50,44 @@ export default function reactiveJsxPlugin(): { name: string; visitor: Visitor } 
             path.replaceWith(reactiveStatement);
           });
 
+          path.traverse({
+            JSXElement: path => {
+              // const attributes = path.get("openingElement").get("attributes");
+              const children = path.get("children");
+              // const isComponent = openingElementIsCapitalized(path);
+
+              // if (isComponent) return;
+
+              /* attributes
+                .filter((path): path is NodePath<JSXAttribute> => path.isJSXAttribute())
+                .filter(path => !isEventHandler(path))
+                .map(path => path.get("value"))
+                .filter((path): path is NodePath<JSXExpressionContainer> => path.isJSXExpressionContainer())
+                .map(path => path.get("expression"))
+                .filter((path): path is NodePath<Expression> => path.isExpression())
+                .forEach(path => {
+                  const VALUE = cloneDeepWithoutLoc(path.node);
+                  path.replaceWith(asFunction({ VALUE }));
+                }); */
+
+              children
+                .filter(isJSXExpressionContainer)
+                .map(path => path.get("expression"))
+                .filter(isExpression)
+                .forEach(path => {
+                  const VALUE = cloneDeepWithoutLoc(path.node);
+                  path.replaceWith(asFunction({ VALUE }));
+                });
+            },
+          });
+
           path.unshiftContainer("body", getRuntimeImports());
         },
       },
     },
   };
 }
+
+const asFunction = template.statement`
+  () => VALUE
+`;

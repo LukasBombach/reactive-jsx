@@ -4,7 +4,7 @@ const exportAsString = require("./exportAsString.js");
 build({
   entryPoints: ["src/index.ts"],
   outfile: "dist/index.js",
-  format: "cjs",
+  format: "esm",
   bundle: true,
   minify: true,
 }).then(() => {

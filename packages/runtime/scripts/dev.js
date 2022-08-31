@@ -4,7 +4,8 @@ const exportAsString = require("./exportAsString.js");
 build({
   entryPoints: ["src/index.ts"],
   outfile: "dist/index.js",
-  format: "cjs",
+  format: "esm",
+  target: "es2020",
   bundle: true,
   watch: {
     onRebuild(error) {

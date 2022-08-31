@@ -4,7 +4,12 @@ import { Layout, BlogTitle, P, QuoteHighlight, Code, PostCredit, H2 } from "comp
 const teaserCode = `
 const Button = () => {
   let count = 1;
-  return <button onClick={() => count++}>{count}</button>
+
+  return (
+    <button onClick={() => count++}>
+      Count is {count}
+    </button>
+  );
 };
 
 document.body.append(rjsx.render(<Button />));`;
