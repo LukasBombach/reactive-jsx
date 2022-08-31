@@ -1,5 +1,5 @@
 import { Playground } from "@reactive-jsx/playground";
-import { Layout, BlogTitle, P, QuoteHighlight, Code, PostCredit, H2 } from "components";
+import { Layout, BlogTitle, P, Code, PostCredit } from "components";
 
 import type { FC, ReactNode } from "react";
 
