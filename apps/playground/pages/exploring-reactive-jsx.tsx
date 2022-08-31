@@ -57,16 +57,17 @@ export default function ExploringReactiveJsx() {
         <P>
           Luckily, a lot of this mess can be managed through reactive UI frameworks, with React as their benevolent
           ruler. But React is not without criticism. While writing components and using <Code>useState</Code> feels
-          pretty straight forward, things begin to feel less <em>obvious</em> once you have to <Code>useEffect</Code> or{" "}
-          <Code>useContext</Code>. Why do we have to use hooks though? <Highlight>Can we not just do this?</Highlight>
+          pretty straight forward, things begin to feel less <em>straight forward</em> once you have to{" "}
+          <Code>useEffect</Code> or <Code>useContext</Code>. Why do we have to use hooks though?{" "}
+          <Highlight>Can we not just do this?</Highlight>
         </P>
 
         <Playground className="my-10 max-w-screen-sm" source={teaserCode} />
 
         <P>
-          <Highlight>A state is merely a mutable variable that gets updated.</Highlight> Well, it works. The same goes
-          for context. Remember context hell?{" "}
-          <Highlight>A context is just a variable that is used by more than one component.</Highlight>
+          <Highlight>A state is merely a mutable variable</Highlight> that gets updated. Well, it works. The same goes
+          for context. Remember context hell? <Highlight>A context is just a variable that is shared</Highlight> by more
+          than one component.
         </P>
 
         <Playground className="my-10 max-w-screen-sm" source={context} />
