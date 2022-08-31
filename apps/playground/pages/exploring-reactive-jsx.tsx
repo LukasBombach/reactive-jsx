@@ -1,6 +1,8 @@
 import { Playground } from "@reactive-jsx/playground";
 import { Layout, BlogTitle, P, QuoteHighlight, Code, PostCredit, H2 } from "components";
 
+import type { FC, ReactNode } from "react";
+
 const teaserCode = `
 const Button = () => {
   let count = 1;
@@ -30,6 +32,10 @@ const App = () => (
 
 rjsx.render(<App />, document.body);`;
 
+const Highlight: FC<{ children?: ReactNode }> = ({ children }) => (
+  <span className="pb-px border-b-[3px] border-b-amber-400">{children}</span>
+);
+
 export default function ExploringReactiveJsx() {
   return (
     <Layout>
@@ -42,25 +48,24 @@ export default function ExploringReactiveJsx() {
       </header>
       <main>
         <P>
-          <span className="pb-px border-b-[3px] border-b-amber-400">Front end development is hard.</span> Sometimes, a
-          statement like this would get ridiculed—&quot;back end is much more complex&quot;, they would say. But think
-          about the inherent complexity of implementing a user interface. In its basic form it is a distributed system
-          of independent actors that runs on parallelism and concurrency. You need to manage state—at scale—and take
-          care of the details as well.
+          <Highlight>Front end development is hard.</Highlight> Sometimes, a statement like this would get
+          ridiculed—&quot;back end is much more complex&quot;, they would say. But think about the inherent complexity
+          of implementing a user interface. In its basic form it is a distributed system of independent actors that runs
+          on parallelism and concurrency. You need to manage state—at scale—and take care of the details as well.
         </P>
         <P>
           Luckily, a lot of this mess can be managed through reactive UI frameworks, with React is their benevolent
           ruler. But React is not without criticism. While writing components and using <Code>useState</Code> feels
           pretty straight forward, things begin to feel less <em>obvious</em> once you have to <Code>useEffect</Code> or{" "}
-          <Code>useContext</Code>. Why do we have to use hooks though?{" "}
-          <span className="pb-px border-b-[3px] border-b-amber-400">Can we not just do this?</span>
+          <Code>useContext</Code>. Why do we have to use hooks though? <Highlight>Can we not just do this?</Highlight>
         </P>
 
         <Playground className="my-10 max-w-screen-sm" source={teaserCode} />
 
         <P>
-          A state is merely a mutable variable that gets updated. Well, it works. The same goes for context. Remember
-          context hell? A context is just a variable that is used by more than one component.
+          <Highlight>A state is merely a mutable variable that gets updated.</Highlight> Well, it works. The same goes
+          for context. Remember context hell?{" "}
+          <Highlight>A context is just a variable that is used by more than one component.</Highlight>
         </P>
 
         <Playground className="my-10 max-w-screen-sm" source={context} />
