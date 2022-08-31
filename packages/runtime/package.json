@@ -5,7 +5,8 @@
   "main": "./dist/index.js",
   "types": "index.d.ts",
   "files": [
-    "as-string"
+    "as-string.js",
+    "as-string.d.ts"
   ],
   "scripts": {
     "build": "node scripts/build.js",
