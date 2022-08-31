@@ -84,9 +84,11 @@ export default function ExploringReactiveJsx() {
         <Playground className="my-10 max-w-screen-sm" source={teaserCode} />
 
         <P>
-          <Highlight>A state is merely a mutable variable</Highlight> that gets updated. Well, it works. The same goes
-          for context. Remember context hell? <Highlight>A context is just a variable that is shared</Highlight> by more
-          than one component.
+          Conceptually speaking, in React <Highlight>state is merely a mutable variable</Highlight> that gets updated.
+          Should it not be as simple as that? Especially context starts to impose the structure of the framework on you.
+          Have you ever heard the term context hell? Well,{" "}
+          <Highlight>context is just a variable that is shared between components</Highlight>, so why can&apos;t the
+          code <em>just be that</em>?
         </P>
 
         <Playground className="my-10 max-w-screen-sm" source={context} />
