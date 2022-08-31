@@ -2,7 +2,7 @@ import type { FC, ReactNode } from "react";
 
 export { PostCredit } from "./PostCredit";
 
-type TC<P = {}> = FC<{ children: ReactNode } & P>;
+type TC<P = {}> = FC<{ children?: ReactNode } & P>;
 
 const linkBrands = {
   twitter: "text-[#55ACEE]",

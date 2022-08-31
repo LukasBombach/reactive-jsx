@@ -33,9 +33,28 @@ const App = () => (
 
 rjsx.render(<App />, document.body);`;
 
-const Highlight: FC<{ children?: ReactNode }> = ({ children }) => (
-  <span className="pb-px border-b-[3px] border-b-amber-400">{children}</span>
-);
+const effect = `
+const Button = () => {
+  let count = 1;
+
+  console.log(\`Count is \${count}\`);
+
+  return <button onClick={() => count++}>Click</button>;
+};
+
+rjsx.render(<Button />, document.body);`;
+
+const Highlight: FC<{ color?: "amber" | "emerald" | "sky"; children?: ReactNode }> = ({
+  color = "amber",
+  children,
+}) => {
+  const border = {
+    amber: "border-b-amber-400",
+    emerald: "border-b-green-500",
+    sky: "border-b-sky-300",
+  }[color];
+  return <span className={`pb-px border-b-[3px] ${border}`}>{children}</span>;
+};
 
 export default function ExploringReactiveJsx() {
   return (
@@ -71,6 +90,21 @@ export default function ExploringReactiveJsx() {
         </P>
 
         <Playground className="my-10 max-w-screen-sm" source={context} />
+
+        <P>
+          And finally, <Highlight>an effect is just a statement that contains a variable</Highlight>.
+        </P>
+
+        <Playground className="my-10 max-w-screen-sm" source={effect} />
+
+        <P>
+          <Highlight color="emerald">
+            It actually works, all of these examples are fully functional playgrounds
+          </Highlight>
+          . Feel free to try them out!
+        </P>
+
+        <P>These examples may seem trivial, but there is a reason why this is good.</P>
       </main>
     </Layout>
   );
