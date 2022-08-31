@@ -26,7 +26,8 @@ const Show = () => <p> Count is {count} </p>;
 const App = () => (
   <div>
     <Show />
-    <Dec /> <Inc />
+    <Dec />
+    <Inc />
   </div>
 );
 
@@ -50,11 +51,11 @@ export default function ExploringReactiveJsx() {
         <P>
           <Highlight>Front end development is hard.</Highlight> Sometimes, a statement like this would get
           ridiculed—&quot;back end is much more complex&quot;, they would say. But think about the inherent complexity
-          of implementing a user interface. In its basic form it is a distributed system of independent actors that runs
-          on parallelism and concurrency. You need to manage state—at scale—and take care of the details as well.
+          of implementing a user interface. In its basic form, it is a distributed system of independent actors that
+          runs on parallelism and concurrency. You need to manage state—at scale—and take care of the details as well.
         </P>
         <P>
-          Luckily, a lot of this mess can be managed through reactive UI frameworks, with React is their benevolent
+          Luckily, a lot of this mess can be managed through reactive UI frameworks, with React as their benevolent
           ruler. But React is not without criticism. While writing components and using <Code>useState</Code> feels
           pretty straight forward, things begin to feel less <em>obvious</em> once you have to <Code>useEffect</Code> or{" "}
           <Code>useContext</Code>. Why do we have to use hooks though? <Highlight>Can we not just do this?</Highlight>
