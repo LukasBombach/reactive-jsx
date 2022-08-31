@@ -40,7 +40,7 @@ export function convertStatement(path: NodePath<Node>): Statement {
 }
 
 const buildDeclaration = statement`
-  const NAME = rjsx.value(() => VALUE, "NAME");
+  const NAME = rjsx.value(() => VALUE);
 `;
 
 const buildGetter = statement`
