@@ -4,6 +4,7 @@ build({
   entryPoints: ["src/plugin.ts"],
   outfile: "dist/plugin.js",
   format: "cjs",
+  bundle: true,
   watch: {
     onRebuild(error) {
       if (error) {

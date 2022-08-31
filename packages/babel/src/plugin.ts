@@ -2,6 +2,7 @@ import { getDeclarations } from "./declarations";
 import { getStatements } from "./statements";
 import { getGetters, getSetters } from "./variables";
 import { convertDeclaration, convertGetter, convertSetter, convertUpdateExpression, convertStatement } from "./convert";
+import { getRuntimeImports } from "./runtime";
 import { isVariableDeclarator, isIdentifier, isAssignmentExpression, isUpdateExpression } from "./typeGuards";
 
 import type { Visitor } from "@babel/core";
@@ -45,6 +46,8 @@ export default function reactiveJsxPlugin(): { name: string; visitor: Visitor } 
             const reactiveStatement = convertStatement(path);
             path.replaceWith(reactiveStatement);
           });
+
+          path.unshiftContainer("body", getRuntimeImports());
         },
       },
     },
