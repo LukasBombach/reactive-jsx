@@ -12,7 +12,23 @@ const Button = () => {
   );
 };
 
-document.body.append(rjsx.render(<Button />));`;
+rjsx.render(<Button />, document.body);`;
+
+const context = `
+let count = 1;
+
+const Dec = () => <button onClick={() => count--}> - </button>;
+const Inc = () => <button onClick={() => count++}> + </button>;
+const Show = () => <p> Count is {count} </p>;
+
+const App = () => (
+  <div>
+    <Show />
+    <Dec /> <Inc />
+  </div>
+);
+
+rjsx.render(<App />, document.body);`;
 
 export default function ExploringReactiveJsx() {
   return (
@@ -39,7 +55,15 @@ export default function ExploringReactiveJsx() {
           <Code>useContext</Code>. Why do we have to use hooks though?{" "}
           <span className="pb-px border-b-[3px] border-b-amber-400">Can we not just do this?</span>
         </P>
+
         <Playground className="my-10 max-w-screen-sm" source={teaserCode} />
+
+        <P>
+          A state is merely a mutable variable that gets updated. Well, it works. The same goes for context. Remember
+          context hell? A context is just a variable that is used by more than one component.
+        </P>
+
+        <Playground className="my-10 max-w-screen-sm" source={context} />
       </main>
     </Layout>
   );

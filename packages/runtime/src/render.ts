@@ -7,6 +7,10 @@ import type { Tag, Component, Props, Child, Element, R } from "./createElement";
 
 type Attrs<P extends Props> = Omit<NonNullable<P>, "children">;
 
+export function append(el: Element, container: HTMLElement) {
+  container.append(render(el));
+}
+
 /**
  *
  */
