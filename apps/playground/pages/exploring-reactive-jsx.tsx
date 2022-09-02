@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Playground } from "@reactive-jsx/playground";
 import { Layout, BlogTitle, P, Code, PostCredit } from "components";
 
@@ -77,8 +78,23 @@ export default function ExploringReactiveJsx() {
           Luckily, a lot of this mess can be managed through reactive UI frameworks, with React as their benevolent
           ruler. But React is not without criticism. While writing components and using <Code>useState</Code> feels
           pretty straight forward, things begin to feel less <em>straight forward</em> once you have to{" "}
-          <Code>useEffect</Code> or <Code>useContext</Code>. Why do we have to use hooks though?{" "}
-          <Highlight>Can we not just do this?</Highlight>
+          <Code>useEffect</Code> or <Code>useContext</Code>.
+          {/*  Why do we have to use hooks though?{" "}
+          <Highlight>Can we not just do this?</Highlight> */}
+        </P>
+
+        <P>
+          I googled &quot;useEffect&quot; and found{" "}
+          <a href="https://dmitripavlutin.com/react-useeffect-explanation/" className="text-blue-600 hover:underline">
+            A Simple Explanation of React.useEffect()
+          </a>
+          . That does not seem simple to me.
+          <Image
+            src="/exploring-reactive-jsx/a_simple_explanation_of_useeffect.svg"
+            alt="diagram explaining how useEffect works"
+            layout="fill"
+          />
+          And then there is callback hell.
         </P>
 
         <Playground className="my-10 max-w-screen-sm" source={teaserCode} />
