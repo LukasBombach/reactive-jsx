@@ -69,60 +69,69 @@ export default function ExploringReactiveJsx() {
       </header>
       <main>
         <P>
-          <Highlight>Front end development is hard.</Highlight> Sometimes, a statement like this would get
-          ridiculed—&quot;back end is much more complex&quot;, they would say. But think about the inherent complexity
-          of implementing a user interface. In its basic form, it is a distributed system of independent actors that
-          runs on parallelism and concurrency. You need to manage state—at scale—and take care of the details as well.
+          Like many others, I have also noticed that React has seemingly gotten more difficult than in the olden days
+          [tm]. I belive this is because, when introduced, React shrunk down a notirously difficult problem—implementing
+          user interfaces—to a managable model.
         </P>
         <P>
-          Luckily, a lot of this mess can be managed through reactive UI frameworks, with React as their benevolent
-          ruler. But React is not without criticism. While writing components and using <Code>useState</Code> feels
-          pretty straight forward, things begin to feel less <em>straight forward</em> once you have to{" "}
-          <Code>useEffect</Code> or <Code>useContext</Code>.
-          {/*  Why do we have to use hooks though?{" "}
-          <Highlight>Can we not just do this?</Highlight> */}
+          If you ever hear a back end person say that front end is easy and back end is the real deal, describe that a
+          user interface, in its most basic form, already is a real-time distributed system with multiple local and
+          shared states, concurrency and parallelism. Not to mention that this system does not only have to work, it
+          needs work in a presentable way, presentable to humans that is, which imposes further complexity on how you
+          have to do state and error handling. You may not just have one part of the system idly wait for some other
+          part of the system or log an error to Kibana and call it a day.
         </P>
-
         <P>
-          I googled &quot;useEffect&quot; and found{" "}
-          <a href="https://dmitripavlutin.com/react-useeffect-explanation/" className="text-blue-600 hover:underline">
-            A Simple Explanation of React.useEffect()
-          </a>
-          . That does not seem simple to me.
-          <Image
-            src="/exploring-reactive-jsx/a_simple_explanation_of_useeffect.svg"
-            alt="diagram explaining how useEffect works"
-            layout="fill"
-          />
-          And then there is callback hell.
+          React made this complexity simple. Simple of course is relative and a generally a bad choice of words in
+          computer science, but it shrunk down the complexity of this and simplified this to a mental model (another
+          worn-out term these days, I feel) that makes the hardness of UI managable. It promoted Components, State, and
+          Props. These things together make up the building blocks that allows managing this distributed mess.
         </P>
-
-        <Playground className="my-10 max-w-screen-sm" source={teaserCode} />
-
+        <ul>
+          <li>Components xyz</li>
+          <li>State xyz</li>
+          <li>Props xyz</li>
+        </ul>
         <P>
-          Conceptually speaking, in React <Highlight>state is merely a mutable variable</Highlight> that gets updated.
-          Should it not be as simple as that? Especially context starts to impose the structure of the framework on you.
-          Have you ever heard the term context hell? Well,{" "}
-          <Highlight>context is just a variable that is shared between components</Highlight>, so why can&apos;t the
-          code <em>just be that</em>?
+          The effectiveness of this model is proven by the evolutionary nature of computer science. Libraries die,
+          Frameworks die, but good ideas survive. This basics model has been copied and adapted by the other giants of
+          front end development. Svelte, Solid, Vue—they have their own twists and USPs, but they do have one idea in
+          common, can you see it? There are other frameworks out there, some backed by large corporations, but they are
+          not part of the cool gang in the high school drama that is our industry.
         </P>
-
-        <Playground className="my-10 max-w-screen-sm" source={context} />
-
         <P>
-          And finally, <Highlight>an effect is just a statement that contains a variable</Highlight>.
+          Like in evolution, we might see other paradigms some day, some more fitting to what we want to do. Things are
+          always in constant change. As a famous quote by Buckminister Fuller goes
         </P>
-
-        <Playground className="my-10 max-w-screen-sm" source={effect} />
-
+        <blockquote>
+          You never change things by fighting the existing reality. To change something, build a new model that makes
+          the existing model obsolete.
+        </blockquote>
         <P>
-          <Highlight color="emerald">
-            It actually works, all of these examples are fully functional playgrounds
-          </Highlight>
-          . Feel free to try them out!
+          Conversely, a new model that&apos;s worse than the old model, will be unnoticed, ridiculed or creates
+          resistance. In regards to React, something has changed.
+        </P>
+        <P>
+          and I belive it is this: Generally speaking, before hooks, the React&apos;s mental model encompassed
+          components.
         </P>
 
-        <P>These examples may seem trivial, but there is a reason why this is good.</P>
+        <ul>
+          <li>[no one size fits all]</li>
+          <li>[crtiqe from that article: different kinds if abstractions für reactivitiy]</li>
+          <li>
+            [different asbstractions provide diferent mental models of how things work and what is happening behind the
+            scenes. some provide benefits for DX at the cost of control and insight, others go the other way around]
+          </li>
+          <li>
+            [just for fun (link to just for fun) and as a genuine and constructute contribution to explore the
+            possiblities of abstractions]
+          </li>
+          <li>
+            [let&apos;s try another extreme: abstracting it all away at compile time. no knowledge of a runtime
+            required, a mental model of possbile states and maybe an &quot;it just works&quot; feeling]
+          </li>
+        </ul>
       </main>
     </Layout>
   );
