@@ -97,10 +97,11 @@ export default function ExploringReactiveJsx() {
         </P>
 
         <P>
-          In the olden days <TM /> there were components and maybe a bit knowledge about their lifecycle in React&apos;s
-          runtime. That was the end of complexity. When hooks came along, I think a lot of people just tried to take
-          this mindset and implement that with hooks. Famously, <Code>useEffect</Code> is one of the first moments they
-          would realize that things seem to be a bit different now.
+          In the olden days
+          <TM /> there were components and maybe a bit knowledge about their lifecycle in React&apos;s runtime. That was
+          the end of complexity. When hooks came along, I think a lot of people just tried to take this mindset and
+          implement that with hooks. Famously, <Code>useEffect</Code> is one of the first moments they would realize
+          that things seem to be a bit different now.
         </P>
 
         <P>
