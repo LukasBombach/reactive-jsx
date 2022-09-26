@@ -70,51 +70,84 @@ export default function ExploringReactiveJsx() {
       <main>
         <P>
           Like many others, I have also noticed that React has seemingly gotten more difficult than in the olden days
-          [tm]. I belive this is because, when introduced, React shrunk down a notirously difficult problem—implementing
-          user interfaces—to a managable model.
+          <sup className="font-bold uppercase">tm</sup>. I belive this is because, when introduced, React shrunk down a
+          notirously difficult problem—implementing user interfaces—to a managable model.
+        </P>
+
+        <P>
+          If you ever hear a back end person say that front end is easy and back end is the real deal, it&apos;s worth
+          pointing out that a very basic user interface is a real-time distributed system with multiple local and shared
+          states that manages both, concurrency and parallelism. Not to mention that this system does not only have to
+          work, it needs work in a presentable way, presentable to humans that is. This imposes further complexity on
+          how you have to do state and error handling. In a non user-facing system it might be ok to have one part idly
+          wait for some other part to do something or—in case of an error, just log it to Kibana and call it a day—but
+          users need instant and sometimes complex solutions for these problems.
+        </P>
+
+        <P>
+          React made this complexity simple. &quot;Simple&quot;, of course, is relative in nature and a generally a bad
+          choice of words in computer science, but what I mean is that it shrunk down the complexity and{" "}
+          <em>simplified</em> it to a mental model that makes the complexity managable (you know, at least potentially).
         </P>
         <P>
-          If you ever hear a back end person say that front end is easy and back end is the real deal, describe that a
-          user interface, in its most basic form, already is a real-time distributed system with multiple local and
-          shared states, concurrency and parallelism. Not to mention that this system does not only have to work, it
-          needs work in a presentable way, presentable to humans that is, which imposes further complexity on how you
-          have to do state and error handling. You may not just have one part of the system idly wait for some other
-          part of the system or log an error to Kibana and call it a day.
+          It did so, by promoting <Code>Components</Code>, <Code>State</Code> and <Code>Props</Code>. These things
+          together make up the building blocks that enable managing the distributed and intervened mess, which user
+          interfaces usually are.
         </P>
-        <P>
-          React made this complexity simple. Simple of course is relative and a generally a bad choice of words in
-          computer science, but it shrunk down the complexity of this and simplified this to a mental model (another
-          worn-out term these days, I feel) that makes the hardness of UI managable. It promoted Components, State, and
-          Props. These things together make up the building blocks that allows managing this distributed mess.
-        </P>
+
         <ul>
-          <li>Components xyz</li>
-          <li>State xyz</li>
-          <li>Props xyz</li>
+          <li>
+            <Code>Components</Code> encapsulate complexity and allow creating manageble units of reactivity
+          </li>
+          <li>
+            <Code>State</Code> allows fine-grained, internal updates, hidden to the outside
+          </li>
+          <li>
+            <Code>Props</Code> allow designing dependencies and contraints to relationships between components
+          </li>
         </ul>
+
+        <P>
+          This list might seem trivial, but before React rose in popularity, the common approaches to UI on the web were
+          based on MCV / MVVM type paradims, which attempted to solve complex UIs by enforcing an order to where and how
+          updates would happen, but still ended up being a complex maze, only adding guard rails that you would now trip
+          over and fall. The larger Angular and Backbone apps I woked with felt like a broken corset, where there were
+          pointy wires poking into my ribs.
+        </P>
+
+        <P>
+          Compenents let me choose my own misery. Oh that sounds bad, but I mean it well. Of couse, a larger React
+          project is often just as hard to maintain as any other project, but this is not due to this core design. This
+          core design is Lego which, solves a lot and prevents nothing. This should make any software architect happy.
+        </P>
+
         <P>
           The effectiveness of this model is proven by the evolutionary nature of computer science. Libraries die,
-          Frameworks die, but good ideas survive. This basics model has been copied and adapted by the other giants of
-          front end development. Svelte, Solid, Vue—they have their own twists and USPs, but they do have one idea in
-          common, can you see it? There are other frameworks out there, some backed by large corporations, but they are
-          not part of the cool gang in the high school drama that is our industry.
+          frameworks die, but good ideas survive. This basics model has been copied and adapted by the other giants of
+          front end development. Svelte, Solid, Vue—they have their own twists and USPs, but they do have that idea in
+          common. Can you see that? There are many other frameworks out there, some backed by large corporations, but
+          they are not popular. Of course there&apos;s more than one reason for that, but it seems hard to ignore that
+          the frameworks developers seem to adopt all share this core pattern.
         </P>
+
         <P>
-          Like in evolution, we might see other paradigms some day, some more fitting to what we want to do. Things are
-          always in constant change. As a famous quote by Buckminister Fuller goes
+          Like in evolution, we might see other paradigms some day. Or this paradigm will adopt and grow to become
+          something else. Something even better fitting to what we want to achieve. Things are always in constant
+          change. Better things supersede what was before. As a famous quote by Buckminister Fuller goes
         </P>
+
         <blockquote>
           You never change things by fighting the existing reality. To change something, build a new model that makes
           the existing model obsolete.
         </blockquote>
+
         <P>
-          Conversely, a new model that&apos;s worse than the old model, will be unnoticed, ridiculed or creates
-          resistance. In regards to React, something has changed.
+          Conversely, a new model that&apos;s worse than the old model, will be ignored, ridiculed or, when enforced,
+          creates resistance. In regards to React, something has changed, and I belive it is that with hooks, we have
+          migrated from a simplistic reactive model to being exposed to fin(er) grained reactive programming.
         </P>
-        <P>
-          and I belive it is this: Generally speaking, before hooks, the React&apos;s mental model encompassed
-          components.
-        </P>
+
+        <P>In the olden days</P>
 
         <ul>
           <li>[no one size fits all]</li>
