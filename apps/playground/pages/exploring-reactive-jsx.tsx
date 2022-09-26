@@ -4,58 +4,7 @@ import { Layout, BlogTitle, P, Code, PostCredit } from "components";
 
 import type { FC, ReactNode } from "react";
 
-const teaserCode = `
-const Button = () => {
-  let count = 1;
-
-  return (
-    <button onClick={() => count++}>
-      Count is {count}
-    </button>
-  );
-};
-
-rjsx.render(<Button />, document.body);`;
-
-const context = `
-let count = 1;
-
-const Dec = () => <button onClick={() => count--}> - </button>;
-const Inc = () => <button onClick={() => count++}> + </button>;
-const Show = () => <p> Count is {count} </p>;
-
-const App = () => (
-  <div>
-    <Show />
-    <Dec />
-    <Inc />
-  </div>
-);
-
-rjsx.render(<App />, document.body);`;
-
-const effect = `
-const Button = () => {
-  let count = 1;
-
-  console.log(\`Count is \${count}\`);
-
-  return <button onClick={() => count++}>Click</button>;
-};
-
-rjsx.render(<Button />, document.body);`;
-
-const Highlight: FC<{ color?: "amber" | "emerald" | "sky"; children?: ReactNode }> = ({
-  color = "amber",
-  children,
-}) => {
-  const border = {
-    amber: "border-b-amber-400",
-    emerald: "border-b-green-500",
-    sky: "border-b-sky-300",
-  }[color];
-  return <span className={`pb-px border-b-[3px] ${border}`}>{children}</span>;
-};
+const TM = () => <sup className="font-bold uppercase">tm</sup>;
 
 export default function ExploringReactiveJsx() {
   return (
@@ -70,8 +19,8 @@ export default function ExploringReactiveJsx() {
       <main>
         <P>
           Like many others, I have also noticed that React has seemingly gotten more difficult than in the olden days
-          <sup className="font-bold uppercase">tm</sup>. I belive this is because, when introduced, React shrunk down a
-          notirously difficult problem—implementing user interfaces—to a managable model.
+          <TM />. I belive this is because, when introduced, React shrunk down a notirously difficult
+          problem—implementing user interfaces—to a managable model.
         </P>
 
         <P>
@@ -147,7 +96,24 @@ export default function ExploringReactiveJsx() {
           migrated from a simplistic reactive model to being exposed to fin(er) grained reactive programming.
         </P>
 
-        <P>In the olden days</P>
+        <P>
+          In the olden days <TM /> there were components and maybe a bit knowledge about their lifecycle in React&apos;s
+          runtime. That was the end of complexity. When hooks came along, I think a lot of people just tried to take
+          this mindset and implement that with hooks. Famously, <Code>useEffect</Code> is one of the first moments they
+          would realize that things seem to be a bit different now.
+        </P>
+
+        <P>
+          <Code>useEffect</Code>&apos;s cleanup is not the same as unmounting a component. In fact{" "}
+          <Code>useEffect</Code>, conceptually speaking, is not part of the pedigree of React and its runtime, but that
+          of reactive programming. It is now part of our canon that an effect is &quot;a side effect that should be
+          re-executed when (and only when) some designated dependencies get updated&quot;.
+        </P>
+
+        <P>
+          That is... <em>drumroll</em>... reactive programming. Having to think about which data depends on which other
+          data and what should happen when things change.
+        </P>
 
         <ul>
           <li>[no one size fits all]</li>
