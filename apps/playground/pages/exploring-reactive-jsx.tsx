@@ -112,7 +112,10 @@ export default function ExploringReactiveJsx() {
 
         <P>
           That is... <em>drumroll</em>... reactive programming. Having to think about which data depends on which other
-          data and what should happen when things change.
+          data and what should happen when things change. And quite importantly, you need to think about optimizing
+          this. React takes this a bit further with hooks <Code>useMemo</Code>, <Code>useCallback</Code>,{" "}
+          <Code>useRef</Code>, <Code>useTransition</Code> these are great tools for writing performant, optimized
+          reactive code.
         </P>
 
         <ul>
