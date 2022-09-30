@@ -6,6 +6,18 @@ import type { FC, ReactNode } from "react";
 
 const TM = () => <sup className="font-bold uppercase">tm</sup>;
 
+const Highlight: FC<{ color?: "amber" | "emerald" | "sky"; children?: ReactNode }> = ({
+  color = "amber",
+  children,
+}) => {
+  const border = {
+    amber: "border-b-amber-400",
+    emerald: "border-b-green-500",
+    sky: "border-b-sky-300",
+  }[color];
+  return <span className={`pb-px border-b-[3px] ${border}`}>{children}</span>;
+};
+
 export default function ExploringReactiveJsx() {
   return (
     <Layout>
@@ -99,9 +111,25 @@ export default function ExploringReactiveJsx() {
         <P>
           In the olden days
           <TM /> there were components and maybe a bit knowledge about their lifecycle in React&apos;s runtime. That was
-          the end of complexity. When hooks came along, I think a lot of people just tried to take this mindset and
+          the end of complexity. I belive, when hooks came along, many developes tried to take this mindset and
           implement that with hooks. Famously, <Code>useEffect</Code> is one of the first moments they would realize
-          that things seem to be a bit different now.
+          that things are a bit different now.
+        </P>
+
+        <P>
+          But it is not the syntax, that is challenging. Knowing how to import `useEffect` and calling it is not hard.
+          It is a shift in the mental model.
+          <Highlight>
+            `useEffect` requires developers to move away from thinking in components and lifecycles to a more detailed
+            understanding of reactive programming.
+          </Highlight>
+          You need to have an understanding that
+          {/* In reactive programming values get updated and functions get executed, whenever something they are built upon{" "}
+          <em>changes</em>. When you have a  <Code>let a = b + c;</Code> */}
+          {/* In the olden days
+          <TM /> you might think about a component that rerenders. In reactive programming, you think about values that
+          get updated and functions that get executed, whenever something they are built upon <em>changes</em>. They{" "}
+          <em>react</em> to their */}
         </P>
 
         <P>
