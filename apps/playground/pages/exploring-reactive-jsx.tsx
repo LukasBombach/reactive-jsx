@@ -123,13 +123,21 @@ export default function ExploringReactiveJsx() {
             `useEffect` requires developers to move away from thinking in components and lifecycles to a more detailed
             understanding of reactive programming.
           </Highlight>
-          You need to have an understanding that
+          In reactive programming, you need to see values, executions and their dependencies. You need to think about
+          which of your chages will cause other changes and any implications of that, be it in terms of product or in
+          terms of performance. This is a much more complex and difficult task.
           {/* In reactive programming values get updated and functions get executed, whenever something they are built upon{" "}
           <em>changes</em>. When you have a  <Code>let a = b + c;</Code> */}
           {/* In the olden days
           <TM /> you might think about a component that rerenders. In reactive programming, you think about values that
           get updated and functions that get executed, whenever something they are built upon <em>changes</em>. They{" "}
           <em>react</em> to their */}
+        </P>
+
+        <P>
+          And I don't mean to say that this is bad. [use cases yadda yardds] And I would not do justice to React if I
+          said that kind of thinking was completely absent before hooks, but this new style is much more previlent right
+          now.
         </P>
 
         <P>
