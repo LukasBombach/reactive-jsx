@@ -152,6 +152,20 @@ export default function ExploringReactiveJsx() {
           have of React is in */}
         </P>
 
+        <P>
+          So, this sounds like I want to paint a picture of something that was good and simple before and is now
+          complicated and difficult. It is not my intention to do that. Instead I am going to pull the &quot;it
+          depends&quot;-card. But HEY! Don&apos;t close this tab yet! Let me explain!
+        </P>
+
+        <P>
+          The succuessful frameworks are all based on reactive programming, and they all seem to encompass a model of
+          components. But they do differ in the details. In the end <em>they all do the same thing</em>. They update the
+          user interface efficiently and they provide APIs for us developers to fulfil the tasks we have to fulfil. The
+          difference is in the <em>coice of abstractions</em>. Some are more fitting for yxxx details perf ext,
+          examplses
+        </P>
+
         {/* <P>
           And I don&apos;t mean to say that this is bad. [use cases yadda yardds] And I would not do justice to React if
           I said that kind of thinking was completely absent before hooks, but this new style is much more previlent
