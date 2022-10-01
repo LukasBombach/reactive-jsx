@@ -118,14 +118,14 @@ export default function ExploringReactiveJsx() {
 
         <P>
           But it is not the syntax, that is challenging. Knowing how to import `useEffect` and calling it is not hard.
-          It is a shift in the mental model.
+          It is the shift in the mental model that makes it difficult.
           <Highlight>
             `useEffect` requires developers to move away from thinking in components and lifecycles to a more detailed
             understanding of reactive programming.
           </Highlight>
           In reactive programming, you need to see values, executions and their dependencies. You need to think about
           which of your chages will cause other changes and any implications of that, be it in terms of product or in
-          terms of performance. This is a much more complex and difficult task.
+          terms of performance. This is a much more complex and task.
           {/* In reactive programming values get updated and functions get executed, whenever something they are built upon{" "}
           <em>changes</em>. When you have a  <Code>let a = b + c;</Code> */}
           {/* In the olden days
@@ -135,9 +135,27 @@ export default function ExploringReactiveJsx() {
         </P>
 
         <P>
-          And I don't mean to say that this is bad. [use cases yadda yardds] And I would not do justice to React if I
-          said that kind of thinking was completely absent before hooks, but this new style is much more previlent right
-          now.
+          I would not do justice to React to claim that there was no thinking in reactivity before hooks, of course
+          there was, it is right in the name. But it was a simpler model of it. Also, it&apos;s probably also wrong to
+          claim that <em>all React devs</em> were thinking like X and now <em>all React devs have to think like Y</em>.
+          But at least from my observation, the majority of problem solving with React apps revolved around components,
+          props, state and lifecycles, whereas now disucssions are fine-grained and consider details of{" "}
+          <em>reactive computaional work</em> that can be saved here and there and why X leads to Y, in other words, how
+          the reactivity works. It doesn&apos;t seem to be a coincidence. When <Code>useEffect</Code> was discussued
+          upon its introduction, many devs recognized that <Code>componentDidMount</Code> and{" "}
+          <Code>componentWillUnmount</Code> could be mimicked by using its setup and teardown functionality, but it has
+          been discouraged to do so and instead pointed out that it is meant to work differently.
+          {/* Funnily, when
+          talking about optimizing code with <Code>useMemo</Code>, <Code>useCallback</Code> and other optimizations to
+          prevent unneccessary reactivity, we still use the term <Highlight>rerendering</Highlight>, which, in a way is
+          what React does, but to me, is a bit of a pointer to the ambivalent state the mental model that most people
+          have of React is in */}
+        </P>
+
+        {/* <P>
+          And I don&apos;t mean to say that this is bad. [use cases yadda yardds] And I would not do justice to React if
+          I said that kind of thinking was completely absent before hooks, but this new style is much more previlent
+          right now.
         </P>
 
         <P>
@@ -153,7 +171,7 @@ export default function ExploringReactiveJsx() {
           this. React takes this a bit further with hooks <Code>useMemo</Code>, <Code>useCallback</Code>,{" "}
           <Code>useRef</Code>, <Code>useTransition</Code> these are great tools for writing performant, optimized
           reactive code.
-        </P>
+        </P> */}
 
         <ul>
           <li>[no one size fits all]</li>
