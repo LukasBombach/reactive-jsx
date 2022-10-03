@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Playground } from "@reactive-jsx/playground";
-import { Layout, BlogTitle, P, Code, PostCredit } from "components";
+import { Layout, BlogTitle, P, Code, PostCredit, H2 } from "components";
 
 import type { FC, ReactNode } from "react";
 
@@ -29,7 +29,7 @@ export default function ExploringReactiveJsx() {
         </blockquote>
       </header>
       <main>
-        <h2>Part 1: Understanding abstractions</h2>
+        <H2>Part 1: Understanding abstractions</H2>
         <P>
           Like many others, I have also noticed that React has seemingly gotten more difficult than in the olden days
           <TM />. I belive this is because, when introduced, React shrunk down a notirously difficult
@@ -159,7 +159,7 @@ export default function ExploringReactiveJsx() {
           depends&quot;-card. But HEY! Don&apos;t close this tab yet! Let me explain!
         </P>
 
-        <h2>Part 2: Seeing abstractions</h2>
+        <H2>Part 2: Seeing abstractions</H2>
 
         <P>
           The succuessful frameworks are all based on reactive programming, and they all seem to encompass a model of
@@ -169,7 +169,7 @@ export default function ExploringReactiveJsx() {
           examplses
         </P>
 
-        <h2>Part 3: Cooperative Play</h2>
+        <H2>Part 3: Cooperative Play</H2>
 
         {/* <P>
           And I don&apos;t mean to say that this is bad. [use cases yadda yardds] And I would not do justice to React if
