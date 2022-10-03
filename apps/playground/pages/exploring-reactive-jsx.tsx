@@ -37,13 +37,14 @@ export default function ExploringReactiveJsx() {
         </P>
 
         <P>
-          If you ever hear a back end person say that front end is easy and back end is the real deal, it&apos;s worth
-          pointing out that a very basic user interface is a real-time distributed system with multiple local and shared
-          states that manages both, concurrency and parallelism. Not to mention that this system does not only have to
-          work, it needs work in a presentable way, presentable to humans that is. This imposes further complexity on
-          how you have to do state and error handling. In a non user-facing system it might be ok to have one part idly
-          wait for some other part to do something or—in case of an error, just log it to Kibana and call it a day—but
-          users need instant and sometimes complex solutions for these problems.
+          If you ever hear a back end person say that front end is easy and back end is the real deal, you might want to
+          point out that user interfaces are a real-time distributed systems with local and shared states that need to
+          synchonization of both, concurrent and parallel processes. Not to mention that these systems do not{" "}
+          <em>just have to work</em>, they have to work in a way that is presentable to humans. This imposes further
+          complexity on how to deal with error handling, state and time. In a non user-facing system it might be ok to
+          have one part idly wait for some other part and in case of an error just log it and call it a day. But in a
+          user-facing system, these approaches become too simple, things get more complex and encompass a wider
+          cross-disciplinary understanding.
         </P>
 
         <P>
@@ -170,6 +171,7 @@ export default function ExploringReactiveJsx() {
         </P>
 
         <H2>Part 3: Cooperative Play</H2>
+        <P>[everything is a remix]</P>
 
         {/* <P>
           And I don&apos;t mean to say that this is bad. [use cases yadda yardds] And I would not do justice to React if
