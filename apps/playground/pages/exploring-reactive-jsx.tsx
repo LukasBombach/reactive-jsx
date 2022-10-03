@@ -29,6 +29,7 @@ export default function ExploringReactiveJsx() {
         </blockquote>
       </header>
       <main>
+        <h2>Part 1: Understanding abstractions</h2>
         <P>
           Like many others, I have also noticed that React has seemingly gotten more difficult than in the olden days
           <TM />. I belive this is because, when introduced, React shrunk down a notirously difficult
@@ -158,6 +159,8 @@ export default function ExploringReactiveJsx() {
           depends&quot;-card. But HEY! Don&apos;t close this tab yet! Let me explain!
         </P>
 
+        <h2>Part 2: Seeing abstractions</h2>
+
         <P>
           The succuessful frameworks are all based on reactive programming, and they all seem to encompass a model of
           components. But they do differ in the details. In the end <em>they all do the same thing</em>. They update the
@@ -165,6 +168,8 @@ export default function ExploringReactiveJsx() {
           difference is in the <em>coice of abstractions</em>. Some are more fitting for yxxx details perf ext,
           examplses
         </P>
+
+        <h2>Part 3: Cooperative Play</h2>
 
         {/* <P>
           And I don&apos;t mean to say that this is bad. [use cases yadda yardds] And I would not do justice to React if
