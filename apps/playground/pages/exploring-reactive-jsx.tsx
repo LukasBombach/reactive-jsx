@@ -36,32 +36,63 @@ export default function ExploringReactiveJsx() {
           problem—implementing user interfaces—to a managable model.
         </P>
 
-        <blockquote>&quot;Front end is easy, back end is hard&quot;</blockquote>
+        <blockquote>&quot;Font end development is easy, back end development is much more complex&quot;</blockquote>
 
         <P>
           You may have heard this discussion before: &quot;Font end development is easy, back end development is much
-          more complex&quot;. Let&apos;s debunk this just a little bit by imagining a simple user interface where you
-          have a login button on the top-right corner of the viewport, a [forum thread]
-          <br />
-          If you ever hear a back end person say that front end is easy and back end is the real deal, you might want to
-          point out that user interfaces are a real-time distributed systems with local and shared states that need to
-          synchonization of both, concurrent and parallel processes. Not to mention that these systems do not{" "}
-          <em>just have to work</em>, they have to work in a way that is presentable to humans. This imposes further
-          complexity on how to deal with error handling, state and time. In a non user-facing system it might be ok to
-          have one part idly wait for some other part and in case of an error just log it and call it a day. But in a
-          user-facing system, these approaches become too simple, things get more complex and encompass a wider
-          cross-disciplinary understanding.
+          more complex&quot;. Let&apos;s debunk this just a little bit by picturing the interface of a forum thread:
+        </P>
+
+        <picture>[image here]</picture>
+
+        <ul>
+          <li>A login on the top right</li>
+          <li>On top of the messages, you&apos; see who of your friends is currently online</li>
+          <li>Messages in the middle, each author also has little indicator whether they are online or not</li>
+          <li>A text field to enter your post</li>
+        </ul>
+
+        <P>
+          Let&apos;s describe this simple example with the language of back end developers: What we have in front of us,
+          in a single browser tab, is a real-time distributed system with multiple local states, some of which are
+          shared, an additional global state, concurrent and parallel processes which all need to be synchronized and
+          error-handled. As a bonus, synchronization and error handling are user-facing, so simply waiting for things or
+          logging errors to the console are anything but acceptable solutions.
+        </P>
+
+        <picture>image of whether, red blue stuff</picture>
+
+        <P>
+          This is not a specifically chosen example to make things seem more complex than they really are. Implementing
+          user interfaces <em>is</em> complex. Literally:{" "}
+          <q>A complex system is a system composed of many components which may interact with each other.</q>{" "}
+          [Wikipedia](https://en.wikipedia.org/wiki/Complex_system). Complexity makes pediction hard and, conversly,
+          makes control difficult.
         </P>
 
         <P>
-          React made this complexity simple. &quot;Simple&quot;, of course, is relative in nature and a generally a bad
-          choice of words in computer science, but what I mean is that it shrunk down the complexity and{" "}
-          <em>simplified</em> it to a mental model that makes the complexity managable (you know, at least potentially).
+          React helped making this complexity simple. &quot;Simple&quot;, of course, is always relative and a generally
+          a bad choice of words in computer science, but what I mean is this: It found a way of abstracting, organizing
+          and assembling the complexity of user interfaces, with all its teeny tiny details, that can be predicted and
+          controlled. {/* It least, you know, potentially. The building blocks are there. */}
         </P>
+
         <P>
-          It did so, by promoting <Code>Components</Code>, <Code>State</Code> and <Code>Props</Code>. These things
-          together make up the building blocks that enable managing the distributed and intervened mess, which user
-          interfaces usually are.
+          It did so, by promoting <Code>Components</Code>, <Code>State</Code> and <Code>Props</Code>. We may have gotten
+          so used to this that it is easy to overlook how well this works. Especially if you consider the historic
+          alternatives. Among the more popular ones are Angular and Backbone.js which come from the era right before
+          React entered the stage. Back then, the hot technology that everyone was talking about were MVC, MVVM and MVV*
+          frameworks. It would take too long to get into all the details of <em>why</em>, but with these frameworks you
+          very quickly got the feeling that you thought you bought a Cabriolet to take it out for a trip on Route 66,
+          but are now stuck in an infinite traffic with a car that has a broken driver&apos;s seat.
+          {/* This abstraction
+          allows encapsulating the many tiny details into bigger entities, Components with internal state you can remove
+          from your brains memory, */}
+          {/* Together, these
+          things 
+          
+          make up the building blocks that enable managing the distributed and intervened mess, which user
+          interfaces usually are. */}
         </P>
 
         <ul>
