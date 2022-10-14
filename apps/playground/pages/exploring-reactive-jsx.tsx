@@ -36,7 +36,13 @@ export default function ExploringReactiveJsx() {
           problem—implementing user interfaces—to a managable model.
         </P>
 
+        <blockquote>&quot;Front end is easy, back end is hard&quot;</blockquote>
+
         <P>
+          You may have heard this discussion before: &quot;Font end development is easy, back end development is much
+          more complex&quot;. Let&apos;s debunk this just a little bit by imagining a simple user interface where you
+          have a login button on the top-right corner of the viewport, a [forum thread]
+          <br />
           If you ever hear a back end person say that front end is easy and back end is the real deal, you might want to
           point out that user interfaces are a real-time distributed systems with local and shared states that need to
           synchonization of both, concurrent and parallel processes. Not to mention that these systems do not{" "}
@@ -160,7 +166,7 @@ export default function ExploringReactiveJsx() {
           depends&quot;-card. But HEY! Don&apos;t close this tab yet! Let me explain!
         </P>
 
-        <H2>Part 2: Seeing abstractions</H2>
+        <H2>Part 2: Comparing abstractions</H2>
 
         <P>
           The succuessful frameworks are all based on reactive programming, and they all seem to encompass a model of
@@ -170,7 +176,7 @@ export default function ExploringReactiveJsx() {
           examplses
         </P>
 
-        <H2>Part 3: Cooperative Play</H2>
+        <H2>Part 3: Constructive play</H2>
         <P>[everything is a remix]</P>
 
         {/* <P>
