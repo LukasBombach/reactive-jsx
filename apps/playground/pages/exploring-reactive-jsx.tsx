@@ -83,11 +83,12 @@ export default function ExploringReactiveJsx() {
           It did so, by promoting <Code>Components</Code>, <Code>State</Code> and <Code>Props</Code>. We may have gotten
           so used to this that it is easy to overlook how well this works. Especially if you consider the historic
           alternatives. Among the more popular ones are Angular and Backbone.js which come from the era right before
-          React entered the stage. Back then, the hot paradigms that everyone was talking about were MVC, MVVM and MVV*
-          frameworks. With these frameworks you very quickly got the feeling that you thought you bought a Cabriolet to
-          take it out for a trip on Route 66, but are now stuck in an infinite traffic with a car that has a broken
-          driver&apos;s seat. Things were entangled, hard wired to one another, had side-effects and unnecessarily
-          elaborate for what there were set out to accomplish. Why is React&apos;s model better? In practical terms:
+          React entered the stage. Back then, the hot paradigms that everyone was talking about were MVC, MVVM and other
+          derivations of that. With these frameworks you very quickly got the feeling that you thought you bought a
+          cabriolet sportscar to take it out for a trip on Route 66, but are now stuck in an infinite traffic jam in a
+          rusty car that has a broken driver&apos;s seat. Things were entangled, hard wired to one another and were
+          unnecessarily elaborate for what there were set out to accomplish. Why is React&apos;s model better? In
+          practical terms:
         </P>
 
         <ul>
@@ -126,16 +127,16 @@ export default function ExploringReactiveJsx() {
         <P>
           The effectiveness of this model is proven by the evolutionary nature of computer science. Libraries die,
           frameworks die, but good ideas survive. This basic model has been copied and adapted by the other giants of
-          front end development. Svelte, Solid, Vue—they have their own twists and USPs, but they do have that idea in
-          common. Can you see that? There are many other frameworks out there, some backed by large corporations, but
-          they are not popular. Of course there&apos;s more than one reason for that, but it seems hard to ignore that
-          the frameworks developers seem to adopt all share this core pattern.
+          the industry. Svelte, Solid, Vue—they have their own twists and turns and they come with their own USP, but
+          they do have that idea in common. Can you see that? There are many other frameworks out there, some backed by
+          large corporations, but they are not popular. Of course there&apos;s more than one reason for that, but it
+          seems hard to ignore that the frameworks developers seem to adopt all share this core pattern.
         </P>
 
         <P>
           Like in evolution, we might see other paradigms some day. Or this paradigm will adopt and grow to become
           something else. Something even better fitting to what we want to achieve. Things are always in constant
-          change. Better things supersede what was before. As a famous quote by Buckminister Fuller goes
+          change. Better ideas will supersede what is here today. As a famous quote by Buckminister Fuller goes
         </P>
 
         <blockquote>
@@ -144,9 +145,9 @@ export default function ExploringReactiveJsx() {
         </blockquote>
 
         <P>
-          Conversely, a new model that&apos;s worse than the old model, will be ignored, ridiculed or, when enforced,
-          creates resistance. In regards to React, something has changed, and I belive it is that with hooks, we have
-          migrated from a simplistic reactive model to being exposed to fin(er) grained reactive programming.
+          Conversely, a new model that&apos;s worse than the old model, will go down unnoticed, be ridiculed or, when
+          enforced, create resistance. In regards to React, something has changed, and I belive it is that with hooks,
+          we have migrated from a simplistic reactive model to being exposed to fin(er) grained reactive programming.
         </P>
 
         <P>
