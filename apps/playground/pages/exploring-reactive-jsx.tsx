@@ -121,9 +121,11 @@ export default function ExploringReactiveJsx() {
           way&quot;, we have <em>not</em> been doing this for quite a while—and it wasn&apos;t great.
         </P>
 
+        <picture>picture of evolution or pomemon or something</picture>
+
         <P>
           The effectiveness of this model is proven by the evolutionary nature of computer science. Libraries die,
-          frameworks die, but good ideas survive. This basics model has been copied and adapted by the other giants of
+          frameworks die, but good ideas survive. This basic model has been copied and adapted by the other giants of
           front end development. Svelte, Solid, Vue—they have their own twists and USPs, but they do have that idea in
           common. Can you see that? There are many other frameworks out there, some backed by large corporations, but
           they are not popular. Of course there&apos;s more than one reason for that, but it seems hard to ignore that
