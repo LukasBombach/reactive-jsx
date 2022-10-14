@@ -121,20 +121,6 @@ export default function ExploringReactiveJsx() {
           way&quot;, we have <em>not</em> been doing this for quite a while—and it wasn&apos;t great.
         </P>
 
-        {/*<P>
-          This list might seem trivial, but before React rose in popularity, the common approaches to UI on the web were
-          based on MCV / MVVM type paradims, which attempted to solve complex UIs by enforcing an order to where and how
-          updates would happen, but still ended up being a complex maze, only adding guard rails that you would now trip
-          over and fall. The larger Angular and Backbone apps I woked with felt like a broken corset, where there were
-          pointy wires poking into my ribs.
-        </P> */}
-
-        {/* <P>
-          Compenents let me choose my own misery. Oh that sounds bad, but I mean it well. Of couse, a larger React
-          project is often just as hard to maintain as any other project, but this is not due to this core design. This
-          core design is Lego which, solves a lot and prevents nothing. This should make any software architect happy.
-        </P> */}
-
         <P>
           The effectiveness of this model is proven by the evolutionary nature of computer science. Libraries die,
           frameworks die, but good ideas survive. This basics model has been copied and adapted by the other giants of
