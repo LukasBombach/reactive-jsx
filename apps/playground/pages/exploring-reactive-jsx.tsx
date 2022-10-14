@@ -77,49 +77,63 @@ export default function ExploringReactiveJsx() {
           controlled. {/* It least, you know, potentially. The building blocks are there. */}
         </P>
 
+        <picture>expectation v reality, image of a shit traffic jam</picture>
+
         <P>
           It did so, by promoting <Code>Components</Code>, <Code>State</Code> and <Code>Props</Code>. We may have gotten
           so used to this that it is easy to overlook how well this works. Especially if you consider the historic
           alternatives. Among the more popular ones are Angular and Backbone.js which come from the era right before
-          React entered the stage. Back then, the hot technology that everyone was talking about were MVC, MVVM and MVV*
-          frameworks. It would take too long to get into all the details of <em>why</em>, but with these frameworks you
-          very quickly got the feeling that you thought you bought a Cabriolet to take it out for a trip on Route 66,
-          but are now stuck in an infinite traffic with a car that has a broken driver&apos;s seat.
-          {/* This abstraction
-          allows encapsulating the many tiny details into bigger entities, Components with internal state you can remove
-          from your brains memory, */}
-          {/* Together, these
-          things 
-          
-          make up the building blocks that enable managing the distributed and intervened mess, which user
-          interfaces usually are. */}
+          React entered the stage. Back then, the hot paradigms that everyone was talking about were MVC, MVVM and MVV*
+          frameworks. With these frameworks you very quickly got the feeling that you thought you bought a Cabriolet to
+          take it out for a trip on Route 66, but are now stuck in an infinite traffic with a car that has a broken
+          driver&apos;s seat. Things were entangled, hard wired to one another, had side-effects and unnecessarily
+          elaborate for what there were set out to accomplish. Why is React&apos;s model better? In practical terms:
         </P>
 
         <ul>
           <li>
-            <Code>Components</Code> encapsulate complexity and allow creating manageble units of reactivity
+            With <Code>Components</Code>, you can encapsulate complexity create simpler units of reactivity. These units
+            are in principle uncoupled and can be put together in topography and hierarchy. Most imporantly, these units{" "}
+            <em>can fit in your head</em>.
           </li>
           <li>
-            <Code>State</Code> allows fine-grained, internal updates, hidden to the outside
+            With <Code>State</Code> you can take take care of fine-grained update, develop them in a smaller context, a
+            context your brain can oversee, and hide them to the outside.
           </li>
           <li>
-            <Code>Props</Code> allow designing dependencies and contraints to relationships between components
+            With <Code>Props</Code> (children are props btw.) you can design a contract of <em>this</em> component to
+            the others and steer the form and structure your software will take. <em>Especially</em>, when you&apos;re
+            working with others.
           </li>
         </ul>
 
         <P>
+          In a more academic explanation, this pretty much ticks or enables all the check boxes of [S.O.L.I.D.
+          architecture](https://en.wikipedia.org/wiki/SOLID) and let&apos; you align well with many of the suggestions
+          of [John Ousterhout&apos;s Philosophy of Software Design](https://web.stanford.edu/~ouster/cgi-bin/book.php).
+        </P>
+
+        <P>
+          If you shrug at this or find this too abstract, try to find an answer how <em>you</em> would structure the
+          code of your user interface with bare HTML, JavaScript and CSS. All the yadda about how things used to be
+          simpler. Try implementing an input field with a list search suggestions and then have your users type real
+          fast. And also, the component model isn&apos;t &quot;duh&quot;, like &quot;of course you would do it this
+          way&quot;, we have <em>not</em> been doing this for quite a while—and it wasn&apos;t great.
+        </P>
+
+        {/*<P>
           This list might seem trivial, but before React rose in popularity, the common approaches to UI on the web were
           based on MCV / MVVM type paradims, which attempted to solve complex UIs by enforcing an order to where and how
           updates would happen, but still ended up being a complex maze, only adding guard rails that you would now trip
           over and fall. The larger Angular and Backbone apps I woked with felt like a broken corset, where there were
           pointy wires poking into my ribs.
-        </P>
+        </P> */}
 
-        <P>
+        {/* <P>
           Compenents let me choose my own misery. Oh that sounds bad, but I mean it well. Of couse, a larger React
           project is often just as hard to maintain as any other project, but this is not due to this core design. This
           core design is Lego which, solves a lot and prevents nothing. This should make any software architect happy.
-        </P>
+        </P> */}
 
         <P>
           The effectiveness of this model is proven by the evolutionary nature of computer science. Libraries die,
