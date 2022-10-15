@@ -29,11 +29,14 @@ export default function ExploringReactiveJsx() {
         </blockquote>
       </header>
       <main>
+        <H2>Intro</H2>
+        <P>todo</P>
+
         <H2>Part 1: Understanding abstractions</H2>
         <P>
           Like many others, I have also noticed that React has seemingly gotten more difficult than in the olden days
           <TM />. I belive this is because, when introduced, React shrunk down a notirously difficult
-          problem—implementing user interfaces—to a managable model.
+          problem—implementing user interfaces—to a managable model. {/* and it has now... */}
         </P>
 
         <blockquote>&quot;Font end development is easy, back end development is much more complex&quot;</blockquote>
@@ -147,7 +150,8 @@ export default function ExploringReactiveJsx() {
         <P>
           Conversely, a new model that&apos;s worse than the old model, will go down unnoticed, be ridiculed or, when
           enforced, create resistance. In regards to React, something has changed, and I belive it is that with hooks,
-          we have migrated from a simplistic reactive model to being exposed to fin(er) grained reactive programming.
+          we have migrated from a simplistic reactive model to being exposed to fin<em>er</em> grained reactive
+          programming.
         </P>
 
         <P>
