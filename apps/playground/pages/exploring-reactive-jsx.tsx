@@ -33,6 +33,12 @@ export default function ExploringReactiveJsx() {
       <main>
         <H2>Intro</H2>
         <P>
+          The discussion over how React is terrible and other frameworks are the best thing one has ever experienced is
+          awfully heated. I am rooting for constructive collaboration and first and foremost, for less talking and more
+          walking. Let&quot;s fuck around and see where we end up. I&apos;ll start:
+        </P>
+
+        <P>
           The discussion over how React and other frameworks is awefully heated. There differences in abstractions are
           miniscule and the mental models are similar. We need a constructive discussion and coorporate play. But enough
           of the yadda yadda, less talking, more walking:
