@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { Playground } from "@reactive-jsx/playground";
 import { Layout, BlogTitle, P, Code, PostCredit, H2 } from "components";
+import weatherMap from "../public/exploring-reactive-jsx/weather_map.jpg";
+import weatherMapSingle from "../public/exploring-reactive-jsx/weather_map_single.jpg";
 
 import type { FC, ReactNode } from "react";
 
@@ -30,6 +32,12 @@ export default function ExploringReactiveJsx() {
       </header>
       <main>
         <H2>Intro</H2>
+        <H2>
+          The discussion over React and other frameworks is awefully heated. There differences in abstractions are
+          miniscule and the mental models are similar. We need a constructive discussion and coorporate play. But enough
+          of the yadda yadda, less talking, more walking:
+        </H2>
+        <H2>less talking, more walking:</H2>
         <P>todo</P>
 
         <H2>Part 1: Understanding abstractions</H2>
@@ -63,7 +71,11 @@ export default function ExploringReactiveJsx() {
           logging errors to the console are anything but acceptable solutions.
         </P>
 
-        <picture>image of whether, red blue stuff</picture>
+        <figure className="max-w-screen-sm">
+          {/* <Image src={weatherMap} alt="Picture of the author" width={1500} height={604} /> */}
+          <Image src={weatherMapSingle} alt="Picture of the author" width={750} height={604} />
+          <figcaption> Source: https://en.wikipedia.org/wiki/Weather_forecasting</figcaption>
+        </figure>
 
         <P>
           This is not a specifically chosen example to make things seem more complex than they really are. Implementing
