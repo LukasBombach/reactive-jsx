@@ -32,15 +32,16 @@ export default function ExploringReactiveJsx() {
       </header>
       <main>
         <H2>Intro</H2>
-        <H2>
-          The discussion over React and other frameworks is awefully heated. There differences in abstractions are
+        <P>
+          The discussion over how React and other frameworks is awefully heated. There differences in abstractions are
           miniscule and the mental models are similar. We need a constructive discussion and coorporate play. But enough
           of the yadda yadda, less talking, more walking:
-        </H2>
+        </P>
         <H2>less talking, more walking:</H2>
         <P>todo</P>
 
-        <H2>Part 1: Understanding abstractions</H2>
+        <H2>Motivation:</H2>
+        {/* <H2>Part 1: Understanding abstractions</H2> */}
         <P>
           Like many others, I have also noticed that React has seemingly gotten more difficult than in the olden days
           <TM />. I belive this is because, when introduced, React shrunk down a notirously difficult
