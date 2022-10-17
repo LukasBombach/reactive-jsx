@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Head from "next/head";
 import { Playground } from "@reactive-jsx/playground";
 import { Layout, BlogTitle, P, Code, PostCredit, H2 } from "components";
 import weatherMap from "../public/exploring-reactive-jsx/weather_map.jpg";
@@ -44,6 +45,10 @@ export default function ExploringReactiveJsx() {
           walking. Let&quot;s fuck around and see where we end up. I&apos;ll start:
         </P>
 
+        <figure>
+          <figcaption>Source https://www.tiktok.com/@rogerskaer/video/7152688876103028010</figcaption>
+        </figure>
+
         <P>
           The discussion over how React and other frameworks is awefully heated. There differences in abstractions are
           miniscule and the mental models are similar. We need a constructive discussion and coorporate play. But enough
@@ -51,7 +56,6 @@ export default function ExploringReactiveJsx() {
         </P>
         <H2>less talking, more walking:</H2>
         <P>todo</P>
-
         <H2>Motivation:</H2>
         {/* <H2>Part 1: Understanding abstractions</H2> */}
         <P>
@@ -59,23 +63,18 @@ export default function ExploringReactiveJsx() {
           <TM />. I belive this is because, when introduced, React shrunk down a notirously difficult
           problem—implementing user interfaces—to a managable model. {/* and it has now... */}
         </P>
-
         <blockquote>&quot;Font end development is easy, back end development is much more complex&quot;</blockquote>
-
         <P>
           You may have heard this discussion before: &quot;Font end development is easy, back end development is much
           more complex&quot;. Let&apos;s debunk this just a little bit by picturing the interface of a forum thread:
         </P>
-
         <picture>[image here]</picture>
-
         <ul>
           <li>A login on the top right</li>
           <li>On top of the messages, you&apos; see who of your friends is currently online</li>
           <li>Messages in the middle, each author also has little indicator whether they are online or not</li>
           <li>A text field to enter your post</li>
         </ul>
-
         <P>
           Let&apos;s describe this simple example with the language of back end developers: What we have in front of us,
           in a single browser tab, is a real-time distributed system with multiple local states, some of which are
@@ -83,13 +82,11 @@ export default function ExploringReactiveJsx() {
           error-handled. As a bonus, synchronization and error handling are user-facing, so simply waiting for things or
           logging errors to the console are anything but acceptable solutions.
         </P>
-
         <figure className="max-w-screen-sm">
           {/* <Image src={weatherMap} alt="Picture of the author" width={1500} height={604} /> */}
           <Image src={weatherMapSingle} alt="Picture of the author" width={750} height={604} />
           <figcaption> Source: https://en.wikipedia.org/wiki/Weather_forecasting</figcaption>
         </figure>
-
         <P>
           This is not a specifically chosen example to make things seem more complex than they really are. Implementing
           user interfaces <em>is</em> complex. Literally:{" "}
@@ -97,16 +94,13 @@ export default function ExploringReactiveJsx() {
           [Wikipedia](https://en.wikipedia.org/wiki/Complex_system). Complexity makes pediction hard and, conversly,
           makes control difficult.
         </P>
-
         <P>
           React helped making this complexity simple. &quot;Simple&quot;, of course, is always relative and a generally
           a bad choice of words in computer science, but what I mean is this: It found a way of abstracting, organizing
           and assembling the complexity of user interfaces, with all its teeny tiny details, that can be predicted and
           controlled. {/* It least, you know, potentially. The building blocks are there. */}
         </P>
-
         <picture>expectation v reality, image of a shit traffic jam</picture>
-
         <P>
           It did so, by promoting <Code>Components</Code>, <Code>State</Code> and <Code>Props</Code>. We may have gotten
           so used to this that it is easy to overlook how well this works. Especially if you consider the historic
@@ -118,7 +112,6 @@ export default function ExploringReactiveJsx() {
           unnecessarily elaborate for what there were set out to accomplish. Why is React&apos;s model better? In
           practical terms:
         </P>
-
         <ul>
           <li>
             With <Code>Components</Code>, you can encapsulate complexity create simpler units of reactivity. These units
@@ -135,13 +128,11 @@ export default function ExploringReactiveJsx() {
             working with others.
           </li>
         </ul>
-
         <P>
           In a more academic explanation, this pretty much ticks or enables all the check boxes of [S.O.L.I.D.
           architecture](https://en.wikipedia.org/wiki/SOLID) and let&apos; you align well with many of the suggestions
           of [John Ousterhout&apos;s Philosophy of Software Design](https://web.stanford.edu/~ouster/cgi-bin/book.php).
         </P>
-
         <P>
           If you shrug at this or find this too abstract, try to find an answer how <em>you</em> would structure the
           code of your user interface with bare HTML, JavaScript and CSS. All the yadda about how things used to be
@@ -149,9 +140,7 @@ export default function ExploringReactiveJsx() {
           fast. And also, the component model isn&apos;t &quot;duh&quot;, like &quot;of course you would do it this
           way&quot;, we have <em>not</em> been doing this for quite a while—and it wasn&apos;t great.
         </P>
-
         <picture>picture of evolution or pomemon or something</picture>
-
         <P>
           The effectiveness of this model is proven by the evolutionary nature of computer science. Libraries die,
           frameworks die, but good ideas survive. This basic model has been copied and adapted by the other giants of
@@ -160,25 +149,21 @@ export default function ExploringReactiveJsx() {
           large corporations, but they are not popular. Of course there&apos;s more than one reason for that, but it
           seems hard to ignore that the frameworks developers seem to adopt all share this core pattern.
         </P>
-
         <P>
           Like in evolution, we might see other paradigms some day. Or this paradigm will adopt and grow to become
           something else. Something even better fitting to what we want to achieve. Things are always in constant
           change. Better ideas will supersede what is here today. As a famous quote by Buckminister Fuller goes
         </P>
-
         <blockquote>
           You never change things by fighting the existing reality. To change something, build a new model that makes
           the existing model obsolete.
         </blockquote>
-
         <P>
           Conversely, a new model that&apos;s worse than the old model, will go down unnoticed, be ridiculed or, when
           enforced, create resistance. In regards to React, something has changed, and I belive it is that with hooks,
           we have migrated from a simplistic reactive model to being exposed to fin<em>er</em> grained reactive
           programming.
         </P>
-
         <P>
           In the olden days
           <TM /> there were components and maybe a bit knowledge about their lifecycle in React&apos;s runtime. That was
@@ -186,7 +171,6 @@ export default function ExploringReactiveJsx() {
           implement that with hooks. Famously, <Code>useEffect</Code> is one of the first moments they would realize
           that things are a bit different now.
         </P>
-
         <P>
           But it is not the syntax, that is challenging. Knowing how to import `useEffect` and calling it is not hard.
           It is the shift in the mental model that makes it difficult.
@@ -204,7 +188,6 @@ export default function ExploringReactiveJsx() {
           get updated and functions that get executed, whenever something they are built upon <em>changes</em>. They{" "}
           <em>react</em> to their */}
         </P>
-
         <P>
           I would not do justice to React to claim that there was no thinking in reactivity before hooks, of course
           there was, it is right in the name. But it was a simpler model of it. Also, it&apos;s probably also wrong to
@@ -222,15 +205,12 @@ export default function ExploringReactiveJsx() {
           what React does, but to me, is a bit of a pointer to the ambivalent state the mental model that most people
           have of React is in */}
         </P>
-
         <P>
           So, this sounds like I want to paint a picture of something that was good and simple before and is now
           complicated and difficult. It is not my intention to do that. Instead I am going to pull the &quot;it
           depends&quot;-card. But HEY! Don&apos;t close this tab yet! Let me explain!
         </P>
-
         <H2>Part 2: Comparing abstractions</H2>
-
         <P>
           The succuessful frameworks are all based on reactive programming, and they all seem to encompass a model of
           components. But they do differ in the details. In the end <em>they all do the same thing</em>. They update the
@@ -238,10 +218,8 @@ export default function ExploringReactiveJsx() {
           difference is in the <em>coice of abstractions</em>. Some are more fitting for yxxx details perf ext,
           examplses
         </P>
-
         <H2>Part 3: Constructive play</H2>
         <P>[everything is a remix]</P>
-
         {/* <P>
           And I don&apos;t mean to say that this is bad. [use cases yadda yardds] And I would not do justice to React if
           I said that kind of thinking was completely absent before hooks, but this new style is much more previlent
@@ -262,7 +240,6 @@ export default function ExploringReactiveJsx() {
           <Code>useRef</Code>, <Code>useTransition</Code> these are great tools for writing performant, optimized
           reactive code.
         </P> */}
-
         <ul>
           <li>[no one size fits all]</li>
           <li>[crtiqe from that article: different kinds if abstractions für reactivitiy]</li>
